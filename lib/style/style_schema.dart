@@ -69,3 +69,26 @@ const darkColorScheme = ColorScheme(
 );
 
 const primaryColor = Color.fromRGBO(80, 241, 115, 1);
+
+
+btnPrimaryStyle() {
+  return ElevatedButton.styleFrom(
+    backgroundColor: primaryColor,
+    textStyle: const TextStyle(
+        fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+    elevation: 5.0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+  );
+}
+
+btnSecondaryStyle() {
+  return ElevatedButton.styleFrom(
+    backgroundColor: lightColorScheme.onPrimaryContainer,
+    foregroundColor: Colors.white,
+    textStyle: const TextStyle(
+        fontSize: 20.0, fontWeight: FontWeight.w500),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
+  );
+}
