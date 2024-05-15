@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "950386226484",
+    "firebase_url": "https://twins-app-ab1a5-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "twins-app-ab1a5",
+    "storage_bucket": "twins-app-ab1a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950386226484:android:33633eccc88b444dfc2161",
+        "android_client_info": {
+          "package_name": "com.twins.twins_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5e_eEeHdYQnNpt_dp9C1OzKVUgYGR_OE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
