@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:twins_front/style/style_schema.dart';
 
 class PopupDialog extends StatelessWidget {
   final String title;
@@ -13,6 +15,10 @@ class PopupDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -40,7 +46,6 @@ class PopupDialog extends StatelessWidget {
           child: const Text(
             'Cancel',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -49,12 +54,7 @@ class PopupDialog extends StatelessWidget {
           },
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+          style: btnDialogStyle(),
           onPressed: onConfirm,
           child: const Text('Confirm'),
         ),
