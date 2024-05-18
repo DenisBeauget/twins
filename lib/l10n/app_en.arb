@@ -1,5 +1,18 @@
 {
+  "welcome": "Welcome to the My twins",
+  "welcome_description": "Discover My Twins concept",
+  "welcome_content_app": "Thanks to My Twins you will be able to benefit from many advantages, such as discounts and exclusive offers. You will also be able to discover new places",
+  "welcome_content_categories": "These offers are classified by category, so it's easy to find what you're looking for and have a great time!",
   "start_experience": "Start experience",
   "start_register": "Sign up",
-  "start_sign_in": "Sign in"
+  "start_sign_in": "Sign in",
+  "registration_title": "Register Now",
+  "email_placeholder": "Enter your email address",
+  "password_placeholder": "Create your password",
+  "confirm_password_placeholder": "Confirm your password",
+  "register_conditions": "I agree to the terms and conditions",
+  "register_button": "Continue",
+  "sign_in_title": "Connect",
+  "sign_in_password_placeholder": "Enter your password",
+  "sign_in_button": "Sign in"
 }

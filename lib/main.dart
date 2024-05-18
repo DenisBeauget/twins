@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:twins_front/firebase_options.dart';
-import 'package:twins_front/screen/home_screen.dart';
+import 'package:twins_front/screen/welcome_screen.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,8 +27,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Twins App',
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme, fontFamily: 'Poppins'),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme, fontFamily: 'Poppins'),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-      home: const HomeScreen(),
+      home: WelcomeScreen(),
     );
   }
 }

@@ -7,34 +7,60 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/img/twins_logo.png'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: btnSecondaryStyle(),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen()));
-              },
-              child: Text(AppLocalizations.of(context)!.start_register)
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Expanded(
+            flex: 7,
+            child: Center(
+              child: appLogo(180),
             ),
-            const SizedBox(height: 50),
-            ElevatedButton(
-              style: btnSecondaryStyle(),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-              },
-              child: Text(AppLocalizations.of(context)!.start_sign_in)
-            ),
-          ],
           ),
-        )
+          Expanded(
+            flex: 3,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                        style: btnPrimaryStyle(),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUpScreen()));
+                        },
+                        child:
+                            Text(AppLocalizations.of(context)!.start_register)),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                        style: btnSecondaryStyle(context),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                        },
+                        child:
+                            Text(AppLocalizations.of(context)!.start_sign_in)),
+                  ),
+                  const SizedBox(height: 50),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

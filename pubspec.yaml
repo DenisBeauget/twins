@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.19.5
   firebase_core: ^2.31.0
+  carousel_slider: ^4.2.1
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +29,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/img/twins_logo.png
+    - assets/img/twins_logo_w.png
+    - assets/img/scroll.gif
+    - assets/img/scroll_w.gif
