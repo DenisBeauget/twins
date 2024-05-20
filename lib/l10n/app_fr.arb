@@ -7,13 +7,25 @@
   "start_register": "Créer un compte",
   "start_sign_in": "Se connecter",
   "registration_title": "Inscrit toi",
+  "registration_title_step2": "Parle-nous de toi",
+  "registration_message": "Veuillez vérifier votre boîte de réception et cliquer sur le lien pour confirmer votre adresse électronique (vérifiez votre courrier indésirable).",
   "email_placeholder": "Entrez votre adresse email",
   "password_placeholder": "Créez votre mot de passe",
   "confirm_password_placeholder": "Confirmez votre mot de passe",
+  "first_name_placeholder": "Entrez votre prénom",
+  "last_name_placeholder": "Entrez votre nom",
+  "birthdate_placeholder": "Entrez votre date de naissance",
+  "zipcode_placeholder": "Entrez votre code postal",
   "register_conditions": "Je suis d'accord avec les conditions d'utilisation",
+  "check_register_conditions": "Veuillez accepter les conditions d'utilisation",
   "register_button": "Continuer",
+  "register_button_finish": "M'inscrire",
   "sign_in_title": "Connecte-toi",
   "sign_in_password_placeholder": "Entrez votre mot de passe",
-  "sign_in_button": "Se connecter"
-
+  "sign_in_button": "Se connecter",
+  "sign_in_success": "Connexion réussie",
+  "sign_in_bad_credentials": "Verifiez vos identifiants",
+  "field_empty": "Un ou plusieurs champs sont vides",
+  "password_not_match": "Les mots de passe ne correspondent pas",
+  "email_not_valid": "L'adresse email n'est pas valide"
 }

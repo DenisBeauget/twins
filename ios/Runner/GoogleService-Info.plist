@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>950386226484-fpsj7qcmghe2j8d3f338q24mfd6cuu3i.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.950386226484-fpsj7qcmghe2j8d3f338q24mfd6cuu3i</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDvBHsMfC5D59anOWZqfNF3icmzoYppEbw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>950386226484</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.twins.twinsFront</string>
+	<key>PROJECT_ID</key>
+	<string>twins-app-ab1a5</string>
+	<key>STORAGE_BUCKET</key>
+	<string>twins-app-ab1a5.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:950386226484:ios:67a2cc9faab51fbffc2161</string>
+	<key>DATABASE_URL</key>
+	<string>https://twins-app-ab1a5-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>

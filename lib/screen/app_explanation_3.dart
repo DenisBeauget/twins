@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:twins_front/screen/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/style/style_schema.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/auth_service.dart';
+import 'home_screen.dart';
 
 class AppExplanation3 extends StatelessWidget {
   const AppExplanation3({Key? key}) : super(key: key);
@@ -47,7 +52,7 @@ class AppExplanation3 extends StatelessWidget {
                         style: btnPrimaryStyle(),
                         child: Text(
                             AppLocalizations.of(context)!.start_experience)),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
@@ -60,8 +65,17 @@ class AppExplanation3 extends StatelessWidget {
 }
 
 void goToHome(BuildContext context) {
+  Haptics.vibrate(HapticsType.medium);
   WidgetsBinding.instance!.addPostFrameCallback((_) {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    if(userConnected()) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+    }
   });
+}
+bool userConnected() {
+  return AuthService.currentUser != null ? true : false;
 }
