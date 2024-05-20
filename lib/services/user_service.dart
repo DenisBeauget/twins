@@ -6,16 +6,21 @@ class UserService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Future<bool> createUser({
-      required String email,
-      required String firstName,
-      required String lastName,
-      required String birthDate,
-      required String zipCode,}) async {
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String birthDate,
+    required String zipCode,
+    required bool isAdmin,
+  }) async {
     if (AuthService.currentUser == null) {
       return false;
     }
-    try{
-      await _firestore.collection('users').doc(AuthService.currentUser?.uid).set({
+    try {
+      await _firestore
+          .collection('users')
+          .doc(AuthService.currentUser?.uid)
+          .set({
         'first_name': firstName,
         'last_name': lastName,
         'date_of_birth': birthDate,
@@ -27,6 +32,7 @@ class UserService {
         'is_deleted': false,
         'is_confirmed': false,
         'is_subscribed': false,
+        'isAdmin': false,
         'subscribed_at': null,
       });
       return true;

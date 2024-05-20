@@ -39,17 +39,17 @@ class Validator {
 
       if (!password.contains(RegExp(r'[a-z]'))) {
         errorMessage =
-            '$errorMessage\nPassowrd must contain at least one lowercase letter';
+            '$errorMessage\nPassword must contain at least one lowercase letter';
       }
 
       if (!password.contains(RegExp(r'[A-Z]'))) {
         errorMessage =
-            '$errorMessage\nPassowrd must contain at least one uppercase letter';
+            '$errorMessage\nPassword must contain at least one uppercase letter';
       }
 
       if (!password.contains(RegExp(r'[0-9]'))) {
         errorMessage =
-            '$errorMessage\nPassowrd must contain at least one number';
+            '$errorMessage\nPassword must contain at least one number';
       }
     }
     return errorMessage.isNotEmpty ? errorMessage.trim() : null;

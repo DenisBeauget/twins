@@ -152,7 +152,8 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.password_not_match);
+      Toaster.showFailedToast(
+          context, AppLocalizations.of(context)!.password_not_match);
       return;
     }
 
@@ -170,7 +171,8 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
         ),
       );
     } else {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.check_register_conditions);
+      Toaster.showFailedToast(
+          context, AppLocalizations.of(context)!.check_register_conditions);
     }
   }
 }

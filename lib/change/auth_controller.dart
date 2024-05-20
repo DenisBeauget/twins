@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/utils/toaster.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-
-import 'package:twins_front/widget/dialog.dart';
 
 import '../screen/home_screen.dart';
 
@@ -109,26 +104,29 @@ class AuthController extends ChangeNotifier {
           lastName: lastName,
           birthDate: birthDate,
           zipCode: zipCode,
+          isAdmin: false,
         );
-        Toaster.showSuccessToast(context, AppLocalizations.of(context)!.registration_message);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const LoginScreen()));
+        Toaster.showSuccessToast(
+            context, AppLocalizations.of(context)!.registration_message);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else {
         await AuthService.login(
           email: email,
           password: password,
         );
-        Toaster.showSuccessToast(context, AppLocalizations.of(context)!.sign_in_success);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const HomeScreen()));
+        Toaster.showSuccessToast(
+            context, AppLocalizations.of(context)!.sign_in_success);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
-      Toaster.showFailedToast(context, e.message!.contains("credential is malformed")? AppLocalizations.of(context)!.sign_in_bad_credentials : e.message!);
+      Toaster.showFailedToast(
+          context,
+          e.message!.contains("credential is malformed")
+              ? AppLocalizations.of(context)!.sign_in_bad_credentials
+              : e.message!);
     } finally {
       isLoading = false;
     }

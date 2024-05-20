@@ -27,5 +27,6 @@
   "sign_in_bad_credentials": "Verifiez vos identifiants",
   "field_empty": "Un ou plusieurs champs sont vides",
   "password_not_match": "Les mots de passe ne correspondent pas",
-  "email_not_valid": "L'adresse email n'est pas valide"
+  "email_not_valid": "L'adresse email n'est pas valide",
+  "no_establishment_found" : "Aucun établissement trouvé"
 }

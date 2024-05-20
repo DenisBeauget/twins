@@ -14,6 +14,7 @@ class AuthService {
     required String lastName,
     required String birthDate,
     required String zipCode,
+    required bool isAdmin,
   }) async {
     try {
       await _auth.createUserWithEmailAndPassword(
@@ -27,6 +28,7 @@ class AuthService {
         lastName: lastName,
         birthDate: birthDate,
         zipCode: zipCode,
+        isAdmin: isAdmin,
       );
     } catch (e) {
       rethrow;
