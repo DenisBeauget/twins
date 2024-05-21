@@ -15,6 +15,20 @@ class CategoryService {
       rethrow;
     }
   }
+
+  Future<List<Category>> searchCategories(String keyword) async {
+    try {
+      List<Category> categories = await getCategory();
+
+      List<Category> filteredCategory = categories.where((category) {
+        return category.name.toLowerCase().contains(keyword.toLowerCase());
+      }).toList();
+
+      return filteredCategory;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class Category {

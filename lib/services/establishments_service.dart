@@ -21,6 +21,55 @@ class EstablishmentService {
       rethrow;
     }
   }
+
+  Future<List<Establishment>> searchEstablishments(String keyword) async {
+    try {
+      List<Establishment> establishments = await getEstablishments();
+
+      List<Establishment> filteredEstablishments =
+          establishments.where((establishment) {
+        return establishment.name.toLowerCase().contains(keyword.toLowerCase());
+      }).toList();
+
+      return filteredEstablishments;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Establishment>> searchHighLightEstablishments(
+      String keyword) async {
+    try {
+      List<Establishment> establishments = await getEstablishments();
+
+      List<Establishment> filteredEstablishments =
+          establishments.where((establishment) {
+        return establishment.name
+                .toLowerCase()
+                .contains(keyword.toLowerCase()) &&
+            establishment.hightlight;
+      }).toList();
+
+      return filteredEstablishments;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Establishment>> getHighLightEstablishments() async {
+    try {
+      List<Establishment> establishments = await getEstablishments();
+
+      List<Establishment> filteredHighlightEstablishments =
+          establishments.where((establishment) {
+        return establishment.hightlight;
+      }).toList();
+
+      return filteredHighlightEstablishments;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class Establishment {

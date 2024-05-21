@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
+import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
 import 'package:twins_front/widget/featured_card.dart';
 
@@ -15,15 +19,32 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Establishment>> _establishmentsFuture;
+  late Future<List<Establishment>> _establishmentsHighLightFuture;
   late Future<List<Category>> _categoryFuture;
   late String _selectedCategory;
+  Future<List<Establishment>>? _searchEstablishmentsFuture;
+  Future<List<Establishment>>? _searchHighLightEstablishmentsFuture;
+  Future<List<Category>>? _searchCategoryFuture;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _establishmentsFuture = EstablishmentService().getEstablishments();
     _categoryFuture = CategoryService().getCategory();
+    _establishmentsHighLightFuture =
+        EstablishmentService().getHighLightEstablishments();
     _selectedCategory = '';
+  }
+
+  void _search(String keyword) {
+    setState(() {
+      _searchEstablishmentsFuture =
+          EstablishmentService().searchEstablishments(keyword);
+      _searchCategoryFuture = CategoryService().searchCategories(keyword);
+      _searchHighLightEstablishmentsFuture =
+          EstablishmentService().searchHighLightEstablishments(keyword);
+    });
   }
 
   @override
@@ -49,11 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
-                'Explore',
-                style: TextStyle(
+                AppLocalizations.of(context)!.explore,
+                style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
@@ -66,20 +87,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: const TextField(
+                child: TextField(
+                  controller: _searchController,
+                  style: TextStyle(color: lightColorScheme.primary),
                   decoration: InputDecoration(
-                    hintText: 'Bistrot Minot',
-                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search',
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
                     border: InputBorder.none,
-                    suffixIcon: Icon(Icons.filter_list),
-                    contentPadding: EdgeInsets.all(16.0),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.arrow_right_alt,
+                          color: Colors.black),
+                      onPressed: () {
+                        _search(_searchController.text);
+                      },
+                    ),
+                    contentPadding: const EdgeInsets.all(16.0),
                   ),
+                  onSubmitted: _search,
                 ),
               ),
             ),
             const SizedBox(height: 20),
             FutureBuilder<List<Category>>(
-              future: CategoryService().getCategory(),
+              future: _searchCategoryFuture ?? _categoryFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -90,19 +123,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: snapshot.data!.map((category) {
-                        return CategoryButton(
-                          text: category.name,
-                          color: Colors.green,
-                          onPressed: () {
-                            setState(() {
-                              _selectedCategory = category.name;
-                            });
-                          },
-                        );
-                      }).toList(),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ...snapshot.data!.map((category) {
+                            return CategoryButton(
+                              text: category.name,
+                              color: Colors.green,
+                              onPressed: () {
+                                setState(() {
+                                  _selectedCategory = category.name;
+                                });
+                              },
+                            );
+                          }).expand((widget) => [
+                                widget,
+                                const SizedBox(width: 10),
+                              ]),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -121,7 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
             FutureBuilder<List<Establishment>>(
-              future: EstablishmentService().getEstablishments(),
+              future: _searchHighLightEstablishmentsFuture ??
+                  _establishmentsHighLightFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -156,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Restaurants 🍔',
+                    'Nos partenaires',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -170,7 +212,35 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const RestaurantSection(),
+            FutureBuilder<List<Establishment>>(
+              future: _searchEstablishmentsFuture ?? _establishmentsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No establishments found'));
+                } else {
+                  List<Establishment> filteredEstablishments;
+                  if (_selectedCategory.isEmpty) {
+                    filteredEstablishments = snapshot.data!;
+                  } else {
+                    filteredEstablishments = snapshot.data!
+                        .where((establishment) =>
+                            establishment.categoryName == _selectedCategory)
+                        .toList();
+                  }
+                  if (filteredEstablishments.isEmpty) {
+                    return Text(
+                      AppLocalizations.of(context)!.no_establishment_found,
+                    );
+                  }
+                  return FeaturedSection(
+                      establishments: filteredEstablishments);
+                }
+              },
+            )
           ],
         ),
       ),
@@ -217,78 +287,6 @@ class FeaturedSection extends StatelessWidget {
               title: establishment.name,
               categoryName: establishment.categoryName ?? 'Unknow');
         },
-      ),
-    );
-  }
-}
-
-class RestaurantSection extends StatelessWidget {
-  const RestaurantSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: const [
-          RestaurantCard(
-            imageUrl: 'https://picsum.photos/200/300',
-            title: 'Western Strait',
-            locations: 16,
-          ),
-          RestaurantCard(
-            imageUrl: 'https://picsum.photos/200/300',
-            title: 'Beach House',
-            locations: 22,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RestaurantCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final int locations;
-
-  const RestaurantCard({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.locations,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      margin: const EdgeInsets.only(left: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            '$locations locations',
-            style: const TextStyle(color: Colors.white70),
-          ),
-        ],
       ),
     );
   }
