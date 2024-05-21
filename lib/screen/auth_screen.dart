@@ -14,9 +14,9 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (userConnected()) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       });
     }
 

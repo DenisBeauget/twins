@@ -70,6 +70,18 @@ class EstablishmentService {
       rethrow;
     }
   }
+
+  Future<List<Establishment>> getEstablishmentsByCategory(String categoryName) {
+    try {
+      return getEstablishments().then((establishments) {
+        return establishments.where((establishment) {
+          return establishment.categoryName == categoryName;
+        }).toList();
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class Establishment {

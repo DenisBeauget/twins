@@ -19,7 +19,9 @@ dependencies:
   cloud_firestore: ^4.17.3
   firebase_core_platform_interface: ^5.0.0
   haptic_feedback: ^0.4.2
-
+  flutter_bloc: ^7.3.0
+  bloc: ^7.2.0
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

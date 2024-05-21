@@ -118,7 +118,7 @@ class AuthController extends ChangeNotifier {
         Toaster.showSuccessToast(
             context, AppLocalizations.of(context)!.sign_in_success);
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;

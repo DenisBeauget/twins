@@ -62,6 +62,6 @@ class AppExplanation3 extends StatelessWidget {
 void goToHome(BuildContext context) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   });
 }

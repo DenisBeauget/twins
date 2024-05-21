@@ -1,57 +1,149 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:twins_front/services/category_service.dart';
-import 'package:twins_front/services/establishments_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:twins_front/bloc/category_bloc.dart';
+import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
 import 'package:twins_front/widget/featured_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Establishment>> _establishmentsFuture;
-  late Future<List<Establishment>> _establishmentsHighLightFuture;
-  late Future<List<Category>> _categoryFuture;
-  late String _selectedCategory;
-  Future<List<Establishment>>? _searchEstablishmentsFuture;
-  Future<List<Establishment>>? _searchHighLightEstablishmentsFuture;
-  Future<List<Category>>? _searchCategoryFuture;
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _establishmentsFuture = EstablishmentService().getEstablishments();
-    _categoryFuture = CategoryService().getCategory();
-    _establishmentsHighLightFuture =
-        EstablishmentService().getHighLightEstablishments();
-    _selectedCategory = '';
-  }
-
-  void _search(String keyword) {
-    setState(() {
-      _searchEstablishmentsFuture =
-          EstablishmentService().searchEstablishments(keyword);
-      _searchCategoryFuture = CategoryService().searchCategories(keyword);
-      _searchHighLightEstablishmentsFuture =
-          EstablishmentService().searchHighLightEstablishments(keyword);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    EstablishmentBloc.isChanged = false;
+    CategoryBloc.isChanged = false;
+
+    final EstablishmentBloc establishmentBloc =
+        BlocProvider.of<EstablishmentBloc>(context);
+
+    final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
+
+    categoryBloc.add(CategoriesALL());
+    establishmentBloc.add(EstablishmentALL());
+
+    final TextEditingController _searchController = TextEditingController();
+
+    Widget returnCategories(List categoryList, BuildContext context) {
+      if (CategoryBloc.isChanged) {
+        if (categoryList.isEmpty) {
+          return const Center(
+              child: Text("Pas de catégories trouvées",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        } else {
+          return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: categoryList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final category = categoryList[index];
+                return CategoryButton(
+                  text: category.name,
+                  color: Colors.green,
+                  onPressed: () {
+                    EstablishmentBloc.isChanged = false;
+                    establishmentBloc
+                        .add(EstablishmentFilterByCategory(category.name));
+                  },
+                );
+              });
+        }
+      } else {
+        return Center(
+            child: CircularProgressIndicator(
+          color: lightColorScheme.primaryContainer,
+        ));
+      }
+    }
+
+    Widget returnHightlightEstablishments(
+        List establishmentList, BuildContext context) {
+      if (EstablishmentBloc.isChanged) {
+        if (establishmentList.isEmpty) {
+          return const Center(
+              child: Text("Pas d'établissements trouvées",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        } else {
+          establishmentList = establishmentList.where((establishment) {
+            return establishment.hightlight == true;
+          }).toList();
+          if (establishmentList.isEmpty) {
+            return const Center(
+                child: Text("Pas d'établissements trouvées",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+          }
+          return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: establishmentList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final establishment = establishmentList[index];
+                return FeaturedCard(
+                    imageUrl: 'https://picsum.photos/200/300',
+                    title: establishment.name,
+                    categoryName: establishment.categoryName ?? 'Unknow');
+              });
+        }
+      } else {
+        return Center(
+            child: CircularProgressIndicator(
+          color: lightColorScheme.primaryContainer,
+        ));
+      }
+    }
+
+    Widget returnEstablishments(List establishmentList, BuildContext context) {
+      if (EstablishmentBloc.isChanged) {
+        if (establishmentList.isEmpty) {
+          return const Center(
+              child: Text("Pas d'établissements trouvées",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        } else {
+          return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: establishmentList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final establishment = establishmentList[index];
+                return FeaturedCard(
+                    imageUrl: 'https://picsum.photos/200/300',
+                    title: establishment.name,
+                    categoryName: establishment.categoryName ?? 'Unknow');
+              });
+        }
+      } else {
+        return Center(
+            child: CircularProgressIndicator(
+          color: lightColorScheme.primaryContainer,
+        ));
+      }
+    }
+
+    Future<void> reloadEstablishments(BuildContext context, bool fromDB) async {
+      if (fromDB) {
+        Haptics.vibrate(HapticsType.medium);
+        establishmentBloc.add(const EstablishmentManuallySet([]));
+        EstablishmentBloc.isChanged = false;
+        establishmentBloc.add(EstablishmentALL());
+      } else {
+        establishmentBloc.add(const EstablishmentManuallySet([]));
+        establishmentBloc.add(EstablishmentManuallySet(
+            establishmentBloc.state.establishmentList));
+      }
+    }
+
+    int navBarIndex = 0;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
         elevation: 0,
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -60,232 +152,169 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 4),
             Text(
               'Lille, France',
-              style: TextStyle(color: Colors.white),
             ),
-            Icon(Icons.arrow_drop_down, color: Colors.white),
+            Icon(Icons.arrow_drop_down),
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                AppLocalizations.of(context)!.explore,
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
+      body: RefreshIndicator(
+        onRefresh: () => reloadEstablishments(context, true),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  AppLocalizations.of(context)!.explore,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                child: TextField(
-                  controller: _searchController,
-                  style: TextStyle(color: lightColorScheme.primary),
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    border: InputBorder.none,
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.arrow_right_alt,
-                          color: Colors.black),
-                      onPressed: () {
-                        _search(_searchController.text);
-                      },
-                    ),
-                    contentPadding: const EdgeInsets.all(16.0),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  onSubmitted: _search,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            FutureBuilder<List<Category>>(
-              future: _searchCategoryFuture ?? _categoryFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No categories found'));
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ...snapshot.data!.map((category) {
-                            return CategoryButton(
-                              text: category.name,
-                              color: Colors.green,
-                              onPressed: () {
-                                setState(() {
-                                  _selectedCategory = category.name;
-                                });
-                              },
-                            );
-                          }).expand((widget) => [
-                                widget,
-                                const SizedBox(width: 10),
-                              ]),
-                        ],
+                  child: TextField(
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.surface),
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.surface),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.onSurface,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.all(16.0),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.arrow_right_alt,
+                            color: Theme.of(context).colorScheme.surface),
+                        onPressed: () {
+                          establishmentBloc.add(EstablishmentFilterByKeyword(
+                              _searchController.text));
+                        },
                       ),
                     ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Nos coups de ♥️',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 20),
-            FutureBuilder<List<Establishment>>(
-              future: _searchHighLightEstablishmentsFuture ??
-                  _establishmentsHighLightFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No establishments found'));
-                } else {
-                  List<Establishment> filteredEstablishments;
-                  if (_selectedCategory.isEmpty) {
-                    filteredEstablishments = snapshot.data!;
-                  } else {
-                    filteredEstablishments = snapshot.data!
-                        .where((establishment) =>
-                            establishment.categoryName == _selectedCategory)
-                        .toList();
-                  }
-                  if (filteredEstablishments.isEmpty) {
-                    return Text(
-                      AppLocalizations.of(context)!.no_establishment_found,
-                    );
-                  }
-                  return FeaturedSection(
-                      establishments: filteredEstablishments);
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Nos partenaires',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    onChanged: (text) {
+                      Future.delayed(const Duration(milliseconds: 300));
+                      establishmentBloc.add(
+                          EstablishmentFilterByKeyword(_searchController.text));
+                    },
                   ),
-                  Text(
-                    'Tout voir',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            FutureBuilder<List<Establishment>>(
-              future: _searchEstablishmentsFuture ?? _establishmentsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No establishments found'));
-                } else {
-                  List<Establishment> filteredEstablishments;
-                  if (_selectedCategory.isEmpty) {
-                    filteredEstablishments = snapshot.data!;
-                  } else {
-                    filteredEstablishments = snapshot.data!
-                        .where((establishment) =>
-                            establishment.categoryName == _selectedCategory)
-                        .toList();
-                  }
-                  if (filteredEstablishments.isEmpty) {
-                    return Text(
-                      AppLocalizations.of(context)!.no_establishment_found,
-                    );
-                  }
-                  return FeaturedSection(
-                      establishments: filteredEstablishments);
-                }
-              },
-            )
-          ],
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BlocBuilder<CategoryBloc, CategoryState>(
+                        builder: (context, state) {
+                          return SizedBox(
+                              height: 40,
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: returnCategories(
+                                  state.categoryList, context));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Nos coups de ♥️',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: BlocBuilder<EstablishmentBloc, EstablishmentState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                        height: 200,
+                        child: returnHightlightEstablishments(
+                            state.establishmentList, context));
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Nos partenaires',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Tout voir',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: BlocBuilder<EstablishmentBloc, EstablishmentState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                        height: 200,
+                        child: returnEstablishments(
+                            state.establishmentList, context));
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        currentIndex: navBarIndex,
         selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.white,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home_outlined,
+            ),
             label: '',
+            activeIcon: Icon(Icons.home),
+            key: Key('home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search_outlined),
             label: '',
+            activeIcon: Icon(Icons.search),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outlined),
             label: '',
+            activeIcon: Icon(Icons.person),
           ),
         ],
-      ),
-      backgroundColor: Colors.black,
-    );
-  }
-}
-
-class FeaturedSection extends StatelessWidget {
-  final List<Establishment> establishments;
-
-  const FeaturedSection({super.key, required this.establishments});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: establishments.length,
-        itemBuilder: (context, index) {
-          final establishment = establishments[index];
-          return FeaturedCard(
-              imageUrl: 'https://picsum.photos/200/300',
-              title: establishment.name,
-              categoryName: establishment.categoryName ?? 'Unknow');
+        onTap: (index) {
+          navBarIndex = index;
+          if (index == 0) {}
+          if (index == 1) {}
+          if (index == 2) {}
         },
       ),
     );

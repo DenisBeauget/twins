@@ -32,13 +32,11 @@ class FeaturedCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           if (categoryName != null)
             Text(
               categoryName!,
-              style: const TextStyle(color: Colors.white70),
             ),
         ],
       ),
