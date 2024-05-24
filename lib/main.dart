@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
+import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/firebase_options.dart';
 import 'package:twins_front/screen/welcome_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
@@ -22,8 +24,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MultiBlocProvider(
+  runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider<AuthController>(
+          create: (context) => AuthController()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc())
     ],
@@ -69,7 +73,7 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

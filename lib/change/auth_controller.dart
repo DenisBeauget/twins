@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
+import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/utils/toaster.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -91,6 +94,15 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isAdmin = false;
+
+  bool get isAdmin => _isAdmin;
+
+  set isAdmin(bool value) {
+    _isAdmin = value;
+    notifyListeners();
+  }
+
   Future<void> authenticateWithEmailAndPassword(
       {required BuildContext context}) async {
     // ignore: prefer_interpolation_to_compose_strings
@@ -115,10 +127,17 @@ class AuthController extends ChangeNotifier {
           email: email,
           password: password,
         );
+
+        final uid = AuthService.currentUser?.uid;
+        if (uid != null) {
+          await UserService.initiaLiseUserAttributes(uid, context);
+        }
+
+        if (!context.mounted) return;
         Toaster.showSuccessToast(
             context, AppLocalizations.of(context)!.sign_in_success);
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomeScreen()));
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
