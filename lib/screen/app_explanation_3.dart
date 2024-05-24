@@ -5,7 +5,7 @@ import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppExplanation3 extends StatelessWidget {
-  const AppExplanation3({Key? key}) : super(key: key);
+  const AppExplanation3({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class AppExplanation3 extends StatelessWidget {
                             .welcome_content_categories,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: darkColorScheme.background,
+                          color: darkColorScheme.surface,
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
                           height: 1.5,
@@ -60,8 +60,8 @@ class AppExplanation3 extends StatelessWidget {
 }
 
 void goToHome(BuildContext context) {
-  WidgetsBinding.instance!.addPostFrameCallback((_) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
   });
 }

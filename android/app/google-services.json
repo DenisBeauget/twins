@@ -13,7 +13,20 @@
           "package_name": "com.twins.twins_front"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "950386226484-n90t5in1rtug9k18hgbgr45dkgr05dop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.twins.twins_front",
+            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        },
+        {
+          "client_id": "950386226484-n6tcomon2n768c09qj65a3fsklaum8o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD5e_eEeHdYQnNpt_dp9C1OzKVUgYGR_OE"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950386226484-n6tcomon2n768c09qj65a3fsklaum8o6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "950386226484-fpsj7qcmghe2j8d3f338q24mfd6cuu3i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.twins.twinsFront"
+              }
+            }
+          ]
         }
       }
     }
