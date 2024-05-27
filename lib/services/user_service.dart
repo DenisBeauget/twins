@@ -45,7 +45,7 @@ class UserService {
     }
   }
 
-  static Future<Map<String, dynamic>?> initiaLiseUserAttributes(
+  static Future<Map<String, dynamic>?> initializetUserAttributes(
       String uid, BuildContext context) async {
     try {
       DocumentSnapshot userAttributes =

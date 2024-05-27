@@ -29,6 +29,22 @@ class CategoryService {
       rethrow;
     }
   }
+
+  Future<bool> addCategory(String name) async {
+    try {
+      List<Category> actualCategories = await getCategory();
+      for (Category category in actualCategories) {
+        if (category.name.toLowerCase() == name.toLowerCase()) {
+          return false;
+        }
+      }
+
+      await _firestore.collection('categories').doc().set({'name': name});
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class Category {

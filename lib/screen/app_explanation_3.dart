@@ -76,7 +76,7 @@ void goToHome(BuildContext context) {
 
 Future<bool> userConnected(BuildContext context) async {
   if (AuthService.currentUser != null) {
-    await UserService.initiaLiseUserAttributes(
+    await UserService.initializetUserAttributes(
         AuthService.currentUser!.uid, context);
     return true;
   }

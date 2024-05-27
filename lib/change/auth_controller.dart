@@ -130,7 +130,7 @@ class AuthController extends ChangeNotifier {
 
         final uid = AuthService.currentUser?.uid;
         if (uid != null) {
-          await UserService.initiaLiseUserAttributes(uid, context);
+          await UserService.initializetUserAttributes(uid, context);
         }
 
         if (!context.mounted) return;
