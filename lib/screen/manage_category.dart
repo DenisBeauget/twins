@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:twins_front/screen/admin_screen.dart';
 import 'package:twins_front/screen/home_screen.dart';
+import 'package:twins_front/utils/popup.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/utils/toaster.dart';
 import 'package:twins_front/utils/validador.dart';
 
-class AddCategory extends StatefulWidget {
-  const AddCategory({super.key});
+class ManageCategory extends StatefulWidget {
+  const ManageCategory({super.key});
 
   @override
-  State<AddCategory> createState() => _AddCategory();
+  State<ManageCategory> createState() => _ManageCategory();
 }
 
-class _AddCategory extends State<AddCategory> {
+class _ManageCategory extends State<ManageCategory> {
   late Future<List<Category>> futureCategories;
   Category? dropdownValue;
 
@@ -42,7 +43,7 @@ class _AddCategory extends State<AddCategory> {
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
                         color: Colors.black),
-                    text: "Administration des catégories")),
+                    text: "Gestion des catégories")),
             const SizedBox(width: 20),
           ],
         ),
@@ -87,6 +88,8 @@ class _AddCategory extends State<AddCategory> {
                       setState(() {
                         dropdownValue = newValue!;
                       });
+                      Popup.showPopupForDeleteCategory(
+                          context, dropdownValue?.name, loadCategories);
                     },
                   );
                 }
@@ -104,14 +107,8 @@ class _AddCategory extends State<AddCategory> {
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.black),
-                          contentPadding: EdgeInsets.symmetric(vertical: 30),
-                          icon: Icon(
-                            Icons.category,
-                            color: Colors.black,
-                          ),
-                          labelText: 'Nom de la catégorie'),
+                      decoration:
+                          inputStyle('Nom de la catégorie', Icons.category),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(

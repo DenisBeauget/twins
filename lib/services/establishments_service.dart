@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:twins_front/services/category_service.dart';
 
 class EstablishmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -78,6 +79,64 @@ class EstablishmentService {
           return establishment.categoryName == categoryName;
         }).toList();
       });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> getEstablishmentIdByName(String? name) async {
+    CollectionReference collectionReference =
+        _firestore.collection('establishments');
+    try {
+      QuerySnapshot querySnapshot =
+          await collectionReference.where('name', isEqualTo: name).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          return doc.id;
+        }
+      }
+      return "";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> addEstablishment(
+      String categorieName, String name, bool isHightlight) async {
+    try {
+      List<Establishment> listEstablishment = await getEstablishments();
+
+      for (Establishment establishment in listEstablishment) {
+        if (establishment.name.toLowerCase() == name.toLowerCase()) {
+          return false;
+        }
+      }
+      String caterogyId =
+          await CategoryService().getCategoryIdByName(categorieName);
+      DocumentReference categoryReference =
+          _firestore.collection('categories').doc(caterogyId);
+
+      _firestore.collection('establishments').doc().set({
+        'name': name,
+        'category_id': categoryReference,
+        'hightlight': isHightlight
+      });
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteEstablishment(String? name) async {
+    try {
+      String idToDelete = await getEstablishmentIdByName(name);
+
+      if (idToDelete.isNotEmpty) {
+        _firestore.collection('establishments').doc(idToDelete).delete();
+        return true;
+      }
+      return false;
     } catch (e) {
       rethrow;
     }

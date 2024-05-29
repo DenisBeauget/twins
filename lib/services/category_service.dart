@@ -16,6 +16,24 @@ class CategoryService {
     }
   }
 
+  Future<String> getCategoryIdByName(String? name) async {
+    CollectionReference collectionReference =
+        _firestore.collection('categories');
+    try {
+      QuerySnapshot querySnapshot =
+          await collectionReference.where('name', isEqualTo: name).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          return doc.id;
+        }
+      }
+      return "";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<Category>> searchCategories(String keyword) async {
     try {
       List<Category> categories = await getCategory();
@@ -38,9 +56,22 @@ class CategoryService {
           return false;
         }
       }
-
       await _firestore.collection('categories').doc().set({'name': name});
       return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteCategory(String? name) async {
+    try {
+      String idToDelete = await getCategoryIdByName(name);
+
+      if (idToDelete.isNotEmpty) {
+        _firestore.collection('categories').doc(idToDelete).delete();
+        return true;
+      }
+      return false;
     } catch (e) {
       rethrow;
     }

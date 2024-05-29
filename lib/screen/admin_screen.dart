@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
-import 'package:twins_front/screen/add_category.dart';
+import 'package:twins_front/screen/manage_category.dart';
 import 'package:twins_front/screen/home_screen.dart';
+import 'package:twins_front/screen/manage_establishments.dart';
 import 'package:twins_front/style/style_schema.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -52,7 +53,7 @@ class AdminScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AddCategory()));
+                              builder: (context) => const ManageCategory()));
                     },
                     child: const Text("Ajoutez des catégories"))),
             const SizedBox(height: 50),
@@ -63,7 +64,8 @@ class AdminScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AdminScreen()));
+                              builder: (context) =>
+                                  const ManageEstablishments()));
                     },
                     child: const Text("Ajoutez des établissements"))),
             const SizedBox(height: 50),
