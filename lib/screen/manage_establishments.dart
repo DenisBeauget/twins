@@ -5,9 +5,11 @@ import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/screen/admin_screen.dart';
 import 'package:twins_front/services/category_service.dart';
+import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
+import 'package:twins_front/utils/toaster.dart';
 import 'package:twins_front/widget/featured_card.dart';
 
 class ManageEstablishments extends StatefulWidget {
@@ -18,22 +20,21 @@ class ManageEstablishments extends StatefulWidget {
 }
 
 class _ManageEstablishments extends State<ManageEstablishments> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  Category? dropdownValue;
+  late Future<List<Category>> futureCategories;
   bool? isChecked = true;
+
   @override
   void initState() {
     super.initState();
-    _formKey = GlobalKey();
+    loadCategories();
   }
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
-
-    EstablishmentBloc.isChanged = false;
-    CategoryBloc.isChanged = false;
-    Category? dropdownValue;
 
     final EstablishmentBloc establishmentBloc =
         BlocProvider.of<EstablishmentBloc>(context);
@@ -47,7 +48,7 @@ class _ManageEstablishments extends State<ManageEstablishments> {
       if (fromDB) {
         Haptics.vibrate(HapticsType.medium);
         establishmentBloc.add(const EstablishmentManuallySet([]));
-        EstablishmentBloc.isChanged = false;
+        await Future.delayed(const Duration(seconds: 1));
         establishmentBloc.add(EstablishmentALL());
       } else {
         establishmentBloc.add(const EstablishmentManuallySet([]));
@@ -57,86 +58,35 @@ class _ManageEstablishments extends State<ManageEstablishments> {
     }
 
     Widget returnEstablishments(List establishmentList, BuildContext context) {
-      if (EstablishmentBloc.isChanged) {
-        if (establishmentList.isEmpty) {
-          return const Center(
-              child: Text("Pas d'établissements trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-        } else {
-          return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: establishmentList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final establishment = establishmentList[index];
-                return GestureDetector(
-                  onTap: () {
-                    Popup.showPopupForDeleteEstablishment(
-                        context, establishment.name, reloadEstablishments);
-                  },
-                  child: FeaturedCard(
-                    imageUrl: 'https://picsum.photos/200/300',
-                    title: establishment.name,
-                    categoryName: establishment.categoryName ?? 'Unknow',
-                  ),
-                );
-              });
-        }
+      if (establishmentList.isEmpty) {
+        return const Center(
+            child: Text("Pas d'établissements trouvés",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
-        return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
-        ));
-      }
-    }
-
-    Widget returnCategories(CategoryState state, BuildContext context) {
-      if (CategoryBloc.isChanged) {
-        if (state.categoryList.isEmpty) {
-          return const Center(
-              child: Text("Pas de catégories trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-        } else {
-          return DropdownButton<Category>(
-            dropdownColor: Theme.of(context).colorScheme.secondary,
-            value: dropdownValue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: state.categoryList
-                .map<DropdownMenuItem<Category>>((Category value) {
-              return DropdownMenuItem<Category>(
-                value: value,
-                child: Text(
-                  value.name,
-                  style: const TextStyle(color: Colors.black),
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: establishmentList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final establishment = establishmentList[index];
+              return GestureDetector(
+                onTap: () {
+                  Popup.showPopupForDeleteEstablishment(
+                      context, establishment.name, reloadEstablishments);
+                },
+                child: FeaturedCard(
+                  imageUrl: 'https://picsum.photos/200/300',
+                  title: establishment.name,
+                  categoryName: establishment.categoryName ?? 'Unknown',
                 ),
               );
-            }).toList(),
-            onChanged: (Category? newValue) {
-              setState(() {
-                dropdownValue = newValue!;
-              });
-              Popup.showPopupForDeleteCategory(
-                context,
-                dropdownValue?.name,
-                () async {
-                  categoryBloc.add(CategoriesALL());
-                },
-              );
-            },
-          );
-        }
-      } else {
-        return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
-        ));
+            });
       }
     }
 
     return Scaffold(
-      backgroundColor: darkColorScheme.secondary,
       appBar: AppBar(
-        backgroundColor: lightColorScheme.primaryContainer,
+        backgroundColor: lightColorScheme.secondary,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -238,9 +188,40 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                             inputStyle("Nom de l'établissement", Icons.house),
                       ),
                       const SizedBox(height: 20),
-                      BlocBuilder<CategoryBloc, CategoryState>(
-                        builder: (context, state) {
-                          return returnCategories(state, context);
+                      FutureBuilder<List<Category>>(
+                        future: futureCategories,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Text('No categories found');
+                          } else {
+                            return DropdownButton<Category>(
+                              dropdownColor: darkColorScheme.secondary,
+                              value: dropdownValue,
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              items: snapshot.data!
+                                  .map<DropdownMenuItem<Category>>(
+                                      (Category value) {
+                                return DropdownMenuItem<Category>(
+                                  value: value,
+                                  child: Text(
+                                    value.name,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (Category? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                              },
+                            );
+                          }
                         },
                       ),
                       const SizedBox(height: 20),
@@ -266,8 +247,15 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                           style: btnPrimaryStyle(),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {}
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await processAddEstablishment(
+                                  context,
+                                  dropdownValue!.name,
+                                  _nameController.text,
+                                  isChecked!);
+                              reloadEstablishments(context, true);
+                            }
                           },
                           child: const Text("Ajoutez établissement")),
                     ],
@@ -293,5 +281,28 @@ class _ManageEstablishments extends State<ManageEstablishments> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  Future<void> processAddEstablishment(BuildContext context,
+      String categoryName, String name, bool isHighlight) async {
+    if (await EstablishmentService()
+        .addEstablishment(categoryName, name, isHighlight)) {
+      Toaster.showSuccessToast(context, "Etablissement ajouté");
+    } else {
+      Toaster.showFailedToast(context, "L'établissement existe déjà");
+    }
+  }
+
+  void loadCategories() {
+    futureCategories = CategoryService().getCategory();
+    futureCategories.then((categories) {
+      setState(() {
+        if (categories.isNotEmpty) {
+          dropdownValue = categories[0];
+        } else {
+          dropdownValue = null;
+        }
+      });
+    });
   }
 }

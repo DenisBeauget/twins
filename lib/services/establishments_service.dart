@@ -103,7 +103,7 @@ class EstablishmentService {
   }
 
   Future<bool> addEstablishment(
-      String categorieName, String name, bool isHightlight) async {
+      String categorieName, String name, bool? isHightlight) async {
     try {
       List<Establishment> listEstablishment = await getEstablishments();
 
@@ -119,7 +119,7 @@ class EstablishmentService {
 
       _firestore.collection('establishments').doc().set({
         'name': name,
-        'category_id': categoryReference,
+        'categorie_id': categoryReference,
         'hightlight': isHightlight
       });
       return true;
