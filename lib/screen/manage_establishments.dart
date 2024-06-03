@@ -59,9 +59,10 @@ class _ManageEstablishments extends State<ManageEstablishments> {
 
     Widget returnEstablishments(List establishmentList, BuildContext context) {
       if (establishmentList.isEmpty) {
-        return const Center(
-            child: Text("Pas d'établissements trouvés",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        return Center(
+            child: Text(AppLocalizations.of(context)!.no_establishment_found,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -86,17 +87,14 @@ class _ManageEstablishments extends State<ManageEstablishments> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: lightColorScheme.secondary,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RichText(
-                text: const TextSpan(
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
-                    text: "Gestion des établissements")),
+                text: TextSpan(
+                    style: const TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.w500),
+                    text: AppLocalizations.of(context)!.manage_establishment)),
             const SizedBox(width: 20),
           ],
         ),
@@ -184,8 +182,9 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                           }
                           return null;
                         },
-                        decoration:
-                            inputStyle("Nom de l'établissement", Icons.house),
+                        decoration: inputStyle(
+                            AppLocalizations.of(context)!.establishment_name,
+                            Icons.house),
                       ),
                       const SizedBox(height: 20),
                       FutureBuilder<List<Category>>(
@@ -211,7 +210,7 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                                   value: value,
                                   child: Text(
                                     value.name,
-                                    style: const TextStyle(color: Colors.black),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 );
                               }).toList(),
@@ -229,12 +228,13 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RichText(
-                              text: const TextSpan(
-                                  style: TextStyle(
+                              text: TextSpan(
+                                  style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                  text: "Mise en avant")),
+                                      color: Colors.white),
+                                  text: AppLocalizations.of(context)!
+                                      .highlighted)),
                           Checkbox(
                               value: isChecked,
                               onChanged: (bool? value) {
@@ -257,7 +257,8 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                               reloadEstablishments(context, true);
                             }
                           },
-                          child: const Text("Ajoutez établissement")),
+                          child: Text(
+                              AppLocalizations.of(context)!.add_establishment)),
                     ],
                   ))
             ],
@@ -265,7 +266,6 @@ class _ManageEstablishments extends State<ManageEstablishments> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: darkColorScheme.secondary,
         shape: const CircularNotchedRectangle(),
         child: Container(
           height: 50,
@@ -276,7 +276,6 @@ class _ManageEstablishments extends State<ManageEstablishments> {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const AdminScreen()))
         },
-        tooltip: "Retour à l'administration",
         child: const Icon(Icons.settings),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -287,9 +286,11 @@ class _ManageEstablishments extends State<ManageEstablishments> {
       String categoryName, String name, bool isHighlight) async {
     if (await EstablishmentService()
         .addEstablishment(categoryName, name, isHighlight)) {
-      Toaster.showSuccessToast(context, "Etablissement ajouté");
+      Toaster.showSuccessToast(
+          context, AppLocalizations.of(context)!.establishment_added);
     } else {
-      Toaster.showFailedToast(context, "L'établissement existe déjà");
+      Toaster.showFailedToast(
+          context, AppLocalizations.of(context)!.establishment_already_exist);
     }
   }
 

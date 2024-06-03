@@ -29,5 +29,17 @@
   "password_not_match": "Passwords do not match",
   "email_not_valid": "Email is not valid",
   "no_establishment_found" : "No establishment found",
-  "explore" : "Explore"
+  "explore" : "Explore",
+  "manage_category" : "Category management",
+  "category_available" : "Category available",
+  "category_name" : "Category name",
+  "add_category" : "Add category",
+  "category_added" : "Category added",
+  "category_already_exist" : "Category already exist",
+  "manage_establishment": "Manage establishments",
+  "establishment_name": "Establishment name",
+  "highlighted" : "Highlight",
+  "add_establishment" : "Add establishment",
+  "establishment_added": "Establishment added",
+  "establishment_already_exist" : "Establishment already exist"
 }

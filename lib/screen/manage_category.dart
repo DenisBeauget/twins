@@ -7,6 +7,8 @@ import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/utils/toaster.dart';
 import 'package:twins_front/utils/validador.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ManageCategory extends StatefulWidget {
   const ManageCategory({super.key});
 
@@ -37,12 +39,8 @@ class _ManageCategory extends State<ManageCategory> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RichText(
-                text: const TextSpan(
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
-                    text: "Gestion des catégories")),
+                text: TextSpan(
+                    text: AppLocalizations.of(context)!.manage_category)),
             const SizedBox(width: 20),
           ],
         ),
@@ -52,10 +50,12 @@ class _ManageCategory extends State<ManageCategory> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RichText(
-                text: const TextSpan(
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-                    text: "Liste des catégories actuellement disponible")),
+                text: TextSpan(
+                    style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                    text: AppLocalizations.of(context)!.category_available)),
             const SizedBox(height: 20),
             FutureBuilder<List<Category>>(
               future: futureCategories,
@@ -68,7 +68,7 @@ class _ManageCategory extends State<ManageCategory> {
                   return const Text('No categories found');
                 } else {
                   return DropdownButton<Category>(
-                    dropdownColor: darkColorScheme.secondary,
+                    dropdownColor: darkColorScheme.primaryContainer,
                     value: dropdownValue,
                     icon: const Icon(Icons.keyboard_arrow_down),
                     items: snapshot.data!
@@ -77,7 +77,7 @@ class _ManageCategory extends State<ManageCategory> {
                         value: value,
                         child: Text(
                           value.name,
-                          style: const TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       );
                     }).toList(),
@@ -104,8 +104,9 @@ class _ManageCategory extends State<ManageCategory> {
                         }
                         return null;
                       },
-                      decoration:
-                          inputStyle('Nom de la catégorie', Icons.category),
+                      decoration: inputStyle(
+                          AppLocalizations.of(context)!.category_name,
+                          Icons.category),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -115,14 +116,14 @@ class _ManageCategory extends State<ManageCategory> {
                             processAddCategory(context, _nameController.text);
                           }
                         },
-                        child: const Text("Ajoutez catégorie")),
+                        child:
+                            Text(AppLocalizations.of(context)!.add_category)),
                   ],
                 ))
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: darkColorScheme.secondary,
         shape: const CircularNotchedRectangle(),
         child: Container(
           height: 50,
@@ -133,7 +134,6 @@ class _ManageCategory extends State<ManageCategory> {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const AdminScreen()))
         },
-        tooltip: "Retour à l'administration",
         child: const Icon(Icons.settings),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -143,9 +143,11 @@ class _ManageCategory extends State<ManageCategory> {
   void processAddCategory(BuildContext context, String name) async {
     if (await CategoryService().addCategory(name)) {
       loadCategories();
-      return Toaster.showSuccessToast(context, "Catégorie ajouté");
+      return Toaster.showSuccessToast(
+          context, AppLocalizations.of(context)!.category_added);
     }
-    return Toaster.showFailedToast(context, "La catégorie existe déjà");
+    return Toaster.showFailedToast(
+        context, AppLocalizations.of(context)!.category_already_exist);
   }
 
   void loadCategories() {

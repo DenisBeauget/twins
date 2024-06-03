@@ -14,7 +14,6 @@ class AdminScreen extends StatelessWidget {
     final name = Provider.of<AuthController>(context).firstName;
 
     return Scaffold(
-      backgroundColor: darkColorScheme.secondary,
       appBar: AppBar(
         backgroundColor: lightColorScheme.primaryContainer,
         title: Row(
@@ -41,7 +40,7 @@ class AdminScreen extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                      color: Colors.white),
                   text:
                       "A partir de cette zone tu pourras ajouter ou consulter différents éléments directement dans l'application"),
             ),
@@ -82,7 +81,6 @@ class AdminScreen extends StatelessWidget {
             const SizedBox(height: 50)
           ])),
       bottomNavigationBar: BottomAppBar(
-        color: darkColorScheme.secondary,
         shape: const CircularNotchedRectangle(),
         child: Container(
           height: 50,

@@ -29,5 +29,17 @@
   "password_not_match": "Les mots de passe ne correspondent pas",
   "email_not_valid": "L'adresse email n'est pas valide",
   "no_establishment_found" : "Aucun établissement trouvé",
-  "explore" : "Parcourir"
+  "explore" : "Parcourir",
+  "manage_category" : "Gestion des catégories",
+  "category_available" : "Liste des catégories actuellement disponible",
+  "category_name" : "Nom de la catégorie",
+  "add_category" : "Ajoutez catégorie",
+  "category_added" : "Catégorie ajouté",
+  "category_already_exist" : "La catégorie existe déjà",
+  "manage_establishment": "Gestion des établissements",
+  "establishment_name": "Nom de l'établissement",
+  "highlighted" : "Mise en avant",
+  "add_establishment" : "Ajoutez établissement",
+  "establishment_added": "Establishment ajouté",
+  "establishment_already_exist" : "L'établissement existe déjà"
 }
