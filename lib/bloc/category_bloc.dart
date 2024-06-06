@@ -24,7 +24,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       await categoryService
           .addCategory(event.category)
           .then((value) => {
-                print(value),
                 if (value)
                   {
                     categories.add(event.category),

@@ -4,7 +4,7 @@ import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/utils/toaster.dart';
 
 class Popup {
-  static Future<bool> showPopupForDeleteCategory(
+  static Future<bool> showPopupForDelete(
       BuildContext context, String title, String description) async {
     final bool? result = await showDialog<bool>(
       context: context,

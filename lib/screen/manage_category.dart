@@ -14,71 +14,16 @@ import '../bloc/category_bloc.dart';
 import '../widget/category_button.dart';
 
 class ManageCategory extends StatelessWidget {
-  const ManageCategory({super.key});
+  ManageCategory({super.key});
+
+  late CategoryBloc categoryBloc;
+
+  String categoryName = "";
 
   @override
   Widget build(BuildContext context) {
-    CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
 
-    String categoryName = "";
-
-
-    void reloadCategories(BuildContext context) {
-      CategoryBloc.isChanged = false;
-      categoryBloc.add(CategoriesALL());
-    }
-
-    void confirmDeleteCategory(Category category, BuildContext context) async {
-      final bool result = await Popup.showPopupForDeleteCategory(
-          context,
-          "Supprimer la catégorie",
-          "Êtes-vous sûr de vouloir supprimer la catégorie ${category.name} ?");
-      if (result) {
-        categoryBloc.add(DeleteCategory(category, context));
-        reloadCategories(context);
-      }
-    }
-
-    Widget returnCategories(List categoryList, BuildContext context) {
-      if (CategoryBloc.isChanged) {
-        if (categoryList.isEmpty) {
-          return const Center(
-              child: Text("Pas de catégories trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
-        } else {
-          return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: categoryList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final category = categoryList[index];
-                return CategoryButton(
-                  text: category.name,
-                  color: Colors.green,
-                  onPressed: () {
-                    confirmDeleteCategory(category, context);
-                  },
-                );
-              });
-        }
-      } else {
-        return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
-        ));
-      }
-    }
-
-    void addCategory(String categoryName, BuildContext context) {
-      if (categoryName.isNotEmpty) {
-        categoryBloc
-            .add(AddCategory(new Category(name: categoryName), context));
-      } else {
-        Toaster.showFailedToast(context, "Veuillez entrer un nom de catégorie");
-      }
-    }
-
-
+    categoryBloc = BlocProvider.of<CategoryBloc>(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -149,4 +94,62 @@ class ManageCategory extends StatelessWidget {
       ),
     );
   }
+
+
+  void reloadCategories(BuildContext context) {
+    CategoryBloc.isChanged = false;
+    categoryBloc.add(CategoriesALL());
+  }
+
+  void confirmDeleteCategory(Category category, BuildContext context) async {
+    final bool result = await Popup.showPopupForDelete(
+        context,
+        "Supprimer la catégorie",
+        "Êtes-vous sûr de vouloir supprimer la catégorie ${category.name} ?");
+    if (result) {
+      categoryBloc.add(DeleteCategory(category, context));
+      reloadCategories(context);
+    }
+  }
+
+  Widget returnCategories(List categoryList, BuildContext context) {
+    if (CategoryBloc.isChanged) {
+      if (categoryList.isEmpty) {
+        return const Center(
+            child: Text("Pas de catégories trouvées",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+      } else {
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: categoryList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final category = categoryList[index];
+              return CategoryButton(
+                text: category.name,
+                color: Colors.green,
+                onPressed: () {
+                  confirmDeleteCategory(category, context);
+                },
+              );
+            });
+      }
+    } else {
+      return Center(
+          child: CircularProgressIndicator(
+            color: lightColorScheme.primaryContainer,
+          ));
+    }
+  }
+
+  void addCategory(String categoryName, BuildContext context) {
+    if (categoryName.isNotEmpty) {
+      categoryBloc
+          .add(AddCategory(new Category(name: categoryName), context));
+    } else {
+      Toaster.showFailedToast(context, "Veuillez entrer un nom de catégorie");
+    }
+  }
+
+
 }

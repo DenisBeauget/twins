@@ -1,21 +1,9 @@
-import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:provider/provider.dart';
-import 'package:twins_front/bloc/category_bloc.dart';
-import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/change/auth_controller.dart';
-import 'package:twins_front/component/fade_indexed_stack.dart';
 import 'package:twins_front/screen/admin_screen.dart';
-import 'package:twins_front/style/style_schema.dart';
-import 'package:twins_front/widget/category_button.dart';
-import 'package:twins_front/widget/featured_card.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home_screen.dart';
 

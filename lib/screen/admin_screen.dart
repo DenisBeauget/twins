@@ -41,7 +41,7 @@ class AdminScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ManageCategory(),fullscreenDialog: false));
+                              builder: (context) => ManageCategory(),fullscreenDialog: false));
                     },
                     child: const Text("Ajoutez des catégories"))),
             const SizedBox(height: 50),
@@ -53,7 +53,7 @@ class AdminScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const ManageEstablishments()));
+                                   ManageEstablishments()));
                     },
                     child: const Text("Ajoutez des établissements"))),
             const SizedBox(height: 50),

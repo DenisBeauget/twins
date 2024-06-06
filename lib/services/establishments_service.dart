@@ -13,8 +13,9 @@ class EstablishmentService {
       }).toList();
 
       // Fetch categories for each establishment
-      for (var establishment in establishments) {
-        DocumentSnapshot categoryDoc = await establishment.categoryId.get();
+      for (Establishment establishment in establishments) {
+        DocumentSnapshot categoryDoc =
+            await establishment.categoryId!.get();
         establishment.categoryName = categoryDoc['name'];
       }
       return establishments;
@@ -102,25 +103,25 @@ class EstablishmentService {
     }
   }
 
-  Future<bool> addEstablishment(
-      String categorieName, String name, bool? isHightlight) async {
+  Future<bool> addEstablishment(Establishment establishmentToAdd) async {
     try {
       List<Establishment> listEstablishment = await getEstablishments();
 
       for (Establishment establishment in listEstablishment) {
-        if (establishment.name.toLowerCase() == name.toLowerCase()) {
+        if (establishment.name.toLowerCase() ==
+            establishmentToAdd.name.toLowerCase()) {
           return false;
         }
       }
-      String caterogyId =
-          await CategoryService().getCategoryIdByName(categorieName);
+      String caterogyId = await CategoryService()
+          .getCategoryIdByName(establishmentToAdd.categoryName);
       DocumentReference categoryReference =
           _firestore.collection('categories').doc(caterogyId);
 
       _firestore.collection('establishments').doc().set({
-        'name': name,
+        'name': establishmentToAdd.name,
         'categorie_id': categoryReference,
-        'hightlight': isHightlight
+        'hightlight': establishmentToAdd.hightlight,
       });
       return true;
     } catch (e) {
@@ -146,13 +147,13 @@ class EstablishmentService {
 class Establishment {
   final String name;
   final bool hightlight;
-  final DocumentReference categoryId;
+  DocumentReference? categoryId;
   String? categoryName;
 
   Establishment(
       {required this.name,
       required this.hightlight,
-      required this.categoryId,
+      this.categoryId,
       this.categoryName});
 
   factory Establishment.fromDocument(DocumentSnapshot doc) {
