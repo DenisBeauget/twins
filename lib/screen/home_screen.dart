@@ -32,16 +32,15 @@ class HomeScreen extends StatelessWidget {
     categoryBloc.add(CategoriesALL());
     establishmentBloc.add(EstablishmentALL());
 
-    final isAdmin = Provider.of<AuthController>(context).isAdmin;
-
     final TextEditingController searchController = TextEditingController();
 
     Widget returnCategories(List categoryList, BuildContext context) {
       if (CategoryBloc.isChanged) {
         if (categoryList.isEmpty) {
-          return const Center(
-              child: Text("Pas de catégories trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.category_not_found,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -72,16 +71,17 @@ class HomeScreen extends StatelessWidget {
         List establishmentList, BuildContext context) {
       if (EstablishmentBloc.isChanged) {
         if (establishmentList.isEmpty) {
-          return const Center(
-              child: Text("Pas d'établissements trouvées",
+          return Center(
+              child: Text(AppLocalizations.of(context)!.no_establishment_found,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           establishmentList = establishmentList.where((establishment) {
             return establishment.hightlight == true;
           }).toList();
           if (establishmentList.isEmpty) {
-            return const Center(
-                child: Text("Pas d'établissements trouvées",
+            return Center(
+                child: Text(
+                    AppLocalizations.of(context)!.no_establishment_found,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
           }
@@ -108,9 +108,10 @@ class HomeScreen extends StatelessWidget {
     Widget returnEstablishments(List establishmentList, BuildContext context) {
       if (EstablishmentBloc.isChanged) {
         if (establishmentList.isEmpty) {
-          return const Center(
-              child: Text("Pas d'établissements trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.no_establishment_found,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -188,7 +189,7 @@ class HomeScreen extends StatelessWidget {
                         TextStyle(color: Theme.of(context).colorScheme.surface),
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: AppLocalizations.of(context)!.search_placeholder,
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.surface),
                       prefixIcon: Icon(
@@ -241,10 +242,10 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Nos coups de ♥️',
+                  AppLocalizations.of(context)!.highlighted,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -261,18 +262,18 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nos partenaires',
+                      AppLocalizations.of(context)!.partners,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Tout voir',
+                      AppLocalizations.of(context)!.see_all,
                     ),
                   ],
                 ),

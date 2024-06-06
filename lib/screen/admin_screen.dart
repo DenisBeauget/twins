@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/manage_category.dart';
-import 'package:twins_front/screen/home_screen.dart';
 import 'package:twins_front/screen/manage_establishments.dart';
 import 'package:twins_front/style/style_schema.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -15,7 +15,7 @@ class AdminScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bonjour $name"),
+        title: Text(AppLocalizations.of(context)!.admin_hello(name)),
       ),
       body: Center(
           child: ListView(
@@ -31,7 +31,7 @@ class AdminScreen extends StatelessWidget {
 
                       color: Theme.of(context).colorScheme.onSurface),
                   text:
-                      "A partir de cette zone tu pourras ajouter ou consulter différents éléments directement dans l'application"),
+                      AppLocalizations.of(context)!.admin_presentation),
             ),
             const SizedBox(height: 50),
             SizedBox(
@@ -43,7 +43,7 @@ class AdminScreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => ManageCategory(),fullscreenDialog: false));
                     },
-                    child: const Text("Ajoutez des catégories"))),
+                    child: Text(AppLocalizations.of(context)!.admin_category))),
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
@@ -55,7 +55,7 @@ class AdminScreen extends StatelessWidget {
                               builder: (context) =>
                                    ManageEstablishments()));
                     },
-                    child: const Text("Ajoutez des établissements"))),
+                    child: Text(AppLocalizations.of(context)!.admin_establishment))),
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
@@ -66,7 +66,7 @@ class AdminScreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => const AdminScreen()));
                     },
-                    child: const Text("Ajoutez des offres"))),
+                    child: Text(AppLocalizations.of(context)!.admin_offer))),
             const SizedBox(height: 50)
           ])),
     );

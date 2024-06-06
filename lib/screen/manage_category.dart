@@ -22,7 +22,6 @@ class ManageCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     categoryBloc = BlocProvider.of<CategoryBloc>(context);
 
     return Scaffold(
@@ -38,13 +37,13 @@ class ManageCategory extends StatelessWidget {
                     border: Border.all(color: Colors.green, width: 20),
                     borderRadius: BorderRadius.circular(10)),
                 width: MediaQuery.of(context).size.width,
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.info_outline, size: 40),
                     Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Text(
-                          "Pour supprimer une catégorie, appuyez dessus.",
+                          AppLocalizations.of(context)!.admin_category_title,
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                     )
@@ -64,14 +63,15 @@ class ManageCategory extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              Text("Ajouter une catégorie",
+              Text(AppLocalizations.of(context)!.admin_category_add,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               TextField(
                   autocorrect: true,
                   cursorColor: Colors.green,
                   decoration: InputDecoration(
-                      hintText: "Nom de la catégorie",
+                      hintText: AppLocalizations.of(context)!
+                          .admin_category_input_placeholder,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onChanged: (value) {
@@ -86,7 +86,8 @@ class ManageCategory extends StatelessWidget {
                       addCategory(categoryName, context);
                       reloadCategories(context);
                     },
-                    child: Text("Ajouter")),
+                    child:
+                        Text(AppLocalizations.of(context)!.admin_category_add)),
               )
             ],
           ),
@@ -94,7 +95,6 @@ class ManageCategory extends StatelessWidget {
       ),
     );
   }
-
 
   void reloadCategories(BuildContext context) {
     CategoryBloc.isChanged = false;
@@ -104,8 +104,9 @@ class ManageCategory extends StatelessWidget {
   void confirmDeleteCategory(Category category, BuildContext context) async {
     final bool result = await Popup.showPopupForDelete(
         context,
-        "Supprimer la catégorie",
-        "Êtes-vous sûr de vouloir supprimer la catégorie ${category.name} ?");
+        AppLocalizations.of(context)!.admin_category_popup_delete_title,
+        AppLocalizations.of(context)!
+            .admin_category_popup_delete_message(category.name));
     if (result) {
       categoryBloc.add(DeleteCategory(category, context));
       reloadCategories(context);
@@ -115,8 +116,8 @@ class ManageCategory extends StatelessWidget {
   Widget returnCategories(List categoryList, BuildContext context) {
     if (CategoryBloc.isChanged) {
       if (categoryList.isEmpty) {
-        return const Center(
-            child: Text("Pas de catégories trouvées",
+        return Center(
+            child: Text(AppLocalizations.of(context)!.category_not_found,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
@@ -137,19 +138,16 @@ class ManageCategory extends StatelessWidget {
     } else {
       return Center(
           child: CircularProgressIndicator(
-            color: lightColorScheme.primaryContainer,
-          ));
+        color: lightColorScheme.primaryContainer,
+      ));
     }
   }
 
   void addCategory(String categoryName, BuildContext context) {
     if (categoryName.isNotEmpty) {
-      categoryBloc
-          .add(AddCategory(new Category(name: categoryName), context));
+      categoryBloc.add(AddCategory(new Category(name: categoryName), context));
     } else {
-      Toaster.showFailedToast(context, "Veuillez entrer un nom de catégorie");
+      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_category_empty_input);
     }
   }
-
-
 }

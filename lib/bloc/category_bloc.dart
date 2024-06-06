@@ -49,14 +49,14 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         if (value) {
           if (categories.map((e) => e.name == event.category.name) != null) {
             categories.removeWhere((e) => e.name == event.category.name);
-            Toaster.showSuccessToast(event.context, "Catégorie supprimé");
+            Toaster.showSuccessToast(event.context, AppLocalizations.of(event.context)!.admin_category_deleted_message);
             print(categories.toString());
           } else {
-            Toaster.showFailedToast(event.context, "Catégorie introuvable");
+            Toaster.showFailedToast(event.context, AppLocalizations.of(event.context)!.category_not_found);
           }
         } else {
           Toaster.showFailedToast(
-              event.context, "Erreur lors de la suppression");
+              event.context, AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(CategoryState(categories)));
       isChanged = true;

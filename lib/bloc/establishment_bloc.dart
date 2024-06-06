@@ -68,19 +68,17 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
     on<DeleteEstablishment>((event, emit) async {
       isChanged = false;
-      print("object");
       await establishmentService.deleteEstablishment(event.establishment.name).then((value) {
         if (value) {
           if (currentEstablishments.map((e) => e.name == event.establishment.name) != null) {
             currentEstablishments.removeWhere((e) => e.name == event.establishment.name);
-            Toaster.showSuccessToast(event.context, "Etablissement supprimé");
-            print(currentEstablishments.toString());
+            Toaster.showSuccessToast(event.context, AppLocalizations.of(event.context)!.admin_establishment_delete_success);
           } else {
-            Toaster.showFailedToast(event.context, "Etablissement introuvable");
+            Toaster.showFailedToast(event.context, AppLocalizations.of(event.context)!.no_establishment_found);
           }
         } else {
           Toaster.showFailedToast(
-              event.context, "Erreur lors de la suppression");
+              event.context, AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(EstablishmentState(currentEstablishments)));
       isChanged = true;

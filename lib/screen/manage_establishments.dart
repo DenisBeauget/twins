@@ -11,6 +11,8 @@ import '../style/style_schema.dart';
 import '../utils/popup.dart';
 import '../widget/category_button.dart';
 import '../widget/featured_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ManageEstablishments extends StatelessWidget {
   late Future<List<Category>> futureCategories;
@@ -44,14 +46,14 @@ class ManageEstablishments extends StatelessWidget {
                       border: Border.all(color: Colors.green, width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.info_outline, size: 40),
-                      Padding(padding: EdgeInsets.only(left: 10)),
+                      const Icon(Icons.info_outline, size: 40),
+                      const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                         child: Text(
-                            "Pour supprimer un établissement, appuyez dessus.",
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.admin_establishment_title,
+                            style: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
                       )
                     ],
@@ -62,7 +64,7 @@ class ManageEstablishments extends StatelessWidget {
                   style:
                       TextStyle(color: Theme.of(context).colorScheme.surface),
                   decoration: InputDecoration(
-                    hintText: 'Search',
+                    hintText: AppLocalizations.of(context)!.search_placeholder,
                     hintStyle:
                         TextStyle(color: Theme.of(context).colorScheme.surface),
                     prefixIcon: Icon(
@@ -95,7 +97,7 @@ class ManageEstablishments extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 50),
-                Text("Ajouter un établissement",
+                Text(AppLocalizations.of(context)!.admin_establishment_add_title,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
@@ -114,7 +116,7 @@ class ManageEstablishments extends StatelessWidget {
                 ValueListenableBuilder(
                   valueListenable: _notify,
                   builder: (BuildContext context, String value, Widget? child) {
-                    return returnSelectedCategory();
+                    return returnSelectedCategory(context);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -122,7 +124,7 @@ class ManageEstablishments extends StatelessWidget {
                     autocorrect: true,
                     cursorColor: Colors.green,
                     decoration: InputDecoration(
-                        hintText: "Nom de l'établissement",
+                        hintText: AppLocalizations.of(context)!.admin_establishment_name_input_placeholder,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onChanged: (value) {
@@ -136,7 +138,7 @@ class ManageEstablishments extends StatelessWidget {
                       onPressed: () {
                         addEstablishment(context);
                       },
-                      child: Text("Ajouter")),
+                      child: Text(AppLocalizations.of(context)!.admin_establishment_add)),
                 )
               ],
             ),
@@ -149,8 +151,8 @@ class ManageEstablishments extends StatelessWidget {
   Widget returnCategories(List categoryList, BuildContext context) {
     if (CategoryBloc.isChanged) {
       if (categoryList.isEmpty) {
-        return const Center(
-            child: Text("Pas de catégories trouvées",
+        return  Center(
+            child: Text(AppLocalizations.of(context)!.category_not_found,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
@@ -180,9 +182,9 @@ class ManageEstablishments extends StatelessWidget {
   Widget returnEstablishments(List establishmentList, BuildContext context) {
     if (EstablishmentBloc.isChanged) {
       if (establishmentList.isEmpty) {
-        return const Center(
-            child: Text("Pas d'établissements trouvées",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+        return Center(
+            child: Text(AppLocalizations.of(context)!.no_establishment_found,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -209,21 +211,21 @@ class ManageEstablishments extends StatelessWidget {
     }
   }
 
-  Widget returnSelectedCategory() {
+  Widget returnSelectedCategory(BuildContext context) {
     if (categorySelected == null) {
-      return const Text("Aucune catégorie sélectionnée");
+      return Text(AppLocalizations.of(context)!.admin_establishment_category_not_selected);
     } else {
-      return Text("Catégorie sélectionnée : ${categorySelected?.name}");
+      return Text(AppLocalizations.of(context)!.admin_establishment_category_selected(categorySelected!.name));
     }
   }
 
   void addEstablishment(BuildContext context) {
     if (categorySelected == null) {
-      Toaster.showFailedToast(context, "Veuillez sélectionner une catégorie");
+      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_establishment_select_category_message);
       return;
     }
     if (establishmentName.isEmpty || establishmentName == null) {
-      Toaster.showFailedToast(context, "Veuillez saisir un nom");
+      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_establishment_enter_name_message);
       return;
     }
 
@@ -239,8 +241,8 @@ class ManageEstablishments extends StatelessWidget {
       establishment, BuildContext context) async {
     final bool result = await Popup.showPopupForDelete(
         context,
-        "Supprimer l'établissement",
-        "Êtes-vous sûr de vouloir supprimer l'établissement ${establishment.name} ?");
+        AppLocalizations.of(context)!.admin_establishment_popup_delete_title,
+        AppLocalizations.of(context)!.admin_establishment_popup_delete_message(establishment.name));
     if (result) {
       establishmentBloc.add(DeleteEstablishment(establishment, context));
     }
