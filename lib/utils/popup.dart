@@ -1,54 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:twins_front/screen/manage_category.dart';
-import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/utils/toaster.dart';
 
 class Popup {
-  static void showPopupForDeleteCategory(
-      BuildContext context, String? categoryName, Function onDelete) {
-    showDialog(
+  static Future<bool> showPopupForDeleteCategory(
+      BuildContext context, String title, String description) async {
+    final bool? result = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          backgroundColor: lightColorScheme.primaryContainer,
-          title: const Text(
-            'Supprimer la catégorie ?',
-            style: TextStyle(color: Colors.black),
-          ),
-          content: Text('Tu as sélectioné : $categoryName',
-              style: const TextStyle(color: Colors.black)),
-          actions: <Widget>[
-            Row(children: [
-              TextButton(
-                style: btnTextPrimaryStyle(),
-                child: const Text('Fermer'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              const SizedBox(width: 10),
-              TextButton(
-                style: btnTextPrimaryStyle(),
-                child: const Text('Supprimer'),
-                onPressed: () async {
-                  if (await CategoryService().deleteCategory(categoryName)) {
-                    Toaster.showSuccessToast(context, "Catégorie supprimer");
-                    onDelete();
-                    Navigator.of(context).pop();
-                  } else {
-                    Toaster.showFailedToast(
-                        context, "Erreur pendant la suppression");
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-            ]),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          title: Center(
+              child:
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23))),
+          content: Text(description),
+          actions: [
+            ElevatedButton(
+              style: btnDialogStyleCancel(),
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Annuler"),
+            ),
+            ElevatedButton(
+              style: btnDialogStyle(),
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Supprimer"),
+            ),
           ],
         );
       },
     );
+
+    return result ?? false;
   }
 
   static void showPopupForDeleteEstablishment(

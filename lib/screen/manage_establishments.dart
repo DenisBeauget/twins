@@ -87,18 +87,7 @@ class _ManageEstablishments extends State<ManageEstablishments> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RichText(
-                text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.w500),
-                    text: AppLocalizations.of(context)!.manage_establishment)),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
+          title: Text(AppLocalizations.of(context)!.manage_establishment)),
       body: RefreshIndicator(
         onRefresh: () => reloadEstablishments(context, true),
         child: SingleChildScrollView(
@@ -200,7 +189,6 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                             return const Text('No categories found');
                           } else {
                             return DropdownButton<Category>(
-                              dropdownColor: darkColorScheme.secondary,
                               value: dropdownValue,
                               icon: const Icon(Icons.keyboard_arrow_down),
                               items: snapshot.data!
@@ -210,7 +198,10 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                                   value: value,
                                   child: Text(
                                     value.name,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
                                   ),
                                 );
                               }).toList(),
@@ -229,10 +220,12 @@ class _ManageEstablishments extends State<ManageEstablishments> {
                         children: [
                           RichText(
                               text: TextSpan(
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.white),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
                                   text: AppLocalizations.of(context)!
                                       .highlighted)),
                           Checkbox(
@@ -265,20 +258,6 @@ class _ManageEstablishments extends State<ManageEstablishments> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Container(
-          height: 50,
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const AdminScreen()))
-        },
-        child: const Icon(Icons.settings),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

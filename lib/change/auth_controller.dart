@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/user_service.dart';
@@ -137,7 +137,7 @@ class AuthController extends ChangeNotifier {
         Toaster.showSuccessToast(
             context, AppLocalizations.of(context)!.sign_in_success);
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => const AppScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;

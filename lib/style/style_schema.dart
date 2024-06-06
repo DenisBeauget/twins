@@ -134,6 +134,16 @@ btnDialogStyle() {
   );
 }
 
+btnDialogStyleCancel() {
+  return ElevatedButton.styleFrom(
+    backgroundColor: Colors.transparent,
+    foregroundColor: Colors.black,
+    elevation: 0,
+    textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+  );
+}
+
+
 btnSecondaryStyle(BuildContext context) {
   return ElevatedButton.styleFrom(
     backgroundColor: Theme.of(context).colorScheme.primary,

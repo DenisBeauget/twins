@@ -48,15 +48,15 @@ class CategoryService {
     }
   }
 
-  Future<bool> addCategory(String name) async {
+  Future<bool> addCategory(Category categoryToAdd) async {
     try {
       List<Category> actualCategories = await getCategory();
       for (Category category in actualCategories) {
-        if (category.name.toLowerCase() == name.toLowerCase()) {
+        if (category.name.toLowerCase() == categoryToAdd.name.toLowerCase()) {
           return false;
         }
       }
-      await _firestore.collection('categories').doc().set({'name': name});
+      await _firestore.collection('categories').doc().set({'name': categoryToAdd.name});
       return true;
     } catch (e) {
       rethrow;

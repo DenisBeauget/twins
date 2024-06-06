@@ -15,20 +15,7 @@ class AdminScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: lightColorScheme.primaryContainer,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RichText(
-                text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
-                    text: "Bonjour $name")),
-            const SizedBox(width: 20)
-          ],
-        ),
+        title: Text("Bonjour $name"),
       ),
       body: Center(
           child: ListView(
@@ -36,11 +23,13 @@ class AdminScreen extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               children: [
             RichText(
-              text: const TextSpan(
+              textAlign: TextAlign.center,
+              text: TextSpan(
                   style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white),
+
+                      color: Theme.of(context).colorScheme.onSurface),
                   text:
                       "A partir de cette zone tu pourras ajouter ou consulter différents éléments directement dans l'application"),
             ),
@@ -49,18 +38,18 @@ class AdminScreen extends StatelessWidget {
                 child: ElevatedButton(
                     style: btnPrimaryStyle(),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ManageCategory()));
+                              builder: (context) => const ManageCategory(),fullscreenDialog: false));
                     },
                     child: const Text("Ajoutez des catégories"))),
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
-                    style: btnPrimaryStyle(),
+                    style: btnSecondaryStyle(context),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
@@ -72,7 +61,7 @@ class AdminScreen extends StatelessWidget {
                 child: ElevatedButton(
                     style: btnPrimaryStyle(),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const AdminScreen()));
@@ -80,21 +69,6 @@ class AdminScreen extends StatelessWidget {
                     child: const Text("Ajoutez des offres"))),
             const SizedBox(height: 50)
           ])),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Container(
-          height: 50,
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()))
-        },
-        tooltip: "Retour à l'accueil",
-        child: const Icon(Icons.home),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

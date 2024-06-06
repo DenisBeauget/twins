@@ -138,6 +138,7 @@ class HomeScreen extends StatelessWidget {
         establishmentBloc.add(const EstablishmentManuallySet([]));
         EstablishmentBloc.isChanged = false;
         establishmentBloc.add(EstablishmentALL());
+        categoryBloc.add(CategoriesALL());
       } else {
         establishmentBloc.add(const EstablishmentManuallySet([]));
         establishmentBloc.add(EstablishmentManuallySet(
@@ -291,40 +292,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navBarIndex,
-        selectedItemColor: Colors.green,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-            ),
-            label: '',
-            activeIcon: Icon(Icons.home),
-            key: Key('home'),
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            label: '',
-            activeIcon: Icon(Icons.search),
-          ),
-          if (isAdmin)
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: '',
-              activeIcon: Icon(Icons.settings),
-            ),
-        ],
-        onTap: (index) {
-          navBarIndex = index;
-          if (index == 0) {}
-          if (index == 1) {}
-          if (index == 2) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const AdminScreen()));
-          }
-        },
       ),
     );
   }
