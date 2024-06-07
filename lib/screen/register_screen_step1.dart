@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/register_screen_step2.dart';
+import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/utils/toaster.dart';
 import 'package:twins_front/utils/validador.dart';
 
@@ -163,13 +164,23 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
     }
 
     if (_termsAccepted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignUpScreenStep2(
-              email: _emailController.text, password: _passwordController.text),
-        ),
-      );
+
+      // verify if email is already registered
+      UserService.userEmailExists(_emailController.text).then((value) {
+        if (value) {
+          Toaster.showFailedToast(
+              context, AppLocalizations.of(context)!.email_already_exist);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpScreenStep2(
+                  email: _emailController.text,
+                  password: _passwordController.text),
+            ),
+          );
+        }
+      });
     } else {
       Toaster.showFailedToast(
           context, AppLocalizations.of(context)!.check_register_conditions);

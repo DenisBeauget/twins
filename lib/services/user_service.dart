@@ -13,7 +13,7 @@ class UserService {
     required String email,
     required String firstName,
     required String lastName,
-    required String birthDate,
+    required Timestamp birthDate,
     required String zipCode,
     required bool isAdmin,
   }) async {
@@ -55,6 +55,18 @@ class UserService {
       Provider.of<AuthController>(context, listen: false).firstName =
           userAttributes['first_name'];
       return userAttributes.data() as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<bool> userEmailExists(String email) async {
+    try {
+      QuerySnapshot query = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+      return query.docs.isNotEmpty;
     } catch (e) {
       rethrow;
     }

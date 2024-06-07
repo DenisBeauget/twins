@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/screen/home_screen.dart';
@@ -67,16 +68,25 @@ class AppExplanation3 extends StatelessWidget {
   }
 }
 
-void goToHome(BuildContext context) {
+Future<void> goToHome(BuildContext context) async {
   Haptics.vibrate(HapticsType.medium);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('firstTime', false);
+
   WidgetsBinding.instance!.addPostFrameCallback((_) async {
-    if (await userConnected(context)) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const AppScreen()));
-    } else {
+    try{
+      if (await userConnected(context)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+      }
+    } catch (e) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const AuthScreen()));
     }
+
   });
 }
 
