@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/services/auth_service.dart';
 
 class UserService {
@@ -36,6 +40,21 @@ class UserService {
         'subscribed_at': null,
       });
       return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> initializetUserAttributes(
+      String uid, BuildContext context) async {
+    try {
+      DocumentSnapshot userAttributes =
+          await _firestore.collection('users').doc(uid).get();
+      Provider.of<AuthController>(context, listen: false).isAdmin =
+          userAttributes['isAdmin'];
+      Provider.of<AuthController>(context, listen: false).firstName =
+          userAttributes['first_name'];
+      return userAttributes.data() as Map<String, dynamic>;
     } catch (e) {
       rethrow;
     }

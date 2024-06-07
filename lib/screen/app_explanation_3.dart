@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:twins_front/screen/app_screen.dart';
+import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/screen/home_screen.dart';
+import 'package:twins_front/services/auth_service.dart';
+import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../services/auth_service.dart';
+import 'auth_screen.dart';
 
 class AppExplanation3 extends StatelessWidget {
   const AppExplanation3({super.key});
@@ -60,8 +68,23 @@ class AppExplanation3 extends StatelessWidget {
 }
 
 void goToHome(BuildContext context) {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  Haptics.vibrate(HapticsType.medium);
+  WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    if (await userConnected(context)) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const AppScreen()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+    }
   });
+}
+
+Future<bool> userConnected(BuildContext context) async {
+  if (AuthService.currentUser != null) {
+    await UserService.initializetUserAttributes(
+        AuthService.currentUser!.uid, context);
+    return true;
+  }
+  return false;
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:twins_front/services/category_service.dart';
 
 class EstablishmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,9 +13,14 @@ class EstablishmentService {
       }).toList();
 
       // Fetch categories for each establishment
-      for (var establishment in establishments) {
-        DocumentSnapshot categoryDoc = await establishment.categoryId.get();
-        establishment.categoryName = categoryDoc['name'];
+      for (Establishment establishment in establishments) {
+        try {
+          DocumentSnapshot categoryDoc =
+          await establishment.categoryId!.get();
+          establishment.categoryName = categoryDoc['name'];
+        } catch (e) {
+          establishment.categoryName = 'Unknown';
+        }
       }
       return establishments;
     } catch (e) {
@@ -82,18 +88,76 @@ class EstablishmentService {
       rethrow;
     }
   }
+
+  Future<String> getEstablishmentIdByName(String? name) async {
+    CollectionReference collectionReference =
+        _firestore.collection('establishments');
+    try {
+      QuerySnapshot querySnapshot =
+          await collectionReference.where('name', isEqualTo: name).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          return doc.id;
+        }
+      }
+      return "";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> addEstablishment(Establishment establishmentToAdd) async {
+    try {
+      List<Establishment> listEstablishment = await getEstablishments();
+
+      for (Establishment establishment in listEstablishment) {
+        if (establishment.name.toLowerCase() ==
+            establishmentToAdd.name.toLowerCase()) {
+          return false;
+        }
+      }
+      String caterogyId = await CategoryService()
+          .getCategoryIdByName(establishmentToAdd.categoryName);
+      DocumentReference categoryReference =
+          _firestore.collection('categories').doc(caterogyId);
+
+      _firestore.collection('establishments').doc().set({
+        'name': establishmentToAdd.name,
+        'categorie_id': categoryReference,
+        'hightlight': establishmentToAdd.hightlight,
+      });
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteEstablishment(String? name) async {
+    try {
+      String idToDelete = await getEstablishmentIdByName(name);
+
+      if (idToDelete.isNotEmpty) {
+        _firestore.collection('establishments').doc(idToDelete).delete();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class Establishment {
   final String name;
   final bool hightlight;
-  final DocumentReference categoryId;
+  DocumentReference? categoryId;
   String? categoryName;
 
   Establishment(
       {required this.name,
       required this.hightlight,
-      required this.categoryId,
+      this.categoryId,
       this.categoryName});
 
   factory Establishment.fromDocument(DocumentSnapshot doc) {

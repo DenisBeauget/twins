@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
 import 'package:twins_front/screen/home_screen.dart';
 import 'package:twins_front/screen/register_screen_step1.dart';
@@ -16,7 +17,7 @@ class AuthScreen extends StatelessWidget {
     if (userConnected()) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomeScreen()));
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       });
     }
 
@@ -45,7 +46,8 @@ class AuthScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignUpScreenStep1()));
+                                  builder: (context) =>
+                                      const SignUpScreenStep1()));
                         },
                         child:
                             Text(AppLocalizations.of(context)!.start_register)),

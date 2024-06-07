@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
+import 'package:twins_front/change/auth_controller.dart';
+import 'package:twins_front/screen/admin_screen.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
 import 'package:twins_front/widget/featured_card.dart';
@@ -30,14 +32,15 @@ class HomeScreen extends StatelessWidget {
     categoryBloc.add(CategoriesALL());
     establishmentBloc.add(EstablishmentALL());
 
-    final TextEditingController _searchController = TextEditingController();
+    final TextEditingController searchController = TextEditingController();
 
     Widget returnCategories(List categoryList, BuildContext context) {
       if (CategoryBloc.isChanged) {
         if (categoryList.isEmpty) {
-          return const Center(
-              child: Text("Pas de catégories trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.category_not_found,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -68,17 +71,19 @@ class HomeScreen extends StatelessWidget {
         List establishmentList, BuildContext context) {
       if (EstablishmentBloc.isChanged) {
         if (establishmentList.isEmpty) {
-          return const Center(
-              child: Text("Pas d'établissements trouvées",
+          return Center(
+              child: Text(AppLocalizations.of(context)!.no_establishment_found,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           establishmentList = establishmentList.where((establishment) {
             return establishment.hightlight == true;
           }).toList();
           if (establishmentList.isEmpty) {
-            return const Center(
-                child: Text("Pas d'établissements trouvées",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+            return Center(
+                child: Text(
+                    AppLocalizations.of(context)!.no_establishment_found,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
           }
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -103,9 +108,10 @@ class HomeScreen extends StatelessWidget {
     Widget returnEstablishments(List establishmentList, BuildContext context) {
       if (EstablishmentBloc.isChanged) {
         if (establishmentList.isEmpty) {
-          return const Center(
-              child: Text("Pas d'établissements trouvées",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+          return Center(
+              child: Text(AppLocalizations.of(context)!.no_establishment_found,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -133,6 +139,7 @@ class HomeScreen extends StatelessWidget {
         establishmentBloc.add(const EstablishmentManuallySet([]));
         EstablishmentBloc.isChanged = false;
         establishmentBloc.add(EstablishmentALL());
+        categoryBloc.add(CategoriesALL());
       } else {
         establishmentBloc.add(const EstablishmentManuallySet([]));
         establishmentBloc.add(EstablishmentManuallySet(
@@ -180,9 +187,9 @@ class HomeScreen extends StatelessWidget {
                   child: TextField(
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.surface),
-                    controller: _searchController,
+                    controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: AppLocalizations.of(context)!.search_placeholder,
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.surface),
                       prefixIcon: Icon(
@@ -201,14 +208,14 @@ class HomeScreen extends StatelessWidget {
                             color: Theme.of(context).colorScheme.surface),
                         onPressed: () {
                           establishmentBloc.add(EstablishmentFilterByKeyword(
-                              _searchController.text));
+                              searchController.text));
                         },
                       ),
                     ),
                     onChanged: (text) {
                       Future.delayed(const Duration(milliseconds: 300));
                       establishmentBloc.add(
-                          EstablishmentFilterByKeyword(_searchController.text));
+                          EstablishmentFilterByKeyword(searchController.text));
                     },
                   ),
                 ),
@@ -235,10 +242,10 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Nos coups de ♥️',
+                  AppLocalizations.of(context)!.highlighted,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -255,18 +262,18 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nos partenaires',
+                      AppLocalizations.of(context)!.partners,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Tout voir',
+                      AppLocalizations.of(context)!.see_all,
                     ),
                   ],
                 ),
@@ -286,36 +293,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navBarIndex,
-        selectedItemColor: Colors.green,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-            ),
-            label: '',
-            activeIcon: Icon(Icons.home),
-            key: Key('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            label: '',
-            activeIcon: Icon(Icons.search),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            label: '',
-            activeIcon: Icon(Icons.person),
-          ),
-        ],
-        onTap: (index) {
-          navBarIndex = index;
-          if (index == 0) {}
-          if (index == 1) {}
-          if (index == 2) {}
-        },
       ),
     );
   }

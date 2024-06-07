@@ -28,6 +28,79 @@
   "field_empty": "One or many fields are empty",
   "password_not_match": "Passwords do not match",
   "email_not_valid": "Email is not valid",
-  "no_establishment_found" : "No establishment found",
-  "explore" : "Explore"
+  "no_establishment_found": "No establishment found",
+  "explore": "Explore",
+  "search_placeholder": "Search",
+  "manage_category": "Category management",
+  "category_available": "Category available",
+  "category_name": "Category name",
+  "category_not_found": "No category found",
+  "add_category": "Add category",
+  "category_added": "Category added",
+  "category_already_exist": "Category already exist",
+  "manage_establishment": "Manage establishments",
+  "establishment_name": "Establishment name",
+  "highlighted": "Our shots of ❤️",
+  "partners": "Our partners",
+  "see_all": "See all",
+  "add_establishment": "Add establishment",
+  "establishment_added": "Establishment added",
+  "establishment_already_exist": "Establishment already exist",
+  "popup_delete_bt": "Delete",
+  "popup_cancel_bt": "Cancel",
+  "admin_hello": "Hello {user_name}",
+  "@admin_hello": {
+    "placeholders": {
+      "user_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_presentation": "From this area you can add, remove or consult different elements directly in the application",
+  "admin_category": "Manage categories",
+  "admin_category_title": "To delete a category, tap it.",
+  "admin_category_add_title": "Add category",
+  "admin_category_add": "Add",
+  "admin_category_empty_input": "Please enter a category name",
+  "admin_category_popup_delete_title": "Delete category",
+  "admin_category_deleted_message": "Category deleted",
+  "admin_category_popup_delete_message": "Are you sure you want to delete the category {category_name} ?",
+  "@admin_category_popup_delete_message": {
+    "placeholders": {
+      "category_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_category_input_placeholder": "Category name",
+  "admin_establishment": "Manage establishments",
+  "admin_establishment_title": "To delete an establishment, tap it.",
+  "admin_establishment_add_title": "Add establishment",
+  "admin_establishment_name_input_placeholder": "Establishment name",
+  "admin_establishment_highlight": "Highlight",
+  "admin_establishment_add": "Add",
+  "admin_establishment_category_selected": "categories selected : {category_name}",
+  "@admin_establishment_category_selected": {
+    "placeholders": {
+      "category_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_establishment_category_not_selected": "No categories selected",
+  "admin_establishment_select_category_message": "Please select a category",
+  "admin_establishment_enter_name_message": "Please enter a name",
+  "admin_establishment_added": "Establishment added",
+  "admin_establishment_popup_delete_title": "Delete establishment",
+  "admin_establishment_popup_delete_message": "Are you sure you want to delete the establishment {establishment_name} ?",
+  "@admin_establishment_popup_delete_message": {
+    "placeholders": {
+      "establishment_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_establishment_delete_success": "Establishment deleted",
+  "admin_offer": "Manage offers",
+  "delete_error": "An error occurred while deleting"
 }

@@ -28,6 +28,79 @@
   "field_empty": "Un ou plusieurs champs sont vides",
   "password_not_match": "Les mots de passe ne correspondent pas",
   "email_not_valid": "L'adresse email n'est pas valide",
-  "no_establishment_found" : "Aucun établissement trouvé",
-  "explore" : "Parcourir"
+  "no_establishment_found": "Aucun établissement trouvé",
+  "explore": "Parcourir",
+  "search_placeholder": "Chercher",
+  "manage_category": "Gestion des catégories",
+  "category_available": "Liste des catégories actuellement disponible",
+  "category_name": "Nom de la catégorie",
+  "category_not_found": "Aucune catégorie trouvée",
+  "add_category": "Ajoutez catégorie",
+  "category_added": "Catégorie ajouté",
+  "category_already_exist": "La catégorie existe déjà",
+  "manage_establishment": "Gestion des établissements",
+  "establishment_name": "Nom de l'établissement",
+  "highlighted": "Nos coups de ❤️",
+  "partners": "Nos partenaires",
+  "see_all": "Voir tout",
+  "add_establishment": "Ajoutez établissement",
+  "establishment_added": "Establishment ajouté",
+  "establishment_already_exist": "L'établissement existe déjà",
+  "popup_delete_bt": "Supprimer",
+  "popup_cancel_bt": "Annuler",
+  "admin_hello": "Bonjour {user_name}",
+  "@admin_hello": {
+    "placeholders": {
+      "user_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_presentation": "A partir de cette zone tu pourras ajouter, supprimer ou consulter différents éléments directement dans l'application",
+  "admin_category": "Gérer les catégories",
+  "admin_category_title": "Pour supprimer une catégorie, appuyez dessus.",
+  "admin_category_add_title": "Ajouter une catégorie",
+  "admin_category_add": "Ajouter",
+  "admin_category_empty_input": "Veuillez entrer un nom de catégorie",
+  "admin_category_popup_delete_title": "Supprimer la categorie",
+  "admin_category_deleted_message": "Categorie supprimé",
+  "admin_category_popup_delete_message": "Êtes-vous sûr de vouloir supprimer la catégorie {category_name} ?",
+  "@admin_category_popup_delete_message": {
+    "placeholders": {
+      "category_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_category_input_placeholder": "Nom de la catégorie",
+  "admin_establishment": "Gérer les établissements",
+  "admin_establishment_title": "Pour supprimer un établissement, appuyez dessus.",
+  "admin_establishment_add_title": "Ajouter un établissement",
+  "admin_establishment_name_input_placeholder": "Nom de l'établissement",
+  "admin_establishment_highlight": "Mettre en avant",
+  "admin_establishment_add": "Ajouter",
+  "admin_establishment_category_selected": "catégories sélectionné : {category_name}",
+  "@admin_establishment_category_selected": {
+    "placeholders": {
+      "category_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_establishment_category_not_selected": "Aucune catégorie sélectionnée",
+  "admin_establishment_select_category_message": "Veuillez sélectionner une catégorie",
+  "admin_establishment_enter_name_message": "Veuillez saisir un nom",
+  "admin_establishment_added": "Etablissement ajouté",
+  "admin_establishment_popup_delete_title": "Supprimer l'établissement",
+  "admin_establishment_popup_delete_message": "Êtes-vous sûr de vouloir supprimer l'établissement {establishment_name} ?",
+  "@admin_establishment_popup_delete_message": {
+    "placeholders": {
+      "establishment_name": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_establishment_delete_success": "Etablissement supprimé",
+  "admin_offer": "Gérer les offres",
+  "delete_error": "Une erreur est survenue lors de la suppression"
 }
