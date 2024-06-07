@@ -14,9 +14,13 @@ class EstablishmentService {
 
       // Fetch categories for each establishment
       for (Establishment establishment in establishments) {
-        DocumentSnapshot categoryDoc =
-            await establishment.categoryId!.get();
-        establishment.categoryName = categoryDoc['name'];
+        try {
+          DocumentSnapshot categoryDoc =
+          await establishment.categoryId!.get();
+          establishment.categoryName = categoryDoc['name'];
+        } catch (e) {
+          establishment.categoryName = 'Unknown';
+        }
       }
       return establishments;
     } catch (e) {
