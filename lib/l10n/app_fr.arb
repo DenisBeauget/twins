@@ -77,6 +77,7 @@
   "admin_establishment_title": "Pour supprimer un établissement, appuyez dessus.",
   "admin_establishment_add_title": "Ajouter un établissement",
   "admin_establishment_name_input_placeholder": "Nom de l'établissement",
+  "admin_establishment_highlight": "Mettre en avant",
   "admin_establishment_add": "Ajouter",
   "admin_establishment_category_selected": "catégories sélectionné : {category_name}",
   "@admin_establishment_category_selected": {

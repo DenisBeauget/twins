@@ -77,6 +77,7 @@
   "admin_establishment_title": "To delete an establishment, tap it.",
   "admin_establishment_add_title": "Add establishment",
   "admin_establishment_name_input_placeholder": "Establishment name",
+  "admin_establishment_highlight": "Highlight",
   "admin_establishment_add": "Add",
   "admin_establishment_category_selected": "categories selected : {category_name}",
   "@admin_establishment_category_selected": {

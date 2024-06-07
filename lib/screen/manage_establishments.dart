@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
@@ -31,6 +32,8 @@ class ManageEstablishments extends StatelessWidget {
   Widget build(BuildContext context) {
     categoryBloc = BlocProvider.of<CategoryBloc>(context);
     establishmentBloc = BlocProvider.of<EstablishmentBloc>(context);
+
+    establishmentBloc.add(const EstablishmentFilterByKeyword(""));
 
     return Scaffold(
       appBar: AppBar(),
@@ -130,6 +133,25 @@ class ManageEstablishments extends StatelessWidget {
                     onChanged: (value) {
                       establishmentName = value;
                     }),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    ChangeNotifierProvider(
+                      create: (_) => CheckboxProvider(),
+                      child: Consumer<CheckboxProvider>(
+                        builder: (context, checkboxProvider, _) =>Checkbox(
+                            value: checkboxProvider.isChecked,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            onChanged: (value) {
+                              checkboxProvider.isChecked = value ?? true;
+                              isChecked = checkboxProvider.isChecked;
+                            }),
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context)!.admin_establishment_highlight)
+                  ],
+                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -246,5 +268,17 @@ class ManageEstablishments extends StatelessWidget {
     if (result) {
       establishmentBloc.add(DeleteEstablishment(establishment, context));
     }
+  }
+}
+
+
+class CheckboxProvider with ChangeNotifier {
+  bool _isChecked = false;
+
+  bool get isChecked => _isChecked;
+
+  set isChecked(bool value) {
+    _isChecked = value;
+    notifyListeners();
   }
 }
