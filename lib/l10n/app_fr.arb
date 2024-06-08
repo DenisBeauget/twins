@@ -91,6 +91,7 @@
   "admin_establishment_category_not_selected": "Aucune catégorie sélectionnée",
   "admin_establishment_select_category_message": "Veuillez sélectionner une catégorie",
   "admin_establishment_enter_name_message": "Veuillez saisir un nom",
+  "admin_establishment_select_image_message": "Veuillez sélectionner une image",
   "admin_establishment_added": "Etablissement ajouté",
   "admin_establishment_popup_delete_title": "Supprimer l'établissement",
   "admin_establishment_popup_delete_message": "Êtes-vous sûr de vouloir supprimer l'établissement {establishment_name} ?",
@@ -101,6 +102,7 @@
       }
     }
   },
+  "admin_establishment_upload_image": "Ajouter une image",
   "admin_establishment_delete_success": "Etablissement supprimé",
   "admin_offer": "Gérer les offres",
   "delete_error": "Une erreur est survenue lors de la suppression"

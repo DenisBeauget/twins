@@ -1,15 +1,20 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:twins_front/services/storage_service.dart';
 
 
 import '../utils/toaster.dart';
 
 class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
   static bool isChanged = false;
+  static bool isCreating = false;
   EstablishmentService establishmentService = EstablishmentService();
-
+  StorageService storageService = StorageService();
   List<Establishment> currentEstablishments = List.empty();
 
   EstablishmentBloc() : super(EstablishmentState(List.empty())) {
@@ -51,12 +56,25 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
     on<AddEstablishment>((event, emit) async {
       isChanged = false;
+
+      //randomly generated image url
+
+      int id = Random().nextInt(1000);
+
+      String? imageUrl = await storageService.uploadFile('establishments/${event.establishment.name}-$id', event.image);
+
+      event.establishment.imageUrl = imageUrl!;
+      String imagePath = 'establishments/${event.establishment.name}-$id';
+      print(imagePath);
+      event.establishment.imageName = imagePath;
+
       await establishmentService.addEstablishment(event.establishment).then((value) {
         if (value) {
           currentEstablishments.add(event.establishment);
           Toaster.showSuccessToast(event.context,
               AppLocalizations.of(event.context)!.establishment_added);
         } else {
+          storageService.deleteFile('establishments/${event.establishment.name}-$id');
           Toaster.showFailedToast(
               event.context,
               AppLocalizations.of(event.context)!
@@ -64,6 +82,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
         }
       }).whenComplete(() => emit(EstablishmentState(currentEstablishments)));
       isChanged = true;
+      isCreating = false;
     });
 
     on<DeleteEstablishment>((event, emit) async {
@@ -131,9 +150,10 @@ class EstablishmentFilterByKeyword extends EstablishmentEvent {
 
 class AddEstablishment extends EstablishmentEvent {
   final Establishment establishment;
+  final File image;
   final BuildContext context;
 
-  const AddEstablishment(this.establishment, this.context);
+  const AddEstablishment(this.establishment, this.image, this.context);
 }
 
 class DeleteEstablishment extends EstablishmentEvent {

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:twins_front/services/category_service.dart';
+import 'package:twins_front/services/storage_service.dart';
 
 class EstablishmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final StorageService storageService = StorageService();
 
   Future<List<Establishment>> getEstablishments() async {
     try {
@@ -89,7 +92,7 @@ class EstablishmentService {
     }
   }
 
-  Future<String> getEstablishmentIdByName(String? name) async {
+  Future<Establishment> getEstablishmentByName(String? name) async {
     CollectionReference collectionReference =
         _firestore.collection('establishments');
     try {
@@ -98,10 +101,11 @@ class EstablishmentService {
 
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
-          return doc.id;
+          return Establishment.fromDocument(doc);
         }
       }
-      return "";
+      return Establishment(
+          name: 'Unknown', hightlight: false, imageUrl: 'Unknown', imageName: 'Unknown');
     } catch (e) {
       rethrow;
     }
@@ -126,6 +130,8 @@ class EstablishmentService {
         'name': establishmentToAdd.name,
         'categorie_id': categoryReference,
         'hightlight': establishmentToAdd.hightlight,
+        'imageUrl': establishmentToAdd.imageUrl,
+        'imageName': establishmentToAdd.imageName,
       });
       return true;
     } catch (e) {
@@ -135,10 +141,12 @@ class EstablishmentService {
 
   Future<bool> deleteEstablishment(String? name) async {
     try {
-      String idToDelete = await getEstablishmentIdByName(name);
+      Establishment toDelete = await getEstablishmentByName(name);
+      String idToDelete = toDelete.id!;
 
       if (idToDelete.isNotEmpty) {
         _firestore.collection('establishments').doc(idToDelete).delete();
+        storageService.deleteFile(toDelete.imageName);
         return true;
       }
       return false;
@@ -151,20 +159,29 @@ class EstablishmentService {
 class Establishment {
   final String name;
   final bool hightlight;
+  String imageUrl;
+  String imageName;
   DocumentReference? categoryId;
   String? categoryName;
+  String? id;
 
   Establishment(
       {required this.name,
       required this.hightlight,
+      required this.imageUrl,
+      required this.imageName,
       this.categoryId,
-      this.categoryName});
+      this.categoryName,
+      this.id});
 
   factory Establishment.fromDocument(DocumentSnapshot doc) {
     return Establishment(
       name: doc['name'],
       hightlight: doc['hightlight'],
       categoryId: doc['categorie_id'],
+      imageUrl: doc['imageUrl'],
+      imageName: doc['imageName'],
+      id: doc.id,
     );
   }
 }

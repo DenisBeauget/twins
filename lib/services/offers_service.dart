@@ -50,8 +50,10 @@ class OffersService {
       DateTime endDate,
       bool isHighlight) async {
     try {
-      String establishmentId = await EstablishmentService()
-          .getEstablishmentIdByName(establishmentName);
+      Establishment establishment = await EstablishmentService()
+          .getEstablishmentByName(establishmentName);
+
+      String establishmentId = establishment.id!;
 
       if (establishmentId.isEmpty) {
         return false;
