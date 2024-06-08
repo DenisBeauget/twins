@@ -17,6 +17,7 @@
   "birthdate_placeholder": "Entrez votre date de naissance",
   "zipcode_placeholder": "Entrez votre code postal",
   "register_conditions": "Je suis d'accord avec les conditions d'utilisation",
+  "email_already_exist": "Email déjà existant",
   "check_register_conditions": "Veuillez accepter les conditions d'utilisation",
   "register_button": "Continuer",
   "register_button_finish": "M'inscrire",

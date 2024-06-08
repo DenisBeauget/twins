@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:twins_front/screen/app_screen.dart';
@@ -67,14 +68,14 @@ class AuthController extends ChangeNotifier {
 
   String get lastName => _lastName;
 
-  String _birthDate = '';
+  Timestamp _birthDate = Timestamp.now();
 
-  set birthDate(String value) {
+  set birthDate(Timestamp value) {
     _birthDate = value;
     notifyListeners();
   }
 
-  String get birthDate => _birthDate;
+  Timestamp get birthDate => _birthDate;
 
   String _zipCode = '';
 

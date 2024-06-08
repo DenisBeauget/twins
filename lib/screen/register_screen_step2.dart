@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
@@ -38,6 +39,9 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime firstDate = DateTime(1900);
+    DateTime selectedDate = DateTime(DateTime.now().year - 18);
+    DateTime lastDate = new DateTime.now();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -92,14 +96,15 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
                             },
                           ),
                           const SizedBox(height: 20),
-                          TextFormField(
-                              controller: _birthDateController,
-                              decoration: inputStyle(
-                                  AppLocalizations.of(context)!
-                                      .birthdate_placeholder,
-                                  Icons.badge_outlined),
-                              onChanged: (value) {
-                                _registrationController.birthDate = value;
+                          CalendarDatePicker(
+                              initialDate: selectedDate,
+                              firstDate: firstDate,
+                              lastDate: lastDate,
+                              onDateChanged: (DateTime date) {
+                                Timestamp.fromDate(date);
+                                _registrationController.birthDate =
+                                    Timestamp.fromDate(date);
+                                _birthDateController.text = _registrationController.birthDate.toString();
                               }),
                           const SizedBox(height: 20),
                           TextFormField(

@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:twins_front/services/user_service.dart';
+
+import '../screen/auth_screen.dart';
 
 class AuthService {
   AuthService._();
@@ -12,7 +16,7 @@ class AuthService {
     required String password,
     required String firstName,
     required String lastName,
-    required String birthDate,
+    required Timestamp birthDate,
     required String zipCode,
     required bool isAdmin,
   }) async {
@@ -66,5 +70,25 @@ class AuthService {
 
   static Future<void> sendPasswordResetEmail(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
+  }
+
+  static Future<void> userAlreadyExists(BuildContext context) async {
+    try {
+      UserService.userEmailExists(currentUser!.email!).then((value) {
+        if (!value) {
+          logout().whenComplete(() {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AuthScreen()));
+          });
+        }
+      });
+    } catch (e) {
+      logout().whenComplete(() {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AuthScreen()));
+      });
+    }
   }
 }
