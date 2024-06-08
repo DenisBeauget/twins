@@ -92,7 +92,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    imageUrl: 'https://picsum.photos/200/300',
+                    imageUrl: establishment.imageUrl,
                     title: establishment.name,
                     categoryName: establishment.categoryName ?? 'Unknow');
               });
@@ -120,7 +120,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    imageUrl: 'https://picsum.photos/200/300',
+                    imageUrl: establishment.imageUrl,
                     title: establishment.name,
                     categoryName: establishment.categoryName ?? 'Unknow');
               });

@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/services/category_service.dart';
@@ -14,7 +19,6 @@ import '../widget/category_button.dart';
 import '../widget/featured_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class ManageEstablishments extends StatelessWidget {
   late Future<List<Category>> futureCategories;
   bool isChecked = false;
@@ -27,6 +31,9 @@ class ManageEstablishments extends StatelessWidget {
   late Category? categorySelected = null;
 
   final ValueNotifier<String> _notify = ValueNotifier<String>("");
+
+  late File _image = File('');
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,8 @@ class ManageEstablishments extends StatelessWidget {
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)!.admin_establishment_title,
+                            AppLocalizations.of(context)!
+                                .admin_establishment_title,
                             style: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
                       )
@@ -100,7 +108,8 @@ class ManageEstablishments extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 50),
-                Text(AppLocalizations.of(context)!.admin_establishment_add_title,
+                Text(
+                    AppLocalizations.of(context)!.admin_establishment_add_title,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
@@ -127,9 +136,18 @@ class ManageEstablishments extends StatelessWidget {
                     autocorrect: true,
                     cursorColor: Colors.green,
                     decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.admin_establishment_name_input_placeholder,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                      hintText: AppLocalizations.of(context)!
+                          .admin_establishment_name_input_placeholder,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.photo_outlined,
+                            color: Theme.of(context).colorScheme.onSurface),
+                        onPressed: () {
+                          getImageFromGallery();
+                        },
+                      ),
+                    ),
                     onChanged: (value) {
                       establishmentName = value;
                     }),
@@ -139,7 +157,7 @@ class ManageEstablishments extends StatelessWidget {
                     ChangeNotifierProvider(
                       create: (_) => CheckboxProvider(),
                       child: Consumer<CheckboxProvider>(
-                        builder: (context, checkboxProvider, _) =>Checkbox(
+                        builder: (context, checkboxProvider, _) => Checkbox(
                             value: checkboxProvider.isChecked,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0)),
@@ -149,19 +167,18 @@ class ManageEstablishments extends StatelessWidget {
                             }),
                       ),
                     ),
-                    Text(AppLocalizations.of(context)!.admin_establishment_highlight)
+                    Text(AppLocalizations.of(context)!
+                        .admin_establishment_highlight),
                   ],
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                      style: btnSecondaryStyle(context),
-                      onPressed: () {
-                        addEstablishment(context);
-                      },
-                      child: Text(AppLocalizations.of(context)!.admin_establishment_add)),
-                )
+
+                BlocBuilder<EstablishmentBloc, EstablishmentState>(
+                  bloc: establishmentBloc,
+                  builder: (context, state) {
+                    return returnAddBtn(context);
+                  },
+                ),
               ],
             ),
           ),
@@ -173,7 +190,7 @@ class ManageEstablishments extends StatelessWidget {
   Widget returnCategories(List categoryList, BuildContext context) {
     if (CategoryBloc.isChanged) {
       if (categoryList.isEmpty) {
-        return  Center(
+        return Center(
             child: Text(AppLocalizations.of(context)!.category_not_found,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
@@ -201,12 +218,40 @@ class ManageEstablishments extends StatelessWidget {
     }
   }
 
+  Widget returnAddBtn(BuildContext context) {
+    if (EstablishmentBloc.isCreating) {
+      return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: ElevatedButton(
+            style: btnSecondaryStyle(context),
+            onPressed: () {
+              addEstablishment(context);
+
+            },
+            child: Center(
+                child: CircularProgressIndicator(
+              color: lightColorScheme.primaryContainer,
+            )),
+          ));
+    }
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+          style: btnSecondaryStyle(context),
+          onPressed: () {
+            addEstablishment(context);
+          },
+          child: Text(AppLocalizations.of(context)!.admin_establishment_add)),
+    );
+  }
+
   Widget returnEstablishments(List establishmentList, BuildContext context) {
     if (EstablishmentBloc.isChanged) {
       if (establishmentList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.no_establishment_found,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -219,7 +264,7 @@ class ManageEstablishments extends StatelessWidget {
                   confirmDeleteEstablishment(establishment, context);
                 },
                 child: FeaturedCardSmall(
-                    imageUrl: 'https://picsum.photos/200/300',
+                    imageUrl: establishment.imageUrl,
                     title: establishment.name,
                     categoryName: establishment.categoryName ?? 'Unknow'),
               );
@@ -235,19 +280,34 @@ class ManageEstablishments extends StatelessWidget {
 
   Widget returnSelectedCategory(BuildContext context) {
     if (categorySelected == null) {
-      return Text(AppLocalizations.of(context)!.admin_establishment_category_not_selected);
+      return Text(AppLocalizations.of(context)!
+          .admin_establishment_category_not_selected);
     } else {
-      return Text(AppLocalizations.of(context)!.admin_establishment_category_selected(categorySelected!.name));
+      return Text(AppLocalizations.of(context)!
+          .admin_establishment_category_selected(categorySelected!.name));
     }
   }
 
   void addEstablishment(BuildContext context) {
+    EstablishmentBloc.isCreating = true;
     if (categorySelected == null) {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_establishment_select_category_message);
+      Toaster.showFailedToast(
+          context,
+          AppLocalizations.of(context)!
+              .admin_establishment_select_category_message);
       return;
     }
     if (establishmentName.isEmpty || establishmentName == null) {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_establishment_enter_name_message);
+      Toaster.showFailedToast(context,
+          AppLocalizations.of(context)!.admin_establishment_enter_name_message);
+      return;
+    }
+
+    if (_image.path.isEmpty || _image.path == null) {
+      Toaster.showFailedToast(
+          context,
+          AppLocalizations.of(context)!
+              .admin_establishment_select_image_message);
       return;
     }
 
@@ -255,7 +315,10 @@ class ManageEstablishments extends StatelessWidget {
         new Establishment(
             name: establishmentName,
             hightlight: isChecked,
-            categoryName: categorySelected?.name),
+            categoryName: categorySelected?.name,
+            imageUrl: '',
+            imageName: ''),
+        _image,
         context));
   }
 
@@ -264,13 +327,23 @@ class ManageEstablishments extends StatelessWidget {
     final bool result = await Popup.showPopupForDelete(
         context,
         AppLocalizations.of(context)!.admin_establishment_popup_delete_title,
-        AppLocalizations.of(context)!.admin_establishment_popup_delete_message(establishment.name));
+        AppLocalizations.of(context)!
+            .admin_establishment_popup_delete_message(establishment.name));
     if (result) {
       establishmentBloc.add(DeleteEstablishment(establishment, context));
     }
   }
-}
 
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File compressedFile =
+          await FlutterNativeImage.compressImage(pickedFile.path, quality: 5);
+      _image = compressedFile;
+    }
+  }
+}
 
 class CheckboxProvider with ChangeNotifier {
   bool _isChecked = false;
