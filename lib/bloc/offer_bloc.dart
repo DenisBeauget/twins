@@ -51,8 +51,8 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           .then((value) {
         if (value) {
           currentOffers.removeWhere((e) => e.title == event.offer.title);
-          Toaster.showSuccessToast(
-              event.context, AppLocalizations.of(event.context)!.delete_error);
+          Toaster.showSuccessToast(event.context,
+              AppLocalizations.of(event.context)!.admin_offer_deleted_message);
         } else {
           Toaster.showFailedToast(
               event.context, AppLocalizations.of(event.context)!.delete_error);
@@ -110,9 +110,10 @@ class OfferFilterByKeyword extends OfferEvent {
 
 class AddOffer extends OfferEvent {
   final Offer offer;
+  final Establishment establishment;
   final BuildContext context;
 
-  const AddOffer(this.offer, this.context);
+  const AddOffer(this.offer, this.establishment, this.context);
 }
 
 class DeleteOffer extends OfferEvent {

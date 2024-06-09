@@ -105,5 +105,17 @@
   "admin_establishment_upload_image": "Upload image",
   "admin_establishment_delete_success": "Establishment deleted",
   "admin_offer": "Manage offers",
-  "delete_error": "An error occurred while deleting"
+  "delete_error": "An error occurred while deleting",
+  "start_date": "Start : ",
+  "end_date": "End : ",
+  "admin_offer_popup_delete_message": "Are you sure you want to delete the offer {offer_title} ?",
+  "admin_offer_popup_delete_title": "Delete offer",
+  "admin_offer_select_establishment": "No establishment selected",
+  "offer_card_hightlight": "Highlighted",
+  "admin_offer_deleted_message": "Offer deleted",
+  "admin_offer_add_title": "Add offer",
+  "admin_offer_title_input_placeholder": "Offer title",
+  "admin_offer_start_date_input_placeholder": "Start date",
+  "admin_offer_end_date_input_placeholder": "End date",
+  "admin_offer_title": "To delete an offer, tap on it"
 }

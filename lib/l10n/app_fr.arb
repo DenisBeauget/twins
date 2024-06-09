@@ -105,5 +105,17 @@
   "admin_establishment_upload_image": "Ajouter une image",
   "admin_establishment_delete_success": "Etablissement supprimé",
   "admin_offer": "Gérer les offres",
-  "delete_error": "Une erreur est survenue lors de la suppression"
+  "delete_error": "Une erreur est survenue lors de la suppression",
+  "start_date": "Début : ",
+  "end_date": "Fin : ",
+  "admin_offer_popup_delete_message": "Êtes-vous sûr de vouloir supprimer l'offre {offer_title} ?",
+  "admin_offer_popup_delete_title": "Supprimer l'offre",
+  "admin_offer_select_establishment": "Aucun établissement sélectionné",
+  "offer_card_hightlight": "Mis en avant",
+  "admin_offer_deleted_message": "Offre supprimé",
+  "admin_offer_add_title": "Ajoutez une offre",
+  "admin_offer_title_input_placeholder": "Titre de l'offre",
+  "admin_offer_start_date_input_placeholder": "Date de début",
+  "admin_offer_end_date_input_placeholder": "Date de fin",
+  "admin_offer_title": "Pour supprimer une offre, appuyez dessus"
 }
