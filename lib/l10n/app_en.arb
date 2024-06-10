@@ -117,5 +117,8 @@
   "admin_offer_title_input_placeholder": "Offer title",
   "admin_offer_start_date_input_placeholder": "Start date",
   "admin_offer_end_date_input_placeholder": "End date",
-  "admin_offer_title": "To delete an offer, tap on it"
+  "admin_offer_title": "To delete an offer, tap on it",
+  "admin_offer_added": "Offer added",
+  "admin_offer_bad_date": "Bad date",
+  "admin_offer_cant_add": "Offer not added"
 }

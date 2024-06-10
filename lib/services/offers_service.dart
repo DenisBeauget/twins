@@ -37,24 +37,14 @@ class OffersService {
     }
   }
 
-  Future<bool> addOfferToSpecificEstablishment(
-      Offer offer, String establishmentName) async {
+  Future<bool> addOfferToSpecificEstablishment(Offer offer) async {
     try {
-      Establishment establishment = await EstablishmentService()
-          .getEstablishmentByName(establishmentName);
-
-      String establishmentId = establishment.id!;
-
-      if (establishmentId.isEmpty) {
-        return false;
-      }
-
       _firestore.collection('offers').doc().set({
         "title": offer.title,
         "start_date": offer.startDate,
         "end_date": offer.endDate,
         "hightlight": offer.hightlight,
-        "establishment_id": establishmentId
+        "establishment_id": offer.establishmentId
       });
       return true;
     } catch (e) {

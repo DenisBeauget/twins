@@ -31,18 +31,23 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
 
     on<AddOffer>((event, emit) async {
       isChanged = false;
-      await OfferService.addOfferToSpecificEstablishment(event.offer, "")
-          .then((value) {
-        if (value) {
-          currentOffers.add(event.offer);
-          Toaster.showSuccessToast(event.context,
-              AppLocalizations.of(event.context)!.establishment_added);
-        } else {
-          Toaster.showFailedToast(event.context,
-              AppLocalizations.of(event.context)!.establishment_added);
-        }
-      }).whenComplete(() => emit(OfferState(currentOffers)));
-      isChanged = true;
+      if (event.offer.startDate.isAfter(event.offer.endDate)) {
+        Toaster.showFailedToast(event.context,
+            AppLocalizations.of(event.context)!.admin_offer_bad_date);
+      } else {
+        await OfferService.addOfferToSpecificEstablishment(event.offer)
+            .then((value) {
+          if (value) {
+            currentOffers.add(event.offer);
+            Toaster.showSuccessToast(event.context,
+                AppLocalizations.of(event.context)!.admin_offer_added);
+          } else {
+            Toaster.showFailedToast(event.context,
+                AppLocalizations.of(event.context)!.admin_offer_cant_add);
+          }
+        }).whenComplete(() => emit(OfferState(currentOffers)));
+        isChanged = true;
+      }
     });
 
     on<DeleteOffer>((event, emit) async {
@@ -110,10 +115,9 @@ class OfferFilterByKeyword extends OfferEvent {
 
 class AddOffer extends OfferEvent {
   final Offer offer;
-  final Establishment establishment;
   final BuildContext context;
 
-  const AddOffer(this.offer, this.establishment, this.context);
+  const AddOffer(this.offer, this.context);
 }
 
 class DeleteOffer extends OfferEvent {

@@ -355,17 +355,17 @@ class ManageOffer extends StatelessWidget {
   }
 
   Future<void> confirmAddOffer(BuildContext context) async {
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .doc("establishements/${establishmentSelected.id}");
+    DocumentReference reference = FirebaseFirestore.instance
+        .collection('establishments')
+        .doc(establishmentSelected.id!);
 
     offerBloc.add(AddOffer(
         Offer(
             title: offerTitle,
             hightlight: isChecked,
-            establishmentId: documentReference,
+            establishmentId: reference,
             startDate: startDate!,
             endDate: endDate!),
-        establishmentSelected,
         context));
   }
 }

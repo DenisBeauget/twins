@@ -19,7 +19,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'bloc/category_bloc.dart';
 
 Future<void> main() async {
