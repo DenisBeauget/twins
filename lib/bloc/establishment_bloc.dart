@@ -7,7 +7,6 @@ import 'package:twins_front/services/establishments_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/services/storage_service.dart';
 
-
 import '../utils/toaster.dart';
 
 class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
@@ -21,7 +20,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
     on<EstablishmentALL>((event, emit) async {
       isChanged = false;
       final List<Establishment> establishments =
-      await establishmentService.getEstablishments();
+          await establishmentService.getEstablishments();
       emit(EstablishmentState(establishments));
       currentEstablishments = establishments;
       isChanged = true;
@@ -35,7 +34,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
     on<EstablishmentFilterByCategory>((event, emit) async {
       final List<Establishment> establishments =
-      currentEstablishments.where((establishment) {
+          currentEstablishments.where((establishment) {
         return establishment.categoryName == event.category;
       }).toList();
       emit(EstablishmentState(establishments));
@@ -45,7 +44,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
     on<EstablishmentFilterByKeyword>((event, emit) async {
       isChanged = false;
       List<Establishment> filteredEstablishments =
-      currentEstablishments.where((establishment) {
+          currentEstablishments.where((establishment) {
         return establishment.name
             .toLowerCase()
             .contains(event.keyword.toLowerCase());
@@ -61,24 +60,26 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
       int id = Random().nextInt(1000);
 
-      String? imageUrl = await storageService.uploadFile('establishments/${event.establishment.name}-$id', event.image);
+      String? imageUrl = await storageService.uploadFile(
+          'establishments/${event.establishment.name}-$id', event.image);
 
       event.establishment.imageUrl = imageUrl!;
       String imagePath = 'establishments/${event.establishment.name}-$id';
-      print(imagePath);
+
       event.establishment.imageName = imagePath;
 
-      await establishmentService.addEstablishment(event.establishment).then((value) {
+      await establishmentService
+          .addEstablishment(event.establishment)
+          .then((value) {
         if (value) {
           currentEstablishments.add(event.establishment);
           Toaster.showSuccessToast(event.context,
               AppLocalizations.of(event.context)!.establishment_added);
         } else {
-          storageService.deleteFile('establishments/${event.establishment.name}-$id');
-          Toaster.showFailedToast(
-              event.context,
-              AppLocalizations.of(event.context)!
-                  .establishment_already_exist);
+          storageService
+              .deleteFile('establishments/${event.establishment.name}-$id');
+          Toaster.showFailedToast(event.context,
+              AppLocalizations.of(event.context)!.establishment_already_exist);
         }
       }).whenComplete(() => emit(EstablishmentState(currentEstablishments)));
       isChanged = true;
@@ -87,14 +88,16 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
     on<DeleteEstablishment>((event, emit) async {
       isChanged = false;
-      await establishmentService.deleteEstablishment(event.establishment.name).then((value) {
+      await establishmentService
+          .deleteEstablishment(event.establishment.name)
+          .then((value) {
         if (value) {
-          if (currentEstablishments.map((e) => e.name == event.establishment.name) != null) {
-            currentEstablishments.removeWhere((e) => e.name == event.establishment.name);
-            Toaster.showSuccessToast(event.context, AppLocalizations.of(event.context)!.admin_establishment_delete_success);
-          } else {
-            Toaster.showFailedToast(event.context, AppLocalizations.of(event.context)!.no_establishment_found);
-          }
+          currentEstablishments
+              .removeWhere((e) => e.name == event.establishment.name);
+          Toaster.showSuccessToast(
+              event.context,
+              AppLocalizations.of(event.context)!
+                  .admin_establishment_delete_success);
         } else {
           Toaster.showFailedToast(
               event.context, AppLocalizations.of(event.context)!.delete_error);
@@ -103,7 +106,6 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
       isChanged = true;
     });
   }
-
 
   bool getConnexionStatus() {
     return isChanged;

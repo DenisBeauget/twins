@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/manage_category.dart';
 import 'package:twins_front/screen/manage_establishments.dart';
+import 'package:twins_front/screen/manage_offer.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,10 +29,8 @@ class AdminScreen extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
-
                       color: Theme.of(context).colorScheme.onSurface),
-                  text:
-                      AppLocalizations.of(context)!.admin_presentation),
+                  text: AppLocalizations.of(context)!.admin_presentation),
             ),
             const SizedBox(height: 50),
             SizedBox(
@@ -41,7 +40,8 @@ class AdminScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ManageCategory(),fullscreenDialog: false));
+                              builder: (context) => ManageCategory(),
+                              fullscreenDialog: false));
                     },
                     child: Text(AppLocalizations.of(context)!.admin_category))),
             const SizedBox(height: 50),
@@ -52,10 +52,10 @@ class AdminScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                   ManageEstablishments()));
+                              builder: (context) => ManageEstablishments()));
                     },
-                    child: Text(AppLocalizations.of(context)!.admin_establishment))),
+                    child: Text(
+                        AppLocalizations.of(context)!.admin_establishment))),
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
@@ -64,7 +64,7 @@ class AdminScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AdminScreen()));
+                              builder: (context) => ManageOffer()));
                     },
                     child: Text(AppLocalizations.of(context)!.admin_offer))),
             const SizedBox(height: 50)

@@ -128,7 +128,7 @@ btnDialogStyle() {
     foregroundColor: Colors.black,
     textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11.0)),
-    padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
     side: const BorderSide(color: Colors.black, width: 1),
     elevation: 5,
   );
@@ -142,7 +142,6 @@ btnDialogStyleCancel() {
     textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
   );
 }
-
 
 btnSecondaryStyle(BuildContext context) {
   return ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/services/storage_service.dart';
+import 'package:twins_front/services/offers_service.dart';
 
 class EstablishmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,11 +16,9 @@ class EstablishmentService {
         return Establishment.fromDocument(doc);
       }).toList();
 
-      // Fetch categories for each establishment
       for (Establishment establishment in establishments) {
         try {
-          DocumentSnapshot categoryDoc =
-          await establishment.categoryId!.get();
+          DocumentSnapshot categoryDoc = await establishment.categoryId!.get();
           establishment.categoryName = categoryDoc['name'];
         } catch (e) {
           establishment.categoryName = 'Unknown';
@@ -105,7 +104,10 @@ class EstablishmentService {
         }
       }
       return Establishment(
-          name: 'Unknown', hightlight: false, imageUrl: 'Unknown', imageName: 'Unknown');
+          name: 'Unknown',
+          hightlight: false,
+          imageUrl: 'Unknown',
+          imageName: 'Unknown');
     } catch (e) {
       rethrow;
     }
@@ -145,6 +147,13 @@ class EstablishmentService {
       String idToDelete = toDelete.id!;
 
       if (idToDelete.isNotEmpty) {
+        List<Offer> offerToDelete =
+            await OffersService().getOffersByEstablishment(name!);
+
+        for (Offer offer in offerToDelete) {
+          await OffersService()
+              .deleteOfferFromSpecificEstablishment(offer.title);
+        }
         _firestore.collection('establishments').doc(idToDelete).delete();
         storageService.deleteFile(toDelete.imageName);
         return true;

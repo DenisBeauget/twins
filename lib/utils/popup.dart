@@ -14,8 +14,9 @@ class Popup {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           title: Center(
-              child:
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23))),
+              child: Text(title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20))),
           content: Text(description),
           actions: [
             ElevatedButton(

@@ -4,22 +4,16 @@ import 'package:twins_front/services/establishments_service.dart';
 class OffersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<Offer>> getOffersByEstablishment(String name) async {
+  Future<List<Offer>> getOffersByEstablishment(String establishmentId) async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('offers').get();
       List<Offer> offers = querySnapshot.docs.map((doc) {
         return Offer.fromDocument(doc);
       }).toList();
 
-      for (var offer in offers) {
-        DocumentSnapshot establishmentName = await offer.establishmentId.get();
-        offer.establishmentName = establishmentName['name'];
-      }
-
       List<Offer> filteredOffers = offers.where((offer) {
-        return offer.establishmentName == name;
+        return offer.establishmentId.id.toString() == establishmentId;
       }).toList();
-
       return filteredOffers;
     } catch (e) {
       rethrow;
@@ -43,28 +37,14 @@ class OffersService {
     }
   }
 
-  Future<bool> addOfferToSpecificEstablishment(
-      String establishmentName,
-      String offerTitle,
-      DateTime startDate,
-      DateTime endDate,
-      bool isHighlight) async {
+  Future<bool> addOfferToSpecificEstablishment(Offer offer) async {
     try {
-      Establishment establishment = await EstablishmentService()
-          .getEstablishmentByName(establishmentName);
-
-      String establishmentId = establishment.id!;
-
-      if (establishmentId.isEmpty) {
-        return false;
-      }
-
       _firestore.collection('offers').doc().set({
-        "title": offerTitle,
-        "start_date": startDate,
-        "end_date": endDate,
-        "hightlight": isHighlight,
-        "establishment_id": establishmentId
+        "title": offer.title,
+        "start_date": offer.startDate,
+        "end_date": offer.endDate,
+        "hightlight": offer.hightlight,
+        "establishment_id": offer.establishmentId
       });
       return true;
     } catch (e) {
@@ -107,9 +87,14 @@ class Offer {
     return Offer(
       title: doc['title'],
       hightlight: doc['hightlight'],
-      startDate: doc['start_date'],
-      endDate: doc['end_date'],
+      startDate: (doc['start_date'] as Timestamp).toDate(),
+      endDate: (doc['end_date'] as Timestamp).toDate(),
       establishmentId: doc['establishment_id'],
     );
+  }
+
+  @override
+  String toString() {
+    return title;
   }
 }
