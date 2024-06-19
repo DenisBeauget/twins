@@ -5,37 +5,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
-import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
-import 'package:twins_front/change/auth_controller.dart';
-import 'package:twins_front/screen/admin_screen.dart';
+import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
 import 'package:twins_front/widget/featured_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../services/category_service.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    EstablishmentBloc.isChanged = false;
-    CategoryBloc.isChanged = false;
-
     final EstablishmentBloc establishmentBloc =
         BlocProvider.of<EstablishmentBloc>(context);
 
     final CategoryBloc categoryBloc = BlocProvider.of<CategoryBloc>(context);
 
     categoryBloc.add(CategoriesALL());
-    establishmentBloc.add(EstablishmentALL());
+    establishmentBloc.add(EstablishmentALL(true));
+
+    String categorySelected = "";
+
 
     final TextEditingController searchController = TextEditingController();
 
-    Widget returnCategories(List categoryList, BuildContext context) {
-      if (CategoryBloc.isChanged) {
+    Widget returnCategories(BuildContext context) {
+      if (categoryBloc.state is CategoryLoaded) {
+        List<Category> categoryList =
+            (categoryBloc.state as CategoryLoaded).categoryList;
         if (categoryList.isEmpty) {
           return Center(
               child: Text(AppLocalizations.of(context)!.category_not_found,
@@ -50,11 +52,23 @@ class HomeScreen extends StatelessWidget {
                 final category = categoryList[index];
                 return CategoryButton(
                   text: category.name,
-                  color: Colors.green,
+                  backgroundColor:
+                      category.name == categorySelected
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.green,
+                  foregroundColor:
+                      category.name == categorySelected
+                          ? Theme.of(context).colorScheme.surface
+                          : Colors.black,
                   onPressed: () {
-                    EstablishmentBloc.isChanged = false;
-                    establishmentBloc
-                        .add(EstablishmentFilterByCategory(category.name));
+                    if(category.name != categorySelected) {
+                      categorySelected = category.name;
+                      establishmentBloc.add(EstablishmentFilterByCategory(category.name));
+                    }else{
+                      categorySelected = '';
+                      establishmentBloc.add(EstablishmentALL(false));
+                    }
+                    categoryBloc.add(CategoriesRefresh());
                   },
                 );
               });
@@ -67,9 +81,10 @@ class HomeScreen extends StatelessWidget {
       }
     }
 
-    Widget returnHightlightEstablishments(
-        List establishmentList, BuildContext context) {
-      if (EstablishmentBloc.isChanged) {
+    Widget returnHightlightEstablishments(BuildContext context) {
+      if (establishmentBloc.state is EstablishmentLoaded) {
+        List<Establishment> establishmentList =
+            (establishmentBloc.state as EstablishmentLoaded).establishmentList;
         if (establishmentList.isEmpty) {
           return Center(
               child: Text(AppLocalizations.of(context)!.no_establishment_found,
@@ -105,8 +120,10 @@ class HomeScreen extends StatelessWidget {
       }
     }
 
-    Widget returnEstablishments(List establishmentList, BuildContext context) {
-      if (EstablishmentBloc.isChanged) {
+    Widget returnEstablishments(BuildContext context) {
+      if (establishmentBloc.state is EstablishmentLoaded) {
+        List<Establishment> establishmentList =
+            (establishmentBloc.state as EstablishmentLoaded).establishmentList;
         if (establishmentList.isEmpty) {
           return Center(
               child: Text(AppLocalizations.of(context)!.no_establishment_found,
@@ -133,18 +150,12 @@ class HomeScreen extends StatelessWidget {
       }
     }
 
-    Future<void> reloadEstablishments(BuildContext context, bool fromDB) async {
-      if (fromDB) {
-        Haptics.vibrate(HapticsType.medium);
-        establishmentBloc.add(const EstablishmentManuallySet([]));
-        EstablishmentBloc.isChanged = false;
-        establishmentBloc.add(EstablishmentALL());
-        categoryBloc.add(CategoriesALL());
-      } else {
-        establishmentBloc.add(const EstablishmentManuallySet([]));
-        establishmentBloc.add(EstablishmentManuallySet(
-            establishmentBloc.state.establishmentList));
-      }
+    Future<void> reloadEstablishments() async {
+      Haptics.vibrate(HapticsType.medium);
+      establishmentBloc.add(EstablishmentALL(true));
+      categorySelected = '';
+      searchController.clear();
+      categoryBloc.add(CategoriesALL());
     }
 
     int navBarIndex = 0;
@@ -165,7 +176,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () => reloadEstablishments(context, true),
+        onRefresh: () => reloadEstablishments(),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +200,8 @@ class HomeScreen extends StatelessWidget {
                         TextStyle(color: Theme.of(context).colorScheme.surface),
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.search_placeholder,
+                      hintText:
+                          AppLocalizations.of(context)!.search_placeholder,
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.surface),
                       prefixIcon: Icon(
@@ -233,8 +245,7 @@ class HomeScreen extends StatelessWidget {
                           return SizedBox(
                               height: 40,
                               width: MediaQuery.of(context).size.width * 0.9,
-                              child: returnCategories(
-                                  state.categoryList, context));
+                              child: returnCategories(context));
                         },
                       ),
                     ],
@@ -256,8 +267,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, state) {
                     return SizedBox(
                         height: 200,
-                        child: returnHightlightEstablishments(
-                            state.establishmentList, context));
+                        child: returnHightlightEstablishments(context));
                   },
                 ),
               ),
@@ -285,8 +295,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, state) {
                     return SizedBox(
                         height: 200,
-                        child: returnEstablishments(
-                            state.establishmentList, context));
+                        child: returnEstablishments(context));
                   },
                 ),
               ),

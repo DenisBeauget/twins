@@ -10,51 +10,48 @@ import 'package:twins_front/services/storage_service.dart';
 import '../utils/toaster.dart';
 
 class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
-  static bool isChanged = false;
-  static bool isCreating = false;
+
   EstablishmentService establishmentService = EstablishmentService();
   StorageService storageService = StorageService();
   List<Establishment> currentEstablishments = List.empty();
 
-  EstablishmentBloc() : super(EstablishmentState(List.empty())) {
+  EstablishmentBloc() : super(EstablishmentInitialState()) {
     on<EstablishmentALL>((event, emit) async {
-      isChanged = false;
-      final List<Establishment> establishments =
-          await establishmentService.getEstablishments();
-      emit(EstablishmentState(establishments));
-      currentEstablishments = establishments;
-      isChanged = true;
-    });
+      emit(EstablishmentLoading());
 
-    on<EstablishmentManuallySet>((event, emit) async {
-      isChanged = false;
-      emit(EstablishmentState(event.establishments));
-      isChanged = true;
+      final List<Establishment> establishments = event.fromDB ?
+      await establishmentService.getEstablishments(): currentEstablishments;
+      emit(EstablishmentLoaded(establishments));
+      currentEstablishments = establishments;
     });
 
     on<EstablishmentFilterByCategory>((event, emit) async {
+      emit(EstablishmentLoading());
+
       final List<Establishment> establishments =
-          currentEstablishments.where((establishment) {
-        return establishment.categoryName == event.category;
+      currentEstablishments.where((establishment) {
+        return establishment.categoryName == event.categoryName;
       }).toList();
-      emit(EstablishmentState(establishments));
-      isChanged = true;
+      emit(EstablishmentLoaded(establishments));
     });
 
     on<EstablishmentFilterByKeyword>((event, emit) async {
-      isChanged = false;
+      emit(EstablishmentLoading());
+
       List<Establishment> filteredEstablishments =
-          currentEstablishments.where((establishment) {
+      currentEstablishments.where((establishment) {
         return establishment.name
             .toLowerCase()
             .contains(event.keyword.toLowerCase());
       }).toList();
-      emit(EstablishmentState(filteredEstablishments));
-      isChanged = true;
+      emit(EstablishmentLoaded(filteredEstablishments));
     });
 
     on<AddEstablishment>((event, emit) async {
-      isChanged = false;
+
+      (state is EstablishmentLoaded)
+          ? emit(EstablishmentCreating((state as EstablishmentLoaded).establishmentList))
+          : emit(EstablishmentCreating(List.empty()));
 
       //randomly generated image url
 
@@ -72,6 +69,8 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           .addEstablishment(event.establishment)
           .then((value) {
         if (value) {
+          emit(EstablishmentLoading());
+
           currentEstablishments.add(event.establishment);
           Toaster.showSuccessToast(event.context,
               AppLocalizations.of(event.context)!.establishment_added);
@@ -81,17 +80,17 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           Toaster.showFailedToast(event.context,
               AppLocalizations.of(event.context)!.establishment_already_exist);
         }
-      }).whenComplete(() => emit(EstablishmentState(currentEstablishments)));
-      isChanged = true;
-      isCreating = false;
+      }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
 
     on<DeleteEstablishment>((event, emit) async {
-      isChanged = false;
+
       await establishmentService
           .deleteEstablishment(event.establishment.name)
           .then((value) {
         if (value) {
+          emit(EstablishmentLoading());
+
           currentEstablishments
               .removeWhere((e) => e.name == event.establishment.name);
           Toaster.showSuccessToast(
@@ -102,27 +101,29 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           Toaster.showFailedToast(
               event.context, AppLocalizations.of(event.context)!.delete_error);
         }
-      }).whenComplete(() => emit(EstablishmentState(currentEstablishments)));
-      isChanged = true;
+      }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
   }
-
-  bool getConnexionStatus() {
-    return isChanged;
-  }
 }
 
-class EstablishmentState {
+class EstablishmentState {}
+
+class EstablishmentInitialState extends EstablishmentState {}
+
+class EstablishmentLoading extends EstablishmentState {}
+
+class EstablishmentLoaded extends EstablishmentState {
   final List<Establishment> establishmentList;
 
-  const EstablishmentState(this.establishmentList);
-
-  List<Object?> get props => [establishmentList];
+  EstablishmentLoaded(this.establishmentList);
 }
 
-class InitialEstablishmentState extends EstablishmentState {
-  const InitialEstablishmentState(super.establishmentList);
+class EstablishmentCreating extends EstablishmentState {
+  final List<Establishment> establishmentList;
+
+  EstablishmentCreating(this.establishmentList);
 }
+
 
 class EstablishmentEvent {
   const EstablishmentEvent();
@@ -130,18 +131,16 @@ class EstablishmentEvent {
   List<Establishment> get props => [];
 }
 
-class EstablishmentALL extends EstablishmentEvent {}
+class EstablishmentALL extends EstablishmentEvent {
+  final bool fromDB;
 
-class EstablishmentManuallySet extends EstablishmentEvent {
-  final List<Establishment> establishments;
-
-  const EstablishmentManuallySet(this.establishments);
+  EstablishmentALL(this.fromDB);
 }
 
 class EstablishmentFilterByCategory extends EstablishmentEvent {
-  final String category;
+  final String categoryName;
 
-  const EstablishmentFilterByCategory(this.category);
+  const EstablishmentFilterByCategory(this.categoryName);
 }
 
 class EstablishmentFilterByKeyword extends EstablishmentEvent {

@@ -32,8 +32,6 @@ class ManageOffer extends StatelessWidget {
   DateTime? endDate;
   String offerTitle = "";
 
-  final ValueNotifier<String> _notify = ValueNotifier<String>("");
-
   @override
   Widget build(BuildContext context) {
     offerBloc = BlocProvider.of<OfferBloc>(context);
@@ -99,9 +97,7 @@ class ManageOffer extends StatelessWidget {
                     return Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
-                          height: 120,
-                          child: returnEstablishments(
-                              state.establishmentList, context)),
+                          height: 120, child: returnEstablishments(context)),
                     );
                   },
                 ),
@@ -131,8 +127,10 @@ class ManageOffer extends StatelessWidget {
     );
   }
 
-  Widget returnEstablishments(List establishmentList, BuildContext context) {
-    if (EstablishmentBloc.isChanged) {
+  Widget returnEstablishments(BuildContext context) {
+    if (establishmentBloc.state is EstablishmentLoaded) {
+      List<Establishment> establishmentList =
+          (establishmentBloc.state as EstablishmentLoaded).establishmentList;
       if (establishmentList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.no_establishment_found,
@@ -167,38 +165,45 @@ class ManageOffer extends StatelessWidget {
 
   Widget returnOffers(BuildContext context) {
     if (establishmentSelected.name.isNotEmpty) {
-      List<Offer> offersList = offerBloc.state.OfferList;
-      if (offersList.isNotEmpty) {
-        return ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: offersList.length,
-          itemBuilder: (BuildContext context, int index) {
-            final offer = offersList[index];
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    confirmDeleteOffer(offer, context);
-                  },
-                  child: FeaturedCardOffer(
-                    title: offer.title,
-                    endDate: offer.endDate,
-                    startDate: offer.startDate,
-                    hightlight: offer.hightlight,
+      if (offerBloc.state is OfferLoaded) {
+        List<Offer> offersList = (offerBloc.state as OfferLoaded).offerList;
+        if (offersList.isNotEmpty) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: offersList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final offer = offersList[index];
+              return Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      confirmDeleteOffer(offer, context);
+                    },
+                    child: FeaturedCardOffer(
+                      title: offer.title,
+                      endDate: offer.endDate,
+                      startDate: offer.startDate,
+                      hightlight: offer.hightlight,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10)
-              ],
-            );
-          },
-        );
+                  const SizedBox(height: 10)
+                ],
+              );
+            },
+          );
+        } else {
+          return Center(
+            child: Text(
+              AppLocalizations.of(context)!.admin_offer_select_establishment,
+            ),
+          );
+        }
       } else {
         return Center(
-          child: Text(
-            AppLocalizations.of(context)!.admin_offer_select_establishment,
-          ),
-        );
+            child: CircularProgressIndicator(
+          color: lightColorScheme.primaryContainer,
+        ));
       }
     } else {
       return Center(
