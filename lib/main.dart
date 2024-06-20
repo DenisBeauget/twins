@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/bloc/offer_bloc.dart';
@@ -23,6 +25,10 @@ import 'bloc/category_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  String paymentUrl = "https://api.stripe.com/v1/payment_intents";
+  Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
+  Stripe.instance.applySettings;
   await _initDevicesParameters();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
