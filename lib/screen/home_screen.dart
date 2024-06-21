@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
+import 'package:twins_front/screen/establishments_screen.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
@@ -31,7 +32,6 @@ class HomeScreen extends StatelessWidget {
 
     String categorySelected = "";
 
-
     final TextEditingController searchController = TextEditingController();
 
     Widget returnCategories(BuildContext context) {
@@ -52,19 +52,19 @@ class HomeScreen extends StatelessWidget {
                 final category = categoryList[index];
                 return CategoryButton(
                   text: category.name,
-                  backgroundColor:
-                      category.name == categorySelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.green,
-                  foregroundColor:
-                      category.name == categorySelected
-                          ? Theme.of(context).colorScheme.surface
-                          : Colors.black,
+                  backgroundColor: category.name == categorySelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.green,
+                  foregroundColor: category.name == categorySelected
+                      ? Theme.of(context).colorScheme.surface
+                      : Colors.black,
                   onPressed: () {
-                    if(category.name != categorySelected) {
+                    searchController.clear();
+                    if (category.name != categorySelected) {
                       categorySelected = category.name;
-                      establishmentBloc.add(EstablishmentFilterByCategory(category.name));
-                    }else{
+                      establishmentBloc
+                          .add(EstablishmentFilterByCategory(category.name));
+                    } else {
                       categorySelected = '';
                       establishmentBloc.add(EstablishmentALL(false));
                     }
@@ -133,7 +133,7 @@ class HomeScreen extends StatelessWidget {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: establishmentList.length,
+              itemCount: establishmentList.length > 10 ? 10 : establishmentList.length,
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
@@ -282,9 +282,23 @@ class HomeScreen extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      AppLocalizations.of(context)!.see_all,
-                    ),
+                    GestureDetector(
+                      child: Text(
+                        AppLocalizations.of(context)!.see_all,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EstablishmentsScreen(),
+                          ),
+                        );
+                        searchController.clear();
+                        categorySelected = '';
+                        establishmentBloc.add(EstablishmentALL(false));
+                        categoryBloc.add(CategoriesRefresh());
+                      },
+                    )
                   ],
                 ),
               ),
@@ -294,8 +308,7 @@ class HomeScreen extends StatelessWidget {
                 child: BlocBuilder<EstablishmentBloc, EstablishmentState>(
                   builder: (context, state) {
                     return SizedBox(
-                        height: 200,
-                        child: returnEstablishments(context));
+                        height: 200, child: returnEstablishments(context));
                   },
                 ),
               ),

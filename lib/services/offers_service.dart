@@ -20,6 +20,22 @@ class OffersService {
     }
   }
 
+  Future<int> getOffersCountByEstablishment(String establishmentId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('offers').get();
+      List<Offer> offers = querySnapshot.docs.map((doc) {
+        return Offer.fromDocument(doc);
+      }).toList();
+
+      List<Offer> filteredOffers = offers.where((offer) {
+        return offer.establishmentId.id.toString() == establishmentId;
+      }).toList();
+      return filteredOffers.length;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String> getOfferIdByTitle(String title) async {
     CollectionReference collectionReference = _firestore.collection('offers');
     try {

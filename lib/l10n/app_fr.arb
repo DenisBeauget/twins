@@ -49,6 +49,15 @@
   "establishment_already_exist": "L'établissement existe déjà",
   "popup_delete_bt": "Supprimer",
   "popup_cancel_bt": "Annuler",
+  "offer_available": "{offer_count} offre(s) disponible(s)",
+  "@offer_available": {
+    "placeholders": {
+      "offer_count": {
+        "type": "int"
+      }
+    }
+  },
+  "no_offer_available": "Pas d'offre disponible",
   "admin_hello": "Bonjour {user_name}",
   "@admin_hello": {
     "placeholders": {
