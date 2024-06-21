@@ -7,30 +7,20 @@ import 'package:twins_front/services/establishments_service.dart';
 import '../utils/toaster.dart';
 
 class OfferBloc extends Bloc<OfferEvent, OfferState> {
-  static bool isChanged = false;
   OffersService OfferService = OffersService();
 
   List<Offer> currentOffers = List.empty();
 
-  OfferBloc() : super(OfferState(List.empty())) {
+  OfferBloc() : super(OfferState()) {
     on<OfferALL>((event, emit) async {
-      isChanged = false;
+      emit(OfferLoading());
       final List<Offer> offers =
           await OfferService.getOffersByEstablishment(event.establishmentName);
-      print(offers.length);
-      emit(OfferState(offers));
+      emit(OfferLoaded(offers));
       currentOffers = offers;
-      isChanged = true;
-    });
-
-    on<OfferManuallySet>((event, emit) async {
-      isChanged = false;
-      emit(OfferState(event.Offers));
-      isChanged = true;
     });
 
     on<AddOffer>((event, emit) async {
-      isChanged = false;
       if (event.offer.startDate.isAfter(event.offer.endDate)) {
         Toaster.showFailedToast(event.context,
             AppLocalizations.of(event.context)!.admin_offer_bad_date);
@@ -45,13 +35,11 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
             Toaster.showFailedToast(event.context,
                 AppLocalizations.of(event.context)!.admin_offer_cant_add);
           }
-        }).whenComplete(() => emit(OfferState(currentOffers)));
-        isChanged = true;
+        }).whenComplete(() => emit(OfferLoaded(currentOffers)));
       }
     });
 
     on<DeleteOffer>((event, emit) async {
-      isChanged = false;
       await OfferService.deleteOfferFromSpecificEstablishment(event.offer.title)
           .then((value) {
         if (value) {
@@ -62,26 +50,19 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           Toaster.showFailedToast(
               event.context, AppLocalizations.of(event.context)!.delete_error);
         }
-      }).whenComplete(() => emit(OfferState(currentOffers)));
-      isChanged = true;
+      }).whenComplete(() => emit(OfferLoaded(currentOffers)));
     });
   }
-
-  bool getConnexionStatus() {
-    return isChanged;
-  }
 }
 
-class OfferState {
-  final List<Offer> OfferList;
+class OfferState {}
 
-  const OfferState(this.OfferList);
+class OfferLoading extends OfferState {}
 
-  List<Object?> get props => [OfferList];
-}
+class OfferLoaded extends OfferState {
+  final List<Offer> offerList;
 
-class InitialOfferState extends OfferState {
-  const InitialOfferState(super.OfferList);
+  OfferLoaded(this.offerList);
 }
 
 class OfferEvent {
@@ -93,12 +74,6 @@ class OfferEvent {
 class OfferALL extends OfferEvent {
   final String establishmentName;
   const OfferALL(this.establishmentName);
-}
-
-class OfferManuallySet extends OfferEvent {
-  final List<Offer> Offers;
-
-  const OfferManuallySet(this.Offers);
 }
 
 class OfferFilterByCategory extends OfferEvent {

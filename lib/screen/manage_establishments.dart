@@ -102,8 +102,7 @@ class ManageEstablishments extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
                           height: 120,
-                          child: returnEstablishments(
-                              state.establishmentList, context)),
+                          child: returnEstablishments(context)),
                     );
                   },
                 ),
@@ -120,7 +119,7 @@ class ManageEstablishments extends StatelessWidget {
                     builder: (context, state) {
                       return SizedBox(
                           height: 40,
-                          child: returnCategories(state.categoryList, context));
+                          child: returnCategories((state as CategoryLoaded).categoryList, context));
                     },
                   ),
                 ),
@@ -188,7 +187,7 @@ class ManageEstablishments extends StatelessWidget {
   }
 
   Widget returnCategories(List categoryList, BuildContext context) {
-    if (CategoryBloc.isChanged) {
+    if (categoryBloc.state is CategoryLoaded) {
       if (categoryList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.category_not_found,
@@ -202,7 +201,8 @@ class ManageEstablishments extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                color: Colors.green,
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.black,
                 onPressed: () {
                   categorySelected = category;
                   _notify.value = categorySelected?.name ?? "";
@@ -219,7 +219,7 @@ class ManageEstablishments extends StatelessWidget {
   }
 
   Widget returnAddBtn(BuildContext context) {
-    if (EstablishmentBloc.isCreating) {
+    if (establishmentBloc.state is EstablishmentCreating) {
       return SizedBox(
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
@@ -245,9 +245,10 @@ class ManageEstablishments extends StatelessWidget {
     );
   }
 
-  Widget returnEstablishments(List establishmentList, BuildContext context) {
-    if (EstablishmentBloc.isChanged) {
-      if (establishmentList.isEmpty) {
+  Widget returnEstablishments(BuildContext context) {
+    if (establishmentBloc.state is EstablishmentLoaded) {
+      List<Establishment> establishmentList =
+          (establishmentBloc.state as EstablishmentLoaded).establishmentList;      if (establishmentList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.no_establishment_found,
                 style: const TextStyle(
@@ -289,7 +290,6 @@ class ManageEstablishments extends StatelessWidget {
   }
 
   void addEstablishment(BuildContext context) {
-    EstablishmentBloc.isCreating = true;
     if (categorySelected == null) {
       Toaster.showFailedToast(
           context,

@@ -7,85 +7,80 @@ import '../utils/toaster.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  static bool isChanged = false;
   CategoryService categoryService = CategoryService();
-  CategoryBloc() : super(CategoryState(List.empty())) {
+  CategoryBloc() : super(CategoryInitialState()) {
     on<CategoriesALL>((event, emit) async {
-      isChanged = false;
-      final List<Category> categories =
-          await categoryService.getCategory();
-      emit(CategoryState(categories));
-      isChanged = true;
+      emit(CategoryLoading());
+      final List<Category> categories = await categoryService.getCategory();
+      emit(CategoryLoaded(categories));
     });
 
     on<AddCategory>((event, emit) async {
-      isChanged = false;
-      final List<Category> categories = state.categoryList;
-      await categoryService
-          .addCategory(event.category)
-          .then((value) => {
-                if (value)
-                  {
-                    categories.add(event.category),
-                    Toaster.showSuccessToast(event.context,
-                        AppLocalizations.of(event.context)!.category_added),
-                  }
-                else
-                  {
-                    Toaster.showFailedToast(
-                        event.context,
-                        AppLocalizations.of(event.context)!
-                            .category_already_exist)
-                  },
-              })
-          .whenComplete(() => emit(CategoryState(categories)));
-      isChanged = true;
+      if (state is CategoryLoaded) {
+        final List<Category> categories =
+            (state as CategoryLoaded).categoryList;
+        await categoryService
+            .addCategory(event.category)
+            .then((value) => {
+                  if (value)
+                    {
+                      emit(CategoryLoading()),
+                      categories.add(event.category),
+                      Toaster.showSuccessToast(event.context,
+                          AppLocalizations.of(event.context)!.category_added),
+                    }
+                  else
+                    {
+                      Toaster.showFailedToast(
+                          event.context,
+                          AppLocalizations.of(event.context)!
+                              .category_already_exist)
+                    },
+                })
+            .whenComplete(() => emit(CategoryLoaded(categories)));
+      }
     });
 
     on<DeleteCategory>((event, emit) async {
-      isChanged = false;
-      final List<Category> categories = state.categoryList;
+      final List<Category> categories = (state as CategoryLoaded).categoryList;
       await categoryService.deleteCategory(event.category.name).then((value) {
         if (value) {
           if (categories.map((e) => e.name == event.category.name) != null) {
+            emit(CategoryLoading());
             categories.removeWhere((e) => e.name == event.category.name);
-            Toaster.showSuccessToast(event.context, AppLocalizations.of(event.context)!.admin_category_deleted_message);
-            print(categories.toString());
+            Toaster.showSuccessToast(
+                event.context,
+                AppLocalizations.of(event.context)!
+                    .admin_category_deleted_message);
           } else {
-            Toaster.showFailedToast(event.context, AppLocalizations.of(event.context)!.category_not_found);
+            Toaster.showFailedToast(event.context,
+                AppLocalizations.of(event.context)!.category_not_found);
           }
         } else {
           Toaster.showFailedToast(
               event.context, AppLocalizations.of(event.context)!.delete_error);
         }
-      }).whenComplete(() => emit(CategoryState(categories)));
-      isChanged = true;
+      }).whenComplete(() => emit(CategoryLoaded(categories)));
     });
 
-    on<CategoryManuallySet>((event, emit) async {
-      isChanged = false;
-      emit(CategoryState(event.categories));
-      isChanged = true;
+    on<CategoriesRefresh>((event, emit) async {
+      final List<Category> categories = (state as CategoryLoaded).categoryList;
+      emit(CategoryLoaded(categories));
     });
-  }
-
-  bool getConnexionStatus() {
-    return isChanged;
   }
 }
 
-class CategoryState extends Equatable{
+class CategoryState {}
+
+class CategoryInitialState extends CategoryState {}
+
+class CategoryLoaded extends CategoryState {
   final List<Category> categoryList;
 
-  const CategoryState(this.categoryList);
-
-  @override
-  List<Object?> get props => [categoryList];
+  CategoryLoaded(this.categoryList);
 }
 
-class InitialCategoryState extends CategoryState {
-  const InitialCategoryState(super.categoryList);
-}
+class CategoryLoading extends CategoryState {}
 
 class CategoryEvent extends Equatable {
   const CategoryEvent();
@@ -110,8 +105,6 @@ class DeleteCategory extends CategoryEvent {
   const DeleteCategory(this.category, this.context);
 }
 
-class CategoryManuallySet extends CategoryEvent {
-  final List<Category> categories;
-
-  const CategoryManuallySet(this.categories);
+class CategoriesRefresh extends CategoryEvent {
+  const CategoriesRefresh();
 }
