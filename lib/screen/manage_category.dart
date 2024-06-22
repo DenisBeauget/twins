@@ -58,7 +58,7 @@ class ManageCategory extends StatelessWidget {
                   builder: (context, state) {
                     return SizedBox(
                         height: 40,
-                        child: returnCategories(state.categoryList, context));
+                        child: returnCategories(context));
                   },
                 ),
               ),
@@ -84,7 +84,6 @@ class ManageCategory extends StatelessWidget {
                     style: btnSecondaryStyle(context),
                     onPressed: () {
                       addCategory(categoryName, context);
-                      reloadCategories(context);
                     },
                     child:
                         Text(AppLocalizations.of(context)!.admin_category_add)),
@@ -96,11 +95,6 @@ class ManageCategory extends StatelessWidget {
     );
   }
 
-  void reloadCategories(BuildContext context) {
-    CategoryBloc.isChanged = false;
-    categoryBloc.add(CategoriesALL());
-  }
-
   void confirmDeleteCategory(Category category, BuildContext context) async {
     final bool result = await Popup.showPopupForDelete(
         context,
@@ -109,12 +103,12 @@ class ManageCategory extends StatelessWidget {
             .admin_category_popup_delete_message(category.name));
     if (result) {
       categoryBloc.add(DeleteCategory(category, context));
-      reloadCategories(context);
     }
   }
 
-  Widget returnCategories(List categoryList, BuildContext context) {
-    if (CategoryBloc.isChanged) {
+  Widget returnCategories(BuildContext context) {
+    if (categoryBloc.state is CategoryLoaded) {
+      List<Category> categoryList = (categoryBloc.state as CategoryLoaded).categoryList;
       if (categoryList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.category_not_found,
@@ -128,7 +122,8 @@ class ManageCategory extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                color: Colors.green,
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.black,
                 onPressed: () {
                   confirmDeleteCategory(category, context);
                 },

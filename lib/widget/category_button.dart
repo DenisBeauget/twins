@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 class CategoryButton extends StatelessWidget {
   final String text;
-  final Color color;
+  final Color backgroundColor;
+  final Color foregroundColor;
   final void Function() onPressed;
 
   const CategoryButton({
     super.key,
     required this.text,
-    required this.color,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    
     required this.onPressed,
   });
 
@@ -18,7 +21,8 @@ class CategoryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color,
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
