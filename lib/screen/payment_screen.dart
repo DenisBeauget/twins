@@ -159,19 +159,22 @@ class PaymentScreen extends StatelessWidget {
     final email = AuthService.currentUser?.email;
 
     try {
+      final customerDate = await createCustomer(
+          firstname: firstname, lastname: lastname, email: email);
       final data = await createPaymentIntent(
           amount: '2500',
           currency: 'eur',
           firstName: firstname,
           lastname: lastname,
-          email: email);
+          email: email,
+          customerId: customerDate['id']);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           customFlow: false,
           merchantDisplayName: 'Twins subscription',
           paymentIntentClientSecret: data['client_secret'],
           customerEphemeralKeySecret: data['ephemeralKey'],
-          customerId: data['id'],
+          customerId: customerDate['id'],
           style: ThemeMode.dark,
         ),
       );
