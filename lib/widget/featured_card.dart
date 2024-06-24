@@ -6,48 +6,48 @@ import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../component/establishment_details.dart';
 import '../services/offers_service.dart';
 
 class FeaturedCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String? categoryName;
+  final Establishment establishment;
 
-  const FeaturedCard(
-      {super.key,
-      required this.imageUrl,
-      required this.title,
-      this.categoryName});
+  FeaturedCard({super.key, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 200,
-      margin: const EdgeInsets.only(left: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
+    return GestureDetector(
+      onTap: () {
+        showTransparentModalBottomSheet(context, establishment);
+      },
+      child: Container(
+        width: 160,
+        height: 200,
+        margin: const EdgeInsets.only(left: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  establishment.imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          if (categoryName != null)
+            const SizedBox(height: 8),
             Text(
-              categoryName!,
+              establishment.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-        ],
+            if (establishment.categoryName != null)
+              Text(
+                establishment.categoryName!,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -96,16 +96,20 @@ class FeaturedCardSmall extends StatelessWidget {
       ),
     );
   }
-  }
+}
 
-  class FeaturedCardBig extends StatelessWidget {
-    final Establishment establishment;
+class FeaturedCardBig extends StatelessWidget {
+  final Establishment establishment;
 
-    const FeaturedCardBig({super.key, required this.establishment});
+  const FeaturedCardBig({super.key, required this.establishment});
 
-    @override
-    Widget build(BuildContext context) {
-      return Container(
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showTransparentModalBottomSheet(context, establishment);
+      },
+      child: Container(
         width: 160,
         height: 200,
         margin: const EdgeInsets.only(bottom: 10),
@@ -116,7 +120,7 @@ class FeaturedCardSmall extends StatelessWidget {
               child: Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(15),
                     child: Image.network(
                       establishment.imageUrl,
                       fit: BoxFit.cover,
@@ -161,31 +165,7 @@ class FeaturedCardSmall extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              FutureBuilder<int>(
-                                future: OffersService()
-                                    .getOffersCountByEstablishment(establishment.id!),
-                                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child:CircularProgressIndicator(color: Colors.white)
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    return const Text('Error', style: TextStyle(color: Colors.white));
-                                  } else {
-                                    int offerCount = snapshot.data!;
-                                    return Text(
-                                      offerCount != 0 ? AppLocalizations.of(context)!.offer_available(offerCount)
-                                          : AppLocalizations.of(context)!.no_offer_available,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
+                              renderOffers(context),
                             ],
                           ),
                         ),
@@ -198,29 +178,35 @@ class FeaturedCardSmall extends StatelessWidget {
             const SizedBox(height: 8),
           ],
         ),
-      );
+      ),
+    );
+  }
+
+  Widget renderOffers(BuildContext context) {
+    int offerCount = establishment.offers.length;
+    return Text(
+      offerCount != 0
+          ? AppLocalizations.of(context)!.offer_available(offerCount)
+          : AppLocalizations.of(context)!.no_offer_available,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 16.0,
+      ),
+    );
   }
 }
 
-class FeaturedCardOffer extends StatelessWidget {
-  final String title;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool hightlight;
+class FeaturedCardOfferAdmin extends StatelessWidget {
+  final Offer offer;
 
-  const FeaturedCardOffer(
-      {super.key,
-      required this.title,
-      required this.startDate,
-      required this.endDate,
-      required this.hightlight});
+  const FeaturedCardOfferAdmin({super.key, required this.offer});
 
   @override
   Widget build(BuildContext context) {
     String formattedStartDate = AppLocalizations.of(context)!.start_date +
-        DateFormat('dd-MM-yyyy').format(startDate);
+        DateFormat('dd-MM-yyyy').format(offer.startDate);
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
-        DateFormat('dd-MM-yyyy').format(endDate);
+        DateFormat('dd-MM-yyyy').format(offer.endDate);
     return Container(
         margin: const EdgeInsets.only(left: 16),
         width: 300,
@@ -246,7 +232,7 @@ class FeaturedCardOffer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      offer.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
@@ -281,11 +267,103 @@ class FeaturedCardOffer extends StatelessWidget {
               Checkbox(
                 activeColor: Colors.white,
                 checkColor: lightColorScheme.surfaceTint,
-                value: hightlight,
+                value: offer.hightlight,
                 onChanged: null,
               ),
             ],
           ),
         ));
+  }
+}
+
+class FeaturedCardOffer extends StatelessWidget {
+  final Offer offer;
+
+  const FeaturedCardOffer({super.key, required this.offer});
+
+  @override
+  Widget build(BuildContext context) {
+    String formattedStartDate = AppLocalizations.of(context)!.start_date +
+        DateFormat('dd-MM-yyyy').format(offer.startDate);
+    String formattedEndDate = AppLocalizations.of(context)!.end_date +
+        DateFormat('dd-MM-yyyy').format(offer.endDate);
+
+    return Container(
+      margin: const EdgeInsets.all(16),
+      width: 300,
+      // Augmentation de la hauteur pour accommoder le bouton
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                    child: Text(
+                  '1 bière achetée = 1 offerte',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                )),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.0,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formattedEndDate,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Text(
+                            'Profite de l’offre',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

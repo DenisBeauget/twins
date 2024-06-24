@@ -105,6 +105,8 @@ class EstablishmentService {
       }
       return Establishment(
           name: 'Unknown',
+          description: 'Unknown',
+          address: 'Unknown',
           hightlight: false,
           imageUrl: 'Unknown',
           imageName: 'Unknown');
@@ -113,14 +115,14 @@ class EstablishmentService {
     }
   }
 
-  Future<bool> addEstablishment(Establishment establishmentToAdd) async {
+  Future<String?> addEstablishment(Establishment establishmentToAdd) async {
     try {
       List<Establishment> listEstablishment = await getEstablishments();
 
       for (Establishment establishment in listEstablishment) {
         if (establishment.name.toLowerCase() ==
             establishmentToAdd.name.toLowerCase()) {
-          return false;
+          return null;
         }
       }
       String caterogyId = await CategoryService()
@@ -128,12 +130,36 @@ class EstablishmentService {
       DocumentReference categoryReference =
           _firestore.collection('categories').doc(caterogyId);
 
-      _firestore.collection('establishments').doc().set({
+      DocumentReference docRef =
+          await FirebaseFirestore.instance.collection('establishments').add({
         'name': establishmentToAdd.name,
+        'description': establishmentToAdd.description,
+        'address': establishmentToAdd.address,
         'categorie_id': categoryReference,
         'hightlight': establishmentToAdd.hightlight,
         'imageUrl': establishmentToAdd.imageUrl,
         'imageName': establishmentToAdd.imageName,
+      });
+
+      // Récupérer l'ID du document ajouté
+      String docId = docRef.id;
+      return docId;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> updateEstablishment(Establishment establishment) async {
+    try {
+      DocumentReference docRef =
+          _firestore.collection('establishments').doc(establishment.id);
+      await docRef.update({
+        'name': establishment.name,
+        'description': establishment.description,
+        'address': establishment.address,
+        'hightlight': establishment.hightlight,
+        'imageUrl': establishment.imageUrl,
+        'imageName': establishment.imageName,
       });
       return true;
     } catch (e) {
@@ -167,15 +193,20 @@ class EstablishmentService {
 
 class Establishment {
   final String name;
+  final String description;
+  final String address;
   final bool hightlight;
   String imageUrl;
   String imageName;
+  List<Offer> offers = [];
   DocumentReference? categoryId;
   String? categoryName;
   String? id;
 
   Establishment(
       {required this.name,
+      required this.description,
+      required this.address,
       required this.hightlight,
       required this.imageUrl,
       required this.imageName,
@@ -186,6 +217,8 @@ class Establishment {
   factory Establishment.fromDocument(DocumentSnapshot doc) {
     return Establishment(
       name: doc['name'],
+      description: doc['description'],
+      address: doc['address'],
       hightlight: doc['hightlight'],
       categoryId: doc['categorie_id'],
       imageUrl: doc['imageUrl'],

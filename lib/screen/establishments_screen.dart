@@ -38,6 +38,7 @@ class EstablishmentsScreen extends StatelessWidget {
           return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: establishmentList.length,
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];

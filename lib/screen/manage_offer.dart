@@ -22,7 +22,7 @@ class ManageOffer extends StatelessWidget {
   late EstablishmentBloc establishmentBloc;
   late OfferBloc offerBloc;
   late Establishment establishmentSelected =
-      Establishment(name: "", hightlight: false, imageUrl: '', imageName: '');
+      Establishment(name: '', description: '', address: '', hightlight: false, imageUrl: '', imageName: '');
 
   String establishmentName = "";
 
@@ -180,12 +180,7 @@ class ManageOffer extends StatelessWidget {
                     onTap: () {
                       confirmDeleteOffer(offer, context);
                     },
-                    child: FeaturedCardOffer(
-                      title: offer.title,
-                      endDate: offer.endDate,
-                      startDate: offer.startDate,
-                      hightlight: offer.hightlight,
-                    ),
+                    child: FeaturedCardOfferAdmin(offer: offer),
                   ),
                   const SizedBox(height: 10)
                 ],
