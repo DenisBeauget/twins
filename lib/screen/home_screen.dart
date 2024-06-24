@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -88,7 +89,8 @@ class HomeScreen extends StatelessWidget {
         if (establishmentList.isEmpty) {
           return Center(
               child: Text(AppLocalizations.of(context)!.no_establishment_found,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)));
         } else {
           establishmentList = establishmentList.where((establishment) {
             return establishment.hightlight == true;
@@ -97,8 +99,8 @@ class HomeScreen extends StatelessWidget {
             return Center(
                 child: Text(
                     AppLocalizations.of(context)!.no_establishment_found,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)));
           }
           return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -254,10 +256,11 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   AppLocalizations.of(context)!.highlighted,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 20),
@@ -273,14 +276,14 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       AppLocalizations.of(context)!.partners,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
                       child: Text(

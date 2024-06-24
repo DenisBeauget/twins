@@ -129,6 +129,16 @@
   "admin_offer_title": "Pour supprimer une offre, appuyez dessus",
   "admin_offer_added": "Offre ajouté",
   "admin_offer_bad_date": "Date incorrect",
-  "admin_offer_cant_add": "Offre non ajouté"
+  "admin_offer_cant_add": "Offre non ajouté",
+  "subscription_argument_first": "Rentabilise ton abonnement en une sortie & profite toute l’année",
+  "subscription_argument_second": "Profite de plus de 300 offres un acheté = un offert sur Lille",
+  "subscription_argument_third": "Découvre des endroits incontournables avec tes proches",
+  "subscription_time": "Annuel",
+  "subscription_price": "25€ / an (sans engagement)",
+  "subscription_argument": "Meilleur prix",
+  "subscription_success": "Abonnement réussi",
+  "subscription_fail": "Paiement échoué",
+  "subscription_button": "J'EN PROFITE !",
+  "subscription_term": "En passant cette commande, vous acceptez les conditions de service et la politique de confidentialité. L'abonnement est automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours."
 
 }

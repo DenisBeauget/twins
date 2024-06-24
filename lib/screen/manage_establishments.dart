@@ -28,12 +28,14 @@ class ManageEstablishments extends StatelessWidget {
 
   String establishmentName = "";
 
-  late Category? categorySelected = null;
+  late Category? categorySelected;
 
   final ValueNotifier<String> _notify = ValueNotifier<String>("");
 
   late File _image = File('');
   final picker = ImagePicker();
+
+  ManageEstablishments({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -109,8 +111,8 @@ class ManageEstablishments extends StatelessWidget {
                 const SizedBox(height: 50),
                 Text(
                     AppLocalizations.of(context)!.admin_establishment_add_title,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -171,7 +173,6 @@ class ManageEstablishments extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-
                 BlocBuilder<EstablishmentBloc, EstablishmentState>(
                   bloc: establishmentBloc,
                   builder: (context, state) {
@@ -191,7 +192,8 @@ class ManageEstablishments extends StatelessWidget {
       if (categoryList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.category_not_found,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -226,7 +228,6 @@ class ManageEstablishments extends StatelessWidget {
             style: btnSecondaryStyle(context),
             onPressed: () {
               addEstablishment(context);
-
             },
             child: Center(
                 child: CircularProgressIndicator(
@@ -297,13 +298,13 @@ class ManageEstablishments extends StatelessWidget {
               .admin_establishment_select_category_message);
       return;
     }
-    if (establishmentName.isEmpty || establishmentName == null) {
+    if (establishmentName.isEmpty) {
       Toaster.showFailedToast(context,
           AppLocalizations.of(context)!.admin_establishment_enter_name_message);
       return;
     }
 
-    if (_image.path.isEmpty || _image.path == null) {
+    if (_image.path.isEmpty) {
       Toaster.showFailedToast(
           context,
           AppLocalizations.of(context)!
@@ -312,7 +313,7 @@ class ManageEstablishments extends StatelessWidget {
     }
 
     establishmentBloc.add(AddEstablishment(
-        new Establishment(
+        Establishment(
             name: establishmentName,
             hightlight: isChecked,
             categoryName: categorySelected?.name,
