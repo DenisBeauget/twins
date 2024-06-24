@@ -27,7 +27,6 @@ import 'bloc/category_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  String paymentUrl = "https://api.stripe.com/v1/payment_intents";
   Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   Stripe.instance.applySettings;
   await _initDevicesParameters();
@@ -41,11 +40,11 @@ Future<void> main() async {
           create: (context) => AuthController()),
       ChangeNotifierProvider<ScreenIndexProvider>(
           create: (context) => ScreenIndexProvider()),
-      ListenableProvider<CheckboxProvider>(create: (context) => CheckboxProvider()),
+      ListenableProvider<CheckboxProvider>(
+          create: (context) => CheckboxProvider()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
       BlocProvider<OfferBloc>(create: (context) => OfferBloc())
-
     ],
     child: const MyApp(),
   ));

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
+import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/payment_service.dart';
 import 'package:twins_front/services/user_service.dart';
@@ -150,12 +152,19 @@ class PaymentScreen extends StatelessWidget {
   }
 
   Future<void> initPaymentSheet(BuildContext context) async {
-    final firstname = AuthService.currentUser?.displayName;
+    final firstname =
+        Provider.of<AuthController>(context, listen: false).firstName;
+    final lastname =
+        Provider.of<AuthController>(context, listen: false).lastName;
     final email = AuthService.currentUser?.email;
 
     try {
       final data = await createPaymentIntent(
-          amount: '2500', currency: 'eur', firstName: firstname, email: email);
+          amount: '2500',
+          currency: 'eur',
+          firstName: firstname,
+          lastname: lastname,
+          email: email);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           customFlow: false,
