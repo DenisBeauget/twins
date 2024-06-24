@@ -71,4 +71,16 @@ class UserService {
       rethrow;
     }
   }
+
+  static Future<bool> subscribeUser(String uid) async {
+    try {
+      _firestore.collection('users').doc(uid).update({
+        'is_subscribed': true,
+        'subscribed_at': Timestamp.fromDate(DateTime.now())
+      });
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

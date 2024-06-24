@@ -29,6 +29,9 @@ dependencies:
   firebase_storage: ^11.7.7
   image_picker: ^1.1.2
   flutter_native_image: ^0.0.6+1
+  flutter_stripe: ^10.1.1
+  flutter_dotenv: ^5.1.0
+  http: ^1.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -61,3 +64,4 @@ flutter:
     - assets/img/twins_logo_w.png
     - assets/img/scroll.gif
     - assets/img/scroll_w.gif
+    - .env

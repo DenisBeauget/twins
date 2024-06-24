@@ -11,7 +11,6 @@ import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../services/auth_service.dart';
-import 'auth_screen.dart';
 
 class AppExplanation3 extends StatelessWidget {
   const AppExplanation3({super.key});
@@ -73,20 +72,19 @@ Future<void> goToHome(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('firstTime', false);
 
-  WidgetsBinding.instance!.addPostFrameCallback((_) async {
-    try{
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    try {
       if (await userConnected(context)) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const AuthScreen()));
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const AuthScreen()));
       }
     } catch (e) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const AuthScreen()));
     }
-
   });
 }
 

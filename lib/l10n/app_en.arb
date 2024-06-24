@@ -129,5 +129,16 @@
   "admin_offer_title": "To delete an offer, tap on it",
   "admin_offer_added": "Offer added",
   "admin_offer_bad_date": "Bad date",
-  "admin_offer_cant_add": "Offer not added"
+  "admin_offer_cant_add": "Offer not added",
+  "subscription_argument_first": "Make the most of your subscription in one go & enjoy it all year round",
+  "subscription_argument_second": "Take advantage of over 300 one-buy-one-free offers in Lille",
+  "subscription_argument_third": "Discover must-see places with your friends and family",
+  "subscription_time": "Annually",
+  "subscription_price": "25€ / year (no engagement)",
+  "subscription_argument": "Best price",
+  "subscription_success": "Successfull subscription",
+  "subscription_fail": "Payment fail",
+  "subscription_button": "I ENJOY !",
+   "subscription_term": "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period."
+
 }

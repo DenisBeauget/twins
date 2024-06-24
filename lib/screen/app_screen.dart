@@ -4,6 +4,7 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/admin_screen.dart';
+import 'package:twins_front/screen/payment_screen.dart';
 
 import '../services/auth_service.dart';
 import 'home_screen.dart';
@@ -15,19 +16,20 @@ class AppScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService.userAlreadyExists(context);
     final isAdmin = Provider.of<AuthController>(context).isAdmin;
-    final _screenindexprovider = Provider.of<ScreenIndexProvider>(context);
-    int navBarIndex = _screenindexprovider._index;
-    const List<Widget> _widgetOptions = <Widget>[
+    final screenindexprovider = Provider.of<ScreenIndexProvider>(context);
+    int navBarIndex = screenindexprovider._index;
+    const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
       HomeScreen(),
-      AdminScreen()
+      AdminScreen(),
+      PaymentScreen()
     ];
 
     return Scaffold(
       body: IndexedStack(
         index: navBarIndex,
         key: key,
-        children: _widgetOptions,
+        children: widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -53,12 +55,16 @@ class AppScreen extends StatelessWidget {
               label: '',
               activeIcon: Icon(Icons.admin_panel_settings),
             ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.payment_outlined),
+            label: '',
+            activeIcon: Icon(Icons.payment),
+          ),
         ],
         onTap: (index) {
           navBarIndex = index;
-          _screenindexprovider.setIndex(index);
+          screenindexprovider.setIndex(index);
           Haptics.vibrate(HapticsType.light);
-
         },
       ),
     );
