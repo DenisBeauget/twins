@@ -66,6 +66,7 @@
       }
     }
   },
+  "admin_update": "Mettre à jour",
   "admin_presentation": "A partir de cette zone tu pourras ajouter, supprimer ou consulter différents éléments directement dans l'application",
   "admin_category": "Gérer les catégories",
   "admin_category_title": "Pour supprimer une catégorie, appuyez dessus.",
@@ -84,9 +85,12 @@
   },
   "admin_category_input_placeholder": "Nom de la catégorie",
   "admin_establishment": "Gérer les établissements",
-  "admin_establishment_title": "Pour supprimer un établissement, appuyez dessus.",
+  "admin_establishment_title_delete": "Pour supprimer un établissement, appuyez deux fois dessus.",
+  "admin_establishment_title_update": "Pour modifier un établissement, appuyez une fois dessus.",
   "admin_establishment_add_title": "Ajouter un établissement",
   "admin_establishment_name_input_placeholder": "Nom de l'établissement",
+  "admin_establishment_description_input_placeholder": "Description",
+  "admin_establishment_address_input_placeholder": "Adresse",
   "admin_establishment_highlight": "Mettre en avant",
   "admin_establishment_add": "Ajouter",
   "admin_establishment_category_selected": "catégories sélectionné : {category_name}",
@@ -139,6 +143,8 @@
   "subscription_success": "Abonnement réussi",
   "subscription_fail": "Paiement échoué",
   "subscription_button": "J'EN PROFITE !",
-  "subscription_term": "En passant cette commande, vous acceptez les conditions de service et la politique de confidentialité. L'abonnement est automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours."
-
+  "subscription_term": "En passant cette commande, vous acceptez les conditions de service et la politique de confidentialité. L'abonnement est automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours.",
+  "offer_card_title": "Offre(s)",
+  "offer_no_offers_available": "Aucune offre disponible",
+  "offer_card_bt": "Profiter de l’offre"
 }

@@ -13,6 +13,7 @@ import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/firebase_options.dart';
 import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/screen/auth_screen.dart';
+import 'package:twins_front/screen/manage_establishments.dart';
 import 'package:twins_front/screen/welcome_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/user_service.dart';
@@ -40,9 +41,11 @@ Future<void> main() async {
           create: (context) => AuthController()),
       ChangeNotifierProvider<ScreenIndexProvider>(
           create: (context) => ScreenIndexProvider()),
+      ListenableProvider<CheckboxProvider>(create: (context) => CheckboxProvider()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
       BlocProvider<OfferBloc>(create: (context) => OfferBloc())
+
     ],
     child: const MyApp(),
   ));

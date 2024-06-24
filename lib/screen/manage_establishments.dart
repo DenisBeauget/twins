@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,16 +26,21 @@ class ManageEstablishments extends StatelessWidget {
   late CategoryBloc categoryBloc;
   late EstablishmentBloc establishmentBloc;
 
-  String establishmentName = "";
+  TextEditingController establishmentName = TextEditingController();
+  TextEditingController establishmentDescription = TextEditingController();
+  TextEditingController establishmentAddress = TextEditingController();
 
-  late Category? categorySelected;
+  late Category? categorySelected = null;
+  late Establishment? establishmentSelected = null;
 
   final ValueNotifier<String> _notify = ValueNotifier<String>("");
 
   late File _image = File('');
   final picker = ImagePicker();
 
-  ManageEstablishments({super.key});
+  bool updating = false;
+
+  late CheckboxProvider checkboxProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +48,8 @@ class ManageEstablishments extends StatelessWidget {
     establishmentBloc = BlocProvider.of<EstablishmentBloc>(context);
 
     establishmentBloc.add(const EstablishmentFilterByKeyword(""));
+
+    checkboxProvider = Provider.of<CheckboxProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(),
@@ -61,13 +68,30 @@ class ManageEstablishments extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(Icons.info_outline, size: 40),
-                      const Padding(padding: EdgeInsets.only(left: 10)),
-                      Expanded(
-                        child: Text(
-                            AppLocalizations.of(context)!
-                                .admin_establishment_title,
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      const Padding(padding: EdgeInsets.only(left: 15)),
+                      SizedBox(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                  AppLocalizations.of(context)!
+                                      .admin_establishment_title_update,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Expanded(
+                              child: Text(
+                                  AppLocalizations.of(context)!
+                                      .admin_establishment_title_delete,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -76,6 +100,7 @@ class ManageEstablishments extends StatelessWidget {
                 TextField(
                   style:
                       TextStyle(color: Theme.of(context).colorScheme.surface),
+                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.search_placeholder,
                     hintStyle:
@@ -103,16 +128,15 @@ class ManageEstablishments extends StatelessWidget {
                     return Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
-                          height: 120,
-                          child: returnEstablishments(context)),
+                          height: 120, child: returnEstablishments(context)),
                     );
                   },
                 ),
                 const SizedBox(height: 50),
                 Text(
                     AppLocalizations.of(context)!.admin_establishment_add_title,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -120,8 +144,7 @@ class ManageEstablishments extends StatelessWidget {
                     bloc: categoryBloc,
                     builder: (context, state) {
                       return SizedBox(
-                          height: 40,
-                          child: returnCategories((state as CategoryLoaded).categoryList, context));
+                          height: 40, child: returnCategories(context));
                     },
                   ),
                 ),
@@ -134,24 +157,50 @@ class ManageEstablishments extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 TextField(
-                    autocorrect: true,
-                    cursorColor: Colors.green,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!
-                          .admin_establishment_name_input_placeholder,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.photo_outlined,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        onPressed: () {
-                          getImageFromGallery();
-                        },
-                      ),
+                  autocorrect: true,
+                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  controller: establishmentName,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!
+                        .admin_establishment_name_input_placeholder,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.photo_outlined,
+                          color: Theme.of(context).colorScheme.onSurface),
+                      onPressed: () {
+                        getImageFromGallery();
+                      },
                     ),
-                    onChanged: (value) {
-                      establishmentName = value;
-                    }),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  autocorrect: true,
+                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  controller: establishmentDescription,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 2,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!
+                        .admin_establishment_description_input_placeholder,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  autocorrect: true,
+                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  controller: establishmentAddress,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!
+                        .admin_establishment_address_input_placeholder,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
@@ -187,13 +236,14 @@ class ManageEstablishments extends StatelessWidget {
     );
   }
 
-  Widget returnCategories(List categoryList, BuildContext context) {
+  Widget returnCategories(BuildContext context) {
     if (categoryBloc.state is CategoryLoaded) {
+      List<Category> categoryList =
+          (categoryBloc.state as CategoryLoaded).categoryList;
       if (categoryList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.category_not_found,
-                style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold)));
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
       } else {
         return ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -203,8 +253,8 @@ class ManageEstablishments extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.black,
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 onPressed: () {
                   categorySelected = category;
                   _notify.value = categorySelected?.name ?? "";
@@ -221,13 +271,14 @@ class ManageEstablishments extends StatelessWidget {
   }
 
   Widget returnAddBtn(BuildContext context) {
-    if (establishmentBloc.state is EstablishmentCreating) {
+    if (establishmentBloc.state is EstablishmentCreating ||
+        establishmentBloc.state is EstablishmentUpdating) {
       return SizedBox(
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             style: btnSecondaryStyle(context),
             onPressed: () {
-              addEstablishment(context);
+              addUpdateEstablishment(context);
             },
             child: Center(
                 child: CircularProgressIndicator(
@@ -238,18 +289,27 @@ class ManageEstablishments extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
-          style: btnSecondaryStyle(context),
-          onPressed: () {
-            addEstablishment(context);
+        style: btnSecondaryStyle(context),
+        onPressed: () {
+          addUpdateEstablishment(context);
+        },
+        child: ValueListenableBuilder(
+          valueListenable: _notify,
+          builder: (BuildContext context, String value, Widget? child) {
+            return Text(updating
+                ? AppLocalizations.of(context)!.admin_update
+                : AppLocalizations.of(context)!.admin_establishment_add);
           },
-          child: Text(AppLocalizations.of(context)!.admin_establishment_add)),
+        ),
+      ),
     );
   }
 
   Widget returnEstablishments(BuildContext context) {
     if (establishmentBloc.state is EstablishmentLoaded) {
       List<Establishment> establishmentList =
-          (establishmentBloc.state as EstablishmentLoaded).establishmentList;      if (establishmentList.isEmpty) {
+          (establishmentBloc.state as EstablishmentLoaded).establishmentList;
+      if (establishmentList.isEmpty) {
         return Center(
             child: Text(AppLocalizations.of(context)!.no_establishment_found,
                 style: const TextStyle(
@@ -263,7 +323,19 @@ class ManageEstablishments extends StatelessWidget {
               final establishment = establishmentList[index];
               return GestureDetector(
                 onTap: () {
-                  confirmDeleteEstablishment(establishment, context);
+                  if (establishmentSelected == null) {
+                    establishmentSelected = establishment;
+                    showData();
+                  } else {
+                    if (establishmentSelected == establishment) {
+                      clearData();
+                      establishmentSelected = null;
+                      confirmDeleteEstablishment(establishment, context);
+                    } else {
+                      establishmentSelected = establishment;
+                      showData();
+                    }
+                  }
                 },
                 child: FeaturedCardSmall(
                     imageUrl: establishment.imageUrl,
@@ -290,7 +362,7 @@ class ManageEstablishments extends StatelessWidget {
     }
   }
 
-  void addEstablishment(BuildContext context) {
+  void addUpdateEstablishment(BuildContext context) {
     if (categorySelected == null) {
       Toaster.showFailedToast(
           context,
@@ -298,13 +370,14 @@ class ManageEstablishments extends StatelessWidget {
               .admin_establishment_select_category_message);
       return;
     }
-    if (establishmentName.isEmpty) {
+    if (establishmentName.text.isEmpty ||
+        establishmentDescription.text.isEmpty) {
       Toaster.showFailedToast(context,
           AppLocalizations.of(context)!.admin_establishment_enter_name_message);
       return;
     }
 
-    if (_image.path.isEmpty) {
+    if (_image.path.isEmpty || _image.path == null) {
       Toaster.showFailedToast(
           context,
           AppLocalizations.of(context)!
@@ -312,15 +385,34 @@ class ManageEstablishments extends StatelessWidget {
       return;
     }
 
-    establishmentBloc.add(AddEstablishment(
-        Establishment(
-            name: establishmentName,
-            hightlight: isChecked,
-            categoryName: categorySelected?.name,
-            imageUrl: '',
-            imageName: ''),
-        _image,
-        context));
+    if (updating) {
+      establishmentBloc.add(UpdateEstablishment(
+          Establishment(
+              id: establishmentSelected!.id,
+              name: establishmentName.text,
+              description: establishmentDescription.text,
+              address: establishmentAddress.text,
+              hightlight: isChecked,
+              categoryName: categorySelected?.name,
+              imageUrl: establishmentSelected!.imageUrl,
+              imageName: establishmentSelected!.imageName),
+          _image,
+          context));
+    } else {
+      establishmentBloc.add(AddEstablishment(
+          Establishment(
+              name: establishmentName.text,
+              description: establishmentDescription.text,
+              address: establishmentAddress.text,
+              hightlight: isChecked,
+              categoryName: categorySelected?.name,
+              imageUrl: '',
+              imageName: ''),
+          _image,
+          context));
+    }
+
+    clearData();
   }
 
   Future<void> confirmDeleteEstablishment(
@@ -343,6 +435,27 @@ class ManageEstablishments extends StatelessWidget {
           await FlutterNativeImage.compressImage(pickedFile.path, quality: 5);
       _image = compressedFile;
     }
+  }
+
+  void showData() {
+    updating = true;
+    categorySelected = Category(name: establishmentSelected!.categoryName!);
+    _notify.value = categorySelected!.name;
+    establishmentName.text = establishmentSelected!.name;
+    establishmentDescription.text = establishmentSelected!.description;
+    establishmentAddress.text = establishmentSelected!.address;
+    _image = File('not_changed');
+    checkboxProvider.isChecked = establishmentSelected!.hightlight;
+  }
+
+  void clearData() {
+    updating = false;
+    categorySelected = null;
+    _notify.value = '';
+    establishmentName.clear();
+    establishmentDescription.clear();
+    establishmentAddress.clear();
+    _image = File('');
   }
 }
 

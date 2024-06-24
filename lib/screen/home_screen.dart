@@ -109,9 +109,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    imageUrl: establishment.imageUrl,
-                    title: establishment.name,
-                    categoryName: establishment.categoryName ?? 'Unknow');
+                    establishment: establishment,);
               });
         }
       } else {
@@ -139,9 +137,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    imageUrl: establishment.imageUrl,
-                    title: establishment.name,
-                    categoryName: establishment.categoryName ?? 'Unknow');
+                    establishment: establishment,);
               });
         }
       } else {

@@ -66,6 +66,7 @@
       }
     }
   },
+  "admin_update": "Update",
   "admin_presentation": "From this area you can add, remove or consult different elements directly in the application",
   "admin_category": "Manage categories",
   "admin_category_title": "To delete a category, tap it.",
@@ -84,9 +85,12 @@
   },
   "admin_category_input_placeholder": "Category name",
   "admin_establishment": "Manage establishments",
-  "admin_establishment_title": "To delete an establishment, tap it.",
+  "admin_establishment_title_delete": "To delete an establishment, tap it twice.",
+  "admin_establishment_title_update": "To modify an establishment, tap it once.",
   "admin_establishment_add_title": "Add establishment",
   "admin_establishment_name_input_placeholder": "Establishment name",
+  "admin_establishment_description_input_placeholder": "Description",
+  "admin_establishment_address_input_placeholder": "Address",
   "admin_establishment_highlight": "Highlight",
   "admin_establishment_add": "Add",
   "admin_establishment_category_selected": "categories selected : {category_name}",
@@ -139,6 +143,9 @@
   "subscription_success": "Successfull subscription",
   "subscription_fail": "Payment fail",
   "subscription_button": "I ENJOY !",
-   "subscription_term": "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period."
+  "subscription_term": "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.",
+  "offer_card_title": "Offer(s)",
+  "offer_no_offers_available": "No offers available",
+  "offer_card_bt": "take advantage of the offer"
 
 }
