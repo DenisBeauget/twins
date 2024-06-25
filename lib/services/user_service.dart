@@ -52,6 +52,8 @@ class UserService {
           userAttributes['isAdmin'];
       Provider.of<AuthController>(context, listen: false).firstName =
           userAttributes['first_name'];
+      Provider.of<AuthController>(context, listen: false).lastName =
+          userAttributes['last_name'];
       return userAttributes.data() as Map<String, dynamic>;
     } catch (e) {
       rethrow;

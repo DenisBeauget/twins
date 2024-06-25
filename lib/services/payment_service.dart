@@ -43,7 +43,7 @@ Future createCustomer(
     required String? email}) async {
   final customerUrl = Uri.parse(dotenv.env["CUSTOMER_URL"]!);
   final String? secretKey = dotenv.env["STRIPE_SECRET_KEY"];
-  final fullName = firstname + lastname;
+  final fullName = "$firstname $lastname";
 
   final body = {'name': fullName, 'email': email};
 
