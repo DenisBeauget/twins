@@ -41,7 +41,7 @@ Future createCustomer(
     {required String firstname,
     required String lastname,
     required String? email}) async {
-  final customerUrl = Uri.parse("https://api.stripe.com/v1/customers");
+  final customerUrl = Uri.parse(dotenv.env["CUSTOMER_URL"]!);
   final String? secretKey = dotenv.env["STRIPE_SECRET_KEY"];
   final fullName = firstname + lastname;
 
