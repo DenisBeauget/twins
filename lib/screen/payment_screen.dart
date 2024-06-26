@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
+import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/payment_service.dart';
+import 'package:twins_front/services/subscription_service.dart';
 import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/utils/toaster.dart';
 
@@ -90,10 +93,11 @@ class PaymentScreen extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              await initPaymentSheet(context);
+              String customerId = await initPaymentSheet(context);
               try {
                 await Stripe.instance.presentPaymentSheet();
-                await UserService.subscribeUser(AuthService.currentUser!.uid);
+                await SubscriptionService.subscribeUser(
+                    AuthService.currentUser!.uid, customerId);
                 Toaster.showSuccessToast(context,
                     AppLocalizations.of(context)!.subscription_success);
               } catch (e) {
@@ -149,23 +153,34 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  Future<void> initPaymentSheet(BuildContext context) async {
-    final firstname = AuthService.currentUser?.displayName;
+  Future<String> initPaymentSheet(BuildContext context) async {
+    final firstname =
+        Provider.of<AuthController>(context, listen: false).firstName;
+    final lastname =
+        Provider.of<AuthController>(context, listen: false).lastName;
     final email = AuthService.currentUser?.email;
 
     try {
+      final customerData = await createCustomer(
+          firstname: firstname, lastname: lastname, email: email);
       final data = await createPaymentIntent(
-          amount: '2500', currency: 'eur', firstName: firstname, email: email);
+          amount: '2500',
+          currency: 'eur',
+          firstName: firstname,
+          lastname: lastname,
+          email: email,
+          customerId: customerData['id']);
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           customFlow: false,
           merchantDisplayName: 'Twins subscription',
           paymentIntentClientSecret: data['client_secret'],
           customerEphemeralKeySecret: data['ephemeralKey'],
-          customerId: data['id'],
+          customerId: customerData['id'],
           style: ThemeMode.dark,
         ),
       );
+      return customerData['id'];
     } catch (e) {
       rethrow;
     }
