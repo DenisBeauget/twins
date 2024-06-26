@@ -4,10 +4,6 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
-import 'utils/util.dart';
-
-import 'theme.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,15 +67,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     getUserInfo(context);
 
-
-    TextTheme textTheme = createTextTheme(context, "Chakra Petch", "Tajawal");
-
-    MaterialTheme theme = MaterialTheme(textTheme);
-
     return MaterialApp(
       title: 'Twins App',
-      theme: theme.light(),
-      darkTheme: theme.dark(),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -112,11 +102,8 @@ class MyApp extends StatelessWidget {
               blastDirectionality: BlastDirectionality.explosive,
               emissionFrequency: 0.1,
               numberOfParticles: 25,
-
               minBlastForce: 10,
               maxBlastForce: 50,
-
-
             ),
           ),
         ],
@@ -127,7 +114,7 @@ class MyApp extends StatelessWidget {
 
 Widget redirectUser() {
   if (FirebaseAuth.instance.currentUser != null) {
-    return AppScreen();
+    return const AppScreen();
   } else {
     return const WelcomeScreen();
   }
@@ -150,5 +137,3 @@ Future<void> getUserInfo(BuildContext context) async {
     }
   }
 }
-
-
