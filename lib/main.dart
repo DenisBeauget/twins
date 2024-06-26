@@ -38,7 +38,6 @@ import 'bloc/category_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  String paymentUrl = "https://api.stripe.com/v1/payment_intents";
   Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   Stripe.instance.applySettings;
   await _initDevicesParameters();

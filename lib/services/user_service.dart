@@ -35,9 +35,7 @@ class UserService {
         'is_active': true,
         'is_deleted': false,
         'is_confirmed': false,
-        'is_subscribed': false,
-        'isAdmin': false,
-        'subscribed_at': null,
+        'isAdmin': false
       });
       return true;
     } catch (e) {
@@ -54,6 +52,8 @@ class UserService {
           userAttributes['isAdmin'];
       Provider.of<AuthController>(context, listen: false).firstName =
           userAttributes['first_name'];
+      Provider.of<AuthController>(context, listen: false).lastName =
+          userAttributes['last_name'];
       return userAttributes.data() as Map<String, dynamic>;
     } catch (e) {
       rethrow;
@@ -67,18 +67,6 @@ class UserService {
           .where('email', isEqualTo: email)
           .get();
       return query.docs.isNotEmpty;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  static Future<bool> subscribeUser(String uid) async {
-    try {
-      _firestore.collection('users').doc(uid).update({
-        'is_subscribed': true,
-        'subscribed_at': Timestamp.fromDate(DateTime.now())
-      });
-      return true;
     } catch (e) {
       rethrow;
     }

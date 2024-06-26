@@ -72,7 +72,7 @@ class AppScreen extends StatelessWidget {
           navBarIndex = index;
           screenindexprovider.setIndex(index);
           Haptics.vibrate(HapticsType.light);
-        },
+         },
       ),
     );
   }
