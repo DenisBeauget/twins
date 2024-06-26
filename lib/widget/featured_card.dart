@@ -152,7 +152,9 @@ class FeaturedCardBig extends StatelessWidget {
                                       establishment.name,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).colorScheme.onPrimary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
                                         fontSize: 18,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -160,7 +162,9 @@ class FeaturedCardBig extends StatelessWidget {
                                     Text(
                                       establishment.categoryName ?? 'Unknown',
                                       style: TextStyle(
-                                        color: Theme.of(context).colorScheme.onPrimary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
                                       ),
                                     ),
                                   ],
@@ -289,81 +293,119 @@ class FeaturedCardOffer extends StatelessWidget {
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
         DateFormat('dd-MM-yyyy').format(offer.endDate);
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      width: 300,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
-        borderRadius: BorderRadius.circular(16.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                    child: Text(
-                  offer.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                )),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 14.0,
-                  ),
+    return FutureBuilder<bool>(
+      future: checkOfferAlreadyUsed(offer.id!),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          bool alreadyUsed = snapshot.data ?? false;
+          return Container(
+            margin: const EdgeInsets.all(16),
+            width: 300,
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16.0),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
                 ),
-                const SizedBox(height: 15),
-                Row(
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        formattedEndDate,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 15.0,
+                      Center(
+                        child: Text(
+                          offer.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            borderRadius: BorderRadius.circular(8.0),
+                      const SizedBox(height: 8.0),
+                      const Text(
+                        'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            formattedEndDate,
+                            style: const TextStyle(
+                              fontSize: 15.0,
+                            ),
                           ),
+                          GestureDetector(
+                            onTap: alreadyUsed
+                                ? null
+                                : () {
+                                    Popup.showValidateOffer(context, offer);
+                                  },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.offer_card_bt,
+                                style: const TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  if (alreadyUsed)
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.all(16),
+                        height: 100,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        color: Colors.black.withOpacity(0.7),
+                        child:  Center(
                           child: Text(
-                            AppLocalizations.of(context)!.offer_card_bt,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontSize: 14.0,
+                            AppLocalizations.of(context)!.offer_already_used,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                    ]),
-              ],
+                    ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
+  }
+
+  Future<bool> checkOfferAlreadyUsed(String offerId) async {
+    return await OffersService().checkOfferAlreadyUsed(offerId);
   }
 }

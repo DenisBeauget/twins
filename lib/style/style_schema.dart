@@ -101,8 +101,6 @@ const darkColorScheme = ColorScheme(
 
 btnPrimaryStyle() {
   return ElevatedButton.styleFrom(
-    backgroundColor: lightColorScheme.primaryContainer,
-    foregroundColor: Colors.black,
     textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
     padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),

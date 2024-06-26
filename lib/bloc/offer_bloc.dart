@@ -27,7 +27,8 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
       } else {
         await OfferService.addOfferToSpecificEstablishment(event.offer)
             .then((value) {
-          if (value) {
+          if (value.isNotEmpty) {
+            event.offer.id = value;
             currentOffers.add(event.offer);
             Toaster.showSuccessToast(event.context,
                 AppLocalizations.of(event.context)!.admin_offer_added);

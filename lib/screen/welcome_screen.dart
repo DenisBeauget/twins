@@ -4,6 +4,7 @@ import 'package:twins_front/screen/app_explanation_1.dart';
 import 'package:twins_front/screen/app_explanation_2.dart';
 import 'package:twins_front/screen/app_explanation_3.dart';
 import 'package:twins_front/screen/auth_screen.dart';
+import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,6 +15,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    DeeplinkService.handleDeepLink(context);
     return Scaffold(
         body: CarouselSlider(
             options: CarouselOptions(
