@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twins_front/screen/admin_screen.dart';
-import 'package:twins_front/screen/home_screen.dart';
 import 'package:twins_front/utils/popup.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/utils/toaster.dart';
-import 'package:twins_front/utils/validador.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -33,8 +30,8 @@ class ManageCategory extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.green,
-                    border: Border.all(color: Colors.green, width: 20),
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 20),
                     borderRadius: BorderRadius.circular(10)),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -68,7 +65,7 @@ class ManageCategory extends StatelessWidget {
               const SizedBox(height: 10),
               TextField(
                   autocorrect: true,
-                  cursorColor: Colors.green,
+                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)!
                           .admin_category_input_placeholder,
@@ -122,7 +119,7 @@ class ManageCategory extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                backgroundColor: Colors.green,
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 foregroundColor: Colors.black,
                 onPressed: () {
                   confirmDeleteCategory(category, context);

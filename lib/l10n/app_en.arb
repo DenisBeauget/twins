@@ -146,6 +146,43 @@
   "subscription_term": "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.",
   "offer_card_title": "Offer(s)",
   "offer_no_offers_available": "No offers available",
-  "offer_card_bt": "take advantage of the offer"
+  "offer_card_bt": "take advantage of the offer",
+  "offer_already_used": "Offer already used",
+  "offer_validation_title": "Offer validation",
+  "offer_validation_user_not_found": "User not found, you can't validate this offer",
+  "offer_validation_offer_expired": "This offer is expired, you can't validate it",
+  "offer_validation_offer_already_used": "This offer is already used, you can't validate it",
+  "offer_validation_warning": "You are about to validate an offer. Please note that this action is irreversible. Please make sure your information is correct.",
+  "offer_not_found": "Offer not found",
+  "offer_validation_success": "Offer validated",
+  "offer_validation_fail": "Offer not validated",
+  "offer_validation_bt": "Validate this offer",
+  "offer_validation_user_card_title": "User",
+  "offer_validation_card_name": "Name: {name}",
+  "@offer_validation_card_name": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offer_validation_user_card_email": "Email: {user_email}",
+  "@offer_validation_user_card_email": {
+    "placeholders": {
+      "user_email": {
+        "type": "String"
+      }
+    }
+  },
+  "offer_validation_offer_card_title": "Offer",
+  "offer_validation_offer_card_establishment": "Establishment: {establishment_name}",
+  "@offer_validation_offer_card_establishment": {
+    "placeholders": {
+      "establishment_name": {
+        "type": "String"
+      }
+    }
+  },
+  "gr_code_offer_message": "To benefit from this offer, present this QR code to the establishment"
 
 }

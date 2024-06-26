@@ -30,6 +30,16 @@ class EstablishmentService {
     }
   }
 
+
+  Future<Establishment> getEstablishmentsById(String establishmentId) async {
+    try {
+      DocumentSnapshot doc = await _firestore.collection('establishments').doc(establishmentId).get();
+      return Establishment.fromDocument(doc);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<Establishment>> searchEstablishments(String keyword) async {
     try {
       List<Establishment> establishments = await getEstablishments();
