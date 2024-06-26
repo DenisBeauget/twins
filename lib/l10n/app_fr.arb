@@ -146,5 +146,42 @@
   "subscription_term": "En passant cette commande, vous acceptez les conditions de service et la politique de confidentialité. L'abonnement est automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours.",
   "offer_card_title": "Offre(s)",
   "offer_no_offers_available": "Aucune offre disponible",
-  "offer_card_bt": "Profiter de l’offre"
+  "offer_card_bt": "Profiter de l’offre",
+  "offer_already_used": "Offre déjà utilisée",
+  "offer_validation_title": "Validation de l'offre",
+  "offer_validation_user_not_found": "L'utilisateur n'a pas été trouvé. Vous ne pouvez pas valider l'offre.",
+  "offer_validation_offer_expired": "Cette offre a expiré. Vous ne pouvez pas la valider.",
+  "offer_validation_offer_already_used": "Cette offre a déjà été utilisée. Vous ne pouvez pas la valider.",
+  "offer_validation_warning": "Vous êtes sur le point de valider une offre. Attention cette action est irréversible. Veuillez vous assurer de l'exactitude des informations.",
+  "offer_not_found": "Offre non trouvée",
+  "offer_validation_success": "Offre validée",
+  "offer_validation_fail": "Validation de l'offre échouée",
+  "offer_validation_bt": "Valider l'offre",
+  "offer_validation_user_card_title": "Utilisateur",
+  "offer_validation_card_name": "Nom: {name}",
+  "@offer_validation_card_name": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offer_validation_user_card_email": "Email: {user_email}",
+  "@offer_validation_user_card_email": {
+    "placeholders": {
+      "user_email": {
+        "type": "String"
+      }
+    }
+  },
+  "offer_validation_offer_card_title": "Offre",
+  "offer_validation_offer_card_establishment": "Etablissement: {establishment_name}",
+  "@offer_validation_offer_card_establishment": {
+    "placeholders": {
+      "establishment_name": {
+        "type": "String"
+      }
+    }
+  },
+  "gr_code_offer_message": "Pour utiliser cette offre, presentez ce QR code au commerçant"
 }

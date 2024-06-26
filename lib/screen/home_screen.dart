@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -54,11 +53,13 @@ class HomeScreen extends StatelessWidget {
                 return CategoryButton(
                   text: category.name,
                   backgroundColor: category.name == categorySelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.green,
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.inversePrimary,
                   foregroundColor: category.name == categorySelected
                       ? Theme.of(context).colorScheme.surface
-                      : Colors.black,
+                      : Theme.of(context)
+                      .colorScheme
+                      .onPrimary,
                   onPressed: () {
                     searchController.clear();
                     if (category.name != categorySelected) {
@@ -109,7 +110,8 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    establishment: establishment,);
+                  establishment: establishment,
+                );
               });
         }
       } else {
@@ -133,11 +135,13 @@ class HomeScreen extends StatelessWidget {
           return ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: establishmentList.length > 10 ? 10 : establishmentList.length,
+              itemCount:
+                  establishmentList.length > 10 ? 10 : establishmentList.length,
               itemBuilder: (BuildContext context, int index) {
                 final establishment = establishmentList[index];
                 return FeaturedCard(
-                    establishment: establishment,);
+                  establishment: establishment,
+                );
               });
         }
       } else {
@@ -161,10 +165,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.location_on, color: Colors.green),
+            Icon(Icons.location_on, color: Theme.of(context).colorScheme.inversePrimary),
             SizedBox(width: 4),
             Text(
               'Lille, France',

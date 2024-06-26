@@ -164,23 +164,14 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
     }
 
     if (_termsAccepted) {
-
       // verify if email is already registered
-      UserService.userEmailExists(_emailController.text).then((value) {
-        if (value) {
-          Toaster.showFailedToast(
-              context, AppLocalizations.of(context)!.email_already_exist);
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SignUpScreenStep2(
-                  email: _emailController.text,
-                  password: _passwordController.text),
-            ),
-          );
-        }
-      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignUpScreenStep2(
+              email: _emailController.text, password: _passwordController.text),
+        ),
+      );
     } else {
       Toaster.showFailedToast(
           context, AppLocalizations.of(context)!.check_register_conditions);

@@ -61,8 +61,8 @@ class ManageEstablishments extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.green,
-                      border: Border.all(color: Colors.green, width: 20),
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
                   child: Row(

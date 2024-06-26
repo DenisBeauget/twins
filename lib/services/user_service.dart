@@ -71,4 +71,25 @@ class UserService {
       rethrow;
     }
   }
+
+  static Future<BasicUser?> getUserByUid(String uid) async {
+    try {
+      DocumentSnapshot user = await _firestore.collection('users').doc(uid).get();
+      return BasicUser(
+        uid: user.id,
+        email: user['email'],
+        displayName: user['first_name'] + ' ' + user['last_name'],
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+class BasicUser {
+  final String uid;
+  final String email;
+  final String displayName;
+
+  BasicUser({required this.uid, required this.email, required this.displayName});
 }

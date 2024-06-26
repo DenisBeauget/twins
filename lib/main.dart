@@ -1,4 +1,12 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
+import 'package:confetti/confetti.dart';
+import 'package:twins_front/utils/confetti_controller.dart';
+
+import 'utils/util.dart';
+
+import 'theme.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +22,17 @@ import 'package:twins_front/firebase_options.dart';
 import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/screen/manage_establishments.dart';
+import 'package:twins_front/screen/validate_offer_screen.dart';
 import 'package:twins_front/screen/welcome_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
+import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:uni_links/uni_links.dart';
 import 'bloc/category_bloc.dart';
 
 Future<void> main() async {
@@ -46,30 +57,29 @@ Future<void> main() async {
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
       BlocProvider<OfferBloc>(create: (context) => OfferBloc())
     ],
-    child: const MyApp(),
+    child: MyApp(),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  StreamSubscription? _sub;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     getUserInfo(context);
 
+
+    TextTheme textTheme = createTextTheme(context, "Chakra Petch", "Tajawal");
+
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return MaterialApp(
       title: 'Twins App',
-      theme: ThemeData(
-          splashColor: Colors.transparent,
-          useMaterial3: true,
-          colorScheme: lightColorScheme,
-          fontFamily: 'Poppins'),
-      darkTheme: ThemeData(
-          splashColor: Colors.transparent,
-          useMaterial3: true,
-          colorScheme: darkColorScheme,
-          fontFamily: 'Poppins'),
+      theme: theme.light(),
+      darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -92,14 +102,32 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-      home: redirectUser(),
+      home: Stack(
+        children: [
+          redirectUser(),
+          Align(
+            alignment: Alignment.center,
+            child: ConfettiWidget(
+              confettiController: confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              emissionFrequency: 0.1,
+              numberOfParticles: 25,
+
+              minBlastForce: 10,
+              maxBlastForce: 50,
+
+
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 Widget redirectUser() {
   if (FirebaseAuth.instance.currentUser != null) {
-    return const AppScreen();
+    return AppScreen();
   } else {
     return const WelcomeScreen();
   }
@@ -122,3 +150,5 @@ Future<void> getUserInfo(BuildContext context) async {
     }
   }
 }
+
+
