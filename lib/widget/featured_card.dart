@@ -2,7 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:twins_front/screen/payment_screen.dart';
+import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
+import 'package:twins_front/services/subscription_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
@@ -13,7 +16,7 @@ import '../services/offers_service.dart';
 class FeaturedCard extends StatelessWidget {
   final Establishment establishment;
 
-  FeaturedCard({super.key, required this.establishment});
+  const FeaturedCard({super.key, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
@@ -297,108 +300,135 @@ class FeaturedCardOffer extends StatelessWidget {
       future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           bool alreadyUsed = snapshot.data ?? false;
-          return Container(
-            margin: const EdgeInsets.all(16),
-            width: 300,
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Center(
-                        child: Text(
-                          offer.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8.0),
-                      const Text(
-                        'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            formattedEndDate,
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: alreadyUsed
-                                ? null
-                                : () {
-                                    Popup.showValidateOffer(context, offer);
-                                  },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.offer_card_bt,
-                                style: const TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+
+          return FutureBuilder<bool>(
+            future: checkIfUserAlreadySubscribed(AuthService.currentUser!.uid),
+            builder: (context, subscriptionSnapshot) {
+              if (subscriptionSnapshot.connectionState ==
+                  ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (subscriptionSnapshot.hasError) {
+                return Text('Error: ${subscriptionSnapshot.error}');
+              } else {
+                bool userSubscribed = subscriptionSnapshot.data ?? false;
+
+                return Container(
+                  margin: const EdgeInsets.all(16),
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
                       ),
                     ],
                   ),
-                  if (alreadyUsed)
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.all(16),
-                        height: 100,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        color: Colors.black.withOpacity(0.7),
-                        child:  Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.offer_already_used,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Center(
+                              child: Text(
+                                offer.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 8.0),
+                            const Text(
+                              'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  formattedEndDate,
+                                  style: const TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: alreadyUsed
+                                      ? null
+                                      : () {
+                                          if (!userSubscribed) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const PaymentScreen()));
+                                          } else {
+                                            Popup.showValidateOffer(
+                                                context, offer);
+                                          }
+                                        },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .offer_card_bt,
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
+                        if (!userSubscribed)
+                          if (alreadyUsed)
+                            Center(
+                              child: Container(
+                                margin: const EdgeInsets.all(16),
+                                height: 100,
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                color: Colors.black.withOpacity(0.7),
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .offer_already_used,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ],
                     ),
-                ],
-              ),
-            ),
+                  ),
+                );
+              }
+            },
           );
         }
       },
@@ -407,5 +437,9 @@ class FeaturedCardOffer extends StatelessWidget {
 
   Future<bool> checkOfferAlreadyUsed(String offerId) async {
     return await OffersService().checkOfferAlreadyUsed(offerId);
+  }
+
+  Future<bool> checkIfUserAlreadySubscribed(String userId) async {
+    return await SubscriptionService.isSubscribed(userId);
   }
 }
