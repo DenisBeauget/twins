@@ -15,119 +15,133 @@ class PaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'GO !',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildCheckItem(
-            AppLocalizations.of(context)!.subscription_argument_first,
-          ),
-          _buildCheckItem(
-            AppLocalizations.of(context)!.subscription_argument_second,
-          ),
-          _buildCheckItem(
-            AppLocalizations.of(context)!.subscription_argument_third,
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.subscription_time,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.subscription_price,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 4.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.subscription_argument,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.subscription_return),
+      ),
+      body: Container(
+        color: Colors.black,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.subscription_go,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () async {
-              String customerId = await initPaymentSheet(context);
-              try {
-                await Stripe.instance.presentPaymentSheet();
-                await SubscriptionService.subscribeUser(
-                    AuthService.currentUser!.uid, customerId);
-                Toaster.showSuccessToast(context,
-                    AppLocalizations.of(context)!.subscription_success);
-              } catch (e) {
-                Toaster.showFailedToast(
-                    context, AppLocalizations.of(context)!.subscription_fail);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                  const SizedBox(height: 20),
+                  _buildCheckItem(
+                    AppLocalizations.of(context)!.subscription_argument_first,
+                  ),
+                  _buildCheckItem(
+                    AppLocalizations.of(context)!.subscription_argument_second,
+                  ),
+                  _buildCheckItem(
+                    AppLocalizations.of(context)!.subscription_argument_third,
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.subscription_time,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .subscription_price,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 4.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.subscription_argument,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      String customerId = await initPaymentSheet(context);
+                      try {
+                        await Stripe.instance.presentPaymentSheet();
+                        await SubscriptionService.subscribeUser(
+                            AuthService.currentUser!.uid, customerId);
+                        Toaster.showSuccessToast(context,
+                            AppLocalizations.of(context)!.subscription_success);
+                      } catch (e) {
+                        Toaster.showFailedToast(context,
+                            AppLocalizations.of(context)!.subscription_fail);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.subscription_button,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    AppLocalizations.of(context)!.subscription_term,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Text(
-              AppLocalizations.of(context)!.subscription_button,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            AppLocalizations.of(context)!.subscription_term,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

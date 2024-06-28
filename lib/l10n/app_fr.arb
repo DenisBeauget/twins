@@ -143,6 +143,8 @@
   "subscription_success": "Abonnement réussi",
   "subscription_fail": "Paiement échoué",
   "subscription_button": "J'EN PROFITE !",
+  "subscription_return": "Voir les offres",
+  "subscription_go": "GO !",
   "subscription_term": "En passant cette commande, vous acceptez les conditions de service et la politique de confidentialité. L'abonnement est automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours.",
   "offer_card_title": "Offre(s)",
   "offer_no_offers_available": "Aucune offre disponible",

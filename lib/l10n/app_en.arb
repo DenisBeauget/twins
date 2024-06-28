@@ -143,6 +143,8 @@
   "subscription_success": "Successfull subscription",
   "subscription_fail": "Payment fail",
   "subscription_button": "I ENJOY !",
+  "subscription_return": "Back to offers",
+  "subscription_go": "GO !",
   "subscription_term": "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.",
   "offer_card_title": "Offer(s)",
   "offer_no_offers_available": "No offers available",
