@@ -26,6 +26,10 @@ import 'package:twins_front/services/user_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'utils/util.dart';
+
+import 'theme.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uni_links/uni_links.dart';
@@ -67,9 +71,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     getUserInfo(context);
 
+    TextTheme textTheme = createTextTheme(context, "Chakra Petch", "Tajawal");
+
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return MaterialApp(
       title: 'Twins App',
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      theme: theme.light(),
+      darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
