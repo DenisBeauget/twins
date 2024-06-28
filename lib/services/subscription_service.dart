@@ -22,11 +22,14 @@ class SubscriptionService {
 
   static Future isSubscribed(String uid) async {
     try {
-      DocumentSnapshot subscription = await FirebaseFirestore.instance
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('users').doc(uid);
+      QuerySnapshot querySnapshot = await _firestore
           .collection('subscription')
-          .doc(uid)
+          .where('user_id', isEqualTo: userRef)
           .get();
-      return subscription.exists;
+
+      return querySnapshot.docs.isNotEmpty;
     } catch (e) {
       rethrow;
     }
