@@ -77,8 +77,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Twins App',
-      theme: theme.light(),
-      darkTheme: theme.dark(),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -123,6 +122,7 @@ class MyApp extends StatelessWidget {
 
 Widget redirectUser() {
   if (FirebaseAuth.instance.currentUser != null) {
+    return const AppScreen();
     return const AppScreen();
   } else {
     return const WelcomeScreen();
