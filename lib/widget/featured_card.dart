@@ -368,13 +368,20 @@ class FeaturedCardOffer extends StatelessWidget {
                                 GestureDetector(
                                   onTap: alreadyUsed
                                       ? null
-                                      : () {
+                                      : () async {
                                           if (!userSubscribed) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const PaymentScreen()));
+                                            final result =
+                                                await showPaymentScreen(
+                                                    context, offer);
+                                            if (result['success'] &&
+                                                context.mounted) {
+                                              print("oui bvien payerg");
+                                              WidgetsBinding.instance
+                                                  .addPostFrameCallback((_) {
+                                                Popup.showValidateOffer(
+                                                    context, result['offer']);
+                                              });
+                                            }
                                           } else {
                                             Popup.showValidateOffer(
                                                 context, offer);
@@ -441,5 +448,15 @@ class FeaturedCardOffer extends StatelessWidget {
 
   Future<bool> checkIfUserAlreadySubscribed(String userId) async {
     return await SubscriptionService.isSubscribed(userId);
+  }
+
+  Future<Map<String, dynamic>> showPaymentScreen(
+      BuildContext context, Offer redirectOffer) async {
+    final result = await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PaymentScreen(redirectOffer: redirectOffer)),
+    );
+    return result ?? {'success': false};
   }
 }

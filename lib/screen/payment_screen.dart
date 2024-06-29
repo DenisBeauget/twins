@@ -3,15 +3,18 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/services/auth_service.dart';
+import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/services/payment_service.dart';
 import 'package:twins_front/services/subscription_service.dart';
-import 'package:twins_front/services/user_service.dart';
+import 'package:twins_front/utils/popup.dart';
 import 'package:twins_front/utils/toaster.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+  final Offer redirectOffer;
+
+  const PaymentScreen({super.key, required this.redirectOffer});
 
   @override
   Widget build(BuildContext context) {
@@ -108,11 +111,12 @@ class PaymentScreen extends StatelessWidget {
                         await Stripe.instance.presentPaymentSheet();
                         await SubscriptionService.subscribeUser(
                             AuthService.currentUser!.uid, customerId);
-                        Toaster.showSuccessToast(context,
-                            AppLocalizations.of(context)!.subscription_success);
+                        Navigator.of(context)
+                            .pop({'success': true, 'offer': redirectOffer});
                       } catch (e) {
                         Toaster.showFailedToast(context,
                             AppLocalizations.of(context)!.subscription_fail);
+                        Navigator.of(context).pop({'success': false});
                       }
                     },
                     style: ElevatedButton.styleFrom(

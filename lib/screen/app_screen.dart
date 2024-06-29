@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/main.dart';
 import 'package:twins_front/screen/admin_screen.dart';
-import 'package:twins_front/screen/payment_screen.dart';
 import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
@@ -28,7 +27,6 @@ class AppScreen extends StatelessWidget {
     const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
       HomeScreen(),
-      PaymentScreen(),
       AdminScreen(),
     ];
 
@@ -56,11 +54,6 @@ class AppScreen extends StatelessWidget {
             label: '',
             activeIcon: Icon(Icons.search),
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.payment_outlined),
-            label: '',
-            activeIcon: Icon(Icons.payment),
-          ),
           if (isAdmin)
             const BottomNavigationBarItem(
               icon: Icon(Icons.admin_panel_settings_outlined),
@@ -72,7 +65,7 @@ class AppScreen extends StatelessWidget {
           navBarIndex = index;
           screenindexprovider.setIndex(index);
           Haptics.vibrate(HapticsType.light);
-         },
+        },
       ),
     );
   }

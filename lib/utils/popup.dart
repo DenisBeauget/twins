@@ -43,7 +43,6 @@ class Popup {
   }
 
   static showValidateOffer(BuildContext context, Offer offer) {
-
     OffersService().startListeningForUsedBy(context, offer);
 
     var brightness =
@@ -51,7 +50,8 @@ class Popup {
     bool isDarkMode = brightness == Brightness.dark;
 
     QrCode qrCode = QrCode.fromData(
-      data: 'mytwins://com.twins.twins/validateOffer?offerId=${offer.id}&userId=${AuthService.currentUser!.uid}',
+      data:
+          'mytwins://com.twins.twins/validateOffer?offerId=${offer.id}&userId=${AuthService.currentUser!.uid}',
       errorCorrectLevel: QrErrorCorrectLevel.H,
     );
 
@@ -60,7 +60,6 @@ class Popup {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.custom,
-
       confirmBtnColor: Theme.of(context).colorScheme.inversePrimary,
       backgroundColor: Theme.of(context).colorScheme.surface,
       widget: Column(
@@ -75,9 +74,12 @@ class Popup {
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
                 image: PrettyQrDecorationImage(
-                  image: AssetImage(isDarkMode? 'assets/img/twins_logo_w.png' :'assets/img/twins_logo.png'),
+                  image: AssetImage(isDarkMode
+                      ? 'assets/img/twins_logo_w.png'
+                      : 'assets/img/twins_logo.png'),
                 ),
-              ), qrImage: qrImage,
+              ),
+              qrImage: qrImage,
             ),
           ),
         ],
