@@ -6,6 +6,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:twins_front/widget/featured_card.dart';
 
 import '../services/auth_service.dart';
 
@@ -43,52 +44,60 @@ class Popup {
   }
 
   static showValidateOffer(BuildContext context, Offer offer) {
-    OffersService().startListeningForUsedBy(context, offer);
+    Future.microtask(() {
+      OffersService().startListeningForUsedBy(context, offer);
 
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+      var brightness =
+          SchedulerBinding.instance.platformDispatcher.platformBrightness;
+      bool isDarkMode = brightness == Brightness.dark;
 
-    QrCode qrCode = QrCode.fromData(
-      data:
-          'mytwins://com.twins.twins/validateOffer?offerId=${offer.id}&userId=${AuthService.currentUser!.uid}',
-      errorCorrectLevel: QrErrorCorrectLevel.H,
-    );
+      QrCode qrCode = QrCode.fromData(
+        data:
+            'mytwins://com.twins.twins/validateOffer?offerId=${offer.id}&userId=${AuthService.currentUser!.uid}',
+        errorCorrectLevel: QrErrorCorrectLevel.H,
+      );
 
-    QrImage qrImage = QrImage(qrCode);
+      QrImage qrImage = QrImage(qrCode);
 
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.custom,
-      confirmBtnColor: Theme.of(context).colorScheme.inversePrimary,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      widget: Column(
-        children: [
-          Text(AppLocalizations.of(context)!.gr_code_offer_message),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: PrettyQrView(
-              decoration: PrettyQrDecoration(
-                shape: PrettyQrSmoothSymbol(
-                  roundFactor: 1,
-                  color: Theme.of(context).colorScheme.inversePrimary,
+      Color confirmBtnColor = Theme.of(context).colorScheme.inversePrimary;
+      Color backgroundColor = Theme.of(context).colorScheme.surface;
+      String logoPath = isDarkMode
+          ? 'assets/img/twins_logo_w.png'
+          : 'assets/img/twins_logo.png';
+      String qrCodeOfferMessage =
+          AppLocalizations.of(context)!.gr_code_offer_message;
+
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        confirmBtnColor: confirmBtnColor,
+        backgroundColor: backgroundColor,
+        widget: Column(
+          children: [
+            Text(qrCodeOfferMessage),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: PrettyQrView(
+                decoration: PrettyQrDecoration(
+                  shape: PrettyQrSmoothSymbol(
+                    roundFactor: 1,
+                    color: confirmBtnColor,
+                  ),
+                  image: PrettyQrDecorationImage(
+                    image: AssetImage(logoPath),
+                  ),
                 ),
-                image: PrettyQrDecorationImage(
-                  image: AssetImage(isDarkMode
-                      ? 'assets/img/twins_logo_w.png'
-                      : 'assets/img/twins_logo.png'),
-                ),
+                qrImage: qrImage,
               ),
-              qrImage: qrImage,
             ),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-      confirmBtnText: 'Ok',
-      onConfirmBtnTap: () async {
-        Navigator.pop(context);
-      },
-    );
+          ],
+        ),
+        barrierDismissible: false,
+        confirmBtnText: 'Ok',
+        onConfirmBtnTap: () async {
+          Navigator.of(context).pop();
+        },
+      );
+    });
   }
 }

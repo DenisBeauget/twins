@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
@@ -111,12 +112,11 @@ class PaymentScreen extends StatelessWidget {
                         await Stripe.instance.presentPaymentSheet();
                         await SubscriptionService.subscribeUser(
                             AuthService.currentUser!.uid, customerId);
-                        Navigator.of(context)
-                            .pop({'success': true, 'offer': redirectOffer});
+                        Navigator.pop(context, redirectOffer);
                       } catch (e) {
                         Toaster.showFailedToast(context,
                             AppLocalizations.of(context)!.subscription_fail);
-                        Navigator.of(context).pop({'success': false});
+                        Navigator.pop(context, null);
                       }
                     },
                     style: ElevatedButton.styleFrom(

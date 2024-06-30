@@ -1,14 +1,23 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/payment_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
+import 'package:twins_front/services/payment_service.dart';
 import 'package:twins_front/services/subscription_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
+import 'package:twins_front/utils/toaster.dart';
 
 import '../component/establishment_details.dart';
 import '../services/offers_service.dart';
@@ -284,20 +293,27 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
   }
 }
 
-class FeaturedCardOffer extends StatelessWidget {
+class FeaturedCardOffer extends StatefulWidget {
   final Offer offer;
 
   const FeaturedCardOffer({super.key, required this.offer});
 
   @override
+  _FeaturedCardOfferState createState() => _FeaturedCardOfferState();
+}
+
+class _FeaturedCardOfferState extends State<FeaturedCardOffer> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
   Widget build(BuildContext context) {
     String formattedStartDate = AppLocalizations.of(context)!.start_date +
-        DateFormat('dd-MM-yyyy').format(offer.startDate);
+        DateFormat('dd-MM-yyyy').format(widget.offer.startDate);
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
-        DateFormat('dd-MM-yyyy').format(offer.endDate);
+        DateFormat('dd-MM-yyyy').format(widget.offer.endDate);
 
     return FutureBuilder<bool>(
-      future: checkOfferAlreadyUsed(offer.id!),
+      future: checkOfferAlreadyUsed(widget.offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -341,7 +357,7 @@ class FeaturedCardOffer extends StatelessWidget {
                           children: [
                             Center(
                               child: Text(
-                                offer.title,
+                                widget.offer.title,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20.0,
@@ -370,21 +386,28 @@ class FeaturedCardOffer extends StatelessWidget {
                                       ? null
                                       : () async {
                                           if (!userSubscribed) {
-                                            final result =
-                                                await showPaymentScreen(
-                                                    context, offer);
-                                            if (result['success'] &&
-                                                context.mounted) {
-                                              print("oui bvien payerg");
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
+                                            final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentScreen(
+                                                        redirectOffer:
+                                                            widget.offer),
+                                              ),
+                                            );
+                                            if (result != null) {
+                                              setState(() {
+                                                userSubscribed = true;
+                                              });
+
+                                              Future.microtask(() {
                                                 Popup.showValidateOffer(
-                                                    context, result['offer']);
+                                                    context, widget.offer);
                                               });
                                             }
                                           } else {
                                             Popup.showValidateOffer(
-                                                context, offer);
+                                                context, widget.offer);
                                           }
                                         },
                                   child: Container(
@@ -448,15 +471,5 @@ class FeaturedCardOffer extends StatelessWidget {
 
   Future<bool> checkIfUserAlreadySubscribed(String userId) async {
     return await SubscriptionService.isSubscribed(userId);
-  }
-
-  Future<Map<String, dynamic>> showPaymentScreen(
-      BuildContext context, Offer redirectOffer) async {
-    final result = await Navigator.push<Map<String, dynamic>>(
-      context,
-      MaterialPageRoute(
-          builder: (context) => PaymentScreen(redirectOffer: redirectOffer)),
-    );
-    return result ?? {'success': false};
   }
 }
