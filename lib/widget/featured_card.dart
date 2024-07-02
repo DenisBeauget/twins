@@ -293,27 +293,22 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
   }
 }
 
-class FeaturedCardOffer extends StatefulWidget {
+class FeaturedCardOffer extends StatelessWidget {
   final Offer offer;
+  final Establishment establishment;
 
-  const FeaturedCardOffer({super.key, required this.offer});
-
-  @override
-  _FeaturedCardOfferState createState() => _FeaturedCardOfferState();
-}
-
-class _FeaturedCardOfferState extends State<FeaturedCardOffer> {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  const FeaturedCardOffer(
+      {super.key, required this.offer, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
     String formattedStartDate = AppLocalizations.of(context)!.start_date +
-        DateFormat('dd-MM-yyyy').format(widget.offer.startDate);
+        DateFormat('dd-MM-yyyy').format(offer.startDate);
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
-        DateFormat('dd-MM-yyyy').format(widget.offer.endDate);
+        DateFormat('dd-MM-yyyy').format(offer.endDate);
 
     return FutureBuilder<bool>(
-      future: checkOfferAlreadyUsed(widget.offer.id!),
+      future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -357,7 +352,7 @@ class _FeaturedCardOfferState extends State<FeaturedCardOffer> {
                           children: [
                             Center(
                               child: Text(
-                                widget.offer.title,
+                                offer.title,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20.0,
@@ -391,23 +386,14 @@ class _FeaturedCardOfferState extends State<FeaturedCardOffer> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     PaymentScreen(
-                                                        redirectOffer:
-                                                            widget.offer),
+                                                        redirectOffer: offer,
+                                                        establishment:
+                                                            establishment),
                                               ),
                                             );
-                                            if (result != null) {
-                                              setState(() {
-                                                userSubscribed = true;
-                                              });
-
-                                              Future.microtask(() {
-                                                Popup.showValidateOffer(
-                                                    context, widget.offer);
-                                              });
-                                            }
                                           } else {
                                             Popup.showValidateOffer(
-                                                context, widget.offer);
+                                                context, offer);
                                           }
                                         },
                                   child: Container(

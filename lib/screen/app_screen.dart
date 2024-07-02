@@ -24,10 +24,10 @@ class AppScreen extends StatelessWidget {
     final isAdmin = Provider.of<AuthController>(context).isAdmin;
     final screenindexprovider = Provider.of<ScreenIndexProvider>(context);
     int navBarIndex = screenindexprovider._index;
-    const List<Widget> widgetOptions = <Widget>[
-      HomeScreen(),
-      HomeScreen(),
-      AdminScreen(),
+    List<Widget> widgetOptions = <Widget>[
+      const HomeScreen(),
+      const HomeScreen(),
+      const AdminScreen(),
     ];
 
     return Scaffold(
