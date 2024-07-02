@@ -7,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
+import 'package:twins_front/component/establishment_details.dart';
 import 'package:twins_front/screen/establishments_screen.dart';
 import 'package:twins_front/services/establishments_service.dart';
+import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/category_button.dart';
 import 'package:twins_front/widget/featured_card.dart';
@@ -18,7 +20,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/category_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.redirectOffer, this.establishment});
+
+  final Offer? redirectOffer;
+  final Establishment? establishment;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,23 @@ class HomeScreen extends StatelessWidget {
     String categorySelected = "";
 
     final TextEditingController searchController = TextEditingController();
+
+    if (redirectOffer != null && establishment != null) {
+      final establishmentBlocState = establishmentBloc.state;
+      if (establishmentBlocState is EstablishmentLoaded) {
+        final establishment = establishmentBlocState.establishmentList
+            .firstWhere((est) =>
+                est.offers.any((offer) => offer.id == redirectOffer!.id));
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FeaturedCardOffer(
+                offer: redirectOffer!, establishment: establishment),
+          ),
+        );
+      }
+    }
 
     Widget returnCategories(BuildContext context) {
       if (categoryBloc.state is CategoryLoaded) {
@@ -57,9 +79,7 @@ class HomeScreen extends StatelessWidget {
                       : Theme.of(context).colorScheme.inversePrimary,
                   foregroundColor: category.name == categorySelected
                       ? Theme.of(context).colorScheme.surface
-                      : Theme.of(context)
-                      .colorScheme
-                      .onPrimary,
+                      : Theme.of(context).colorScheme.onPrimary,
                   onPressed: () {
                     searchController.clear();
                     if (category.name != categorySelected) {
@@ -70,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                       categorySelected = '';
                       establishmentBloc.add(EstablishmentALL(false));
                     }
-                    categoryBloc.add(CategoriesRefresh());
+                    categoryBloc.add(const CategoriesRefresh());
                   },
                 );
               });
@@ -168,12 +188,13 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.location_on, color: Theme.of(context).colorScheme.inversePrimary),
-            SizedBox(width: 4),
-            Text(
+            Icon(Icons.location_on,
+                color: Theme.of(context).colorScheme.inversePrimary),
+            const SizedBox(width: 4),
+            const Text(
               'Lille, France',
             ),
-            Icon(Icons.arrow_drop_down),
+            const Icon(Icons.arrow_drop_down),
           ],
         ),
       ),
@@ -299,7 +320,7 @@ class HomeScreen extends StatelessWidget {
                         searchController.clear();
                         categorySelected = '';
                         establishmentBloc.add(EstablishmentALL(false));
-                        categoryBloc.add(CategoriesRefresh());
+                        categoryBloc.add(const CategoriesRefresh());
                       },
                     )
                   ],

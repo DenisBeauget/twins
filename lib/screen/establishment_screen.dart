@@ -5,7 +5,6 @@ import 'package:twins_front/widget/featured_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class EstablishmentScreen extends StatelessWidget {
   final Establishment establishment;
   final List<Offer> offers;
@@ -37,7 +36,7 @@ class EstablishmentScreen extends StatelessWidget {
                         Colors.black.withOpacity(0.5), // Fond semi-transparent
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 200,
                   child: Center(
                     child: Padding(
@@ -87,7 +86,7 @@ class EstablishmentScreen extends StatelessWidget {
           Center(
             child: Text(
               AppLocalizations.of(context)!.offer_card_title,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(height: 20),
@@ -111,7 +110,8 @@ class EstablishmentScreen extends StatelessWidget {
       itemCount: offers.length,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return FeaturedCardOffer(offer: offers[index]);
+        return FeaturedCardOffer(
+            offer: offers[index], establishment: establishment);
       },
     );
   }

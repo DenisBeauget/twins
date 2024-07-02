@@ -3,7 +3,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
+import 'package:twins_front/screen/home_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
+import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/services/payment_service.dart';
 import 'package:twins_front/services/subscription_service.dart';
@@ -14,8 +16,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PaymentScreen extends StatelessWidget {
   final Offer redirectOffer;
+  final Establishment establishment;
 
-  const PaymentScreen({super.key, required this.redirectOffer});
+  const PaymentScreen(
+      {super.key, required this.redirectOffer, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +116,15 @@ class PaymentScreen extends StatelessWidget {
                         await Stripe.instance.presentPaymentSheet();
                         await SubscriptionService.subscribeUser(
                             AuthService.currentUser!.uid, customerId);
-                        Navigator.pop(context, redirectOffer);
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(
+                              redirectOffer: redirectOffer,
+                              establishment: establishment,
+                            ),
+                          ),
+                        );
                       } catch (e) {
                         Toaster.showFailedToast(context,
                             AppLocalizations.of(context)!.subscription_fail);
