@@ -119,10 +119,15 @@ class PaymentScreen extends StatelessWidget {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
+<<<<<<< HEAD
                             builder: (context) => HomeScreen(
                               redirectOffer: redirectOffer,
                               establishment: establishment,
                             ),
+=======
+                            builder: (context) =>
+                                HomeScreen(redirectOffer: redirectOffer),
+>>>>>>> 77a53486138cd105a6046f3656cd902169323382
                           ),
                         );
                       } catch (e) {

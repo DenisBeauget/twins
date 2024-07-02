@@ -46,6 +46,7 @@ class HomeScreen extends StatelessWidget {
             .firstWhere((est) =>
                 est.offers.any((offer) => offer.id == redirectOffer!.id));
 
+<<<<<<< HEAD
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -53,6 +54,9 @@ class HomeScreen extends StatelessWidget {
                 offer: redirectOffer!, establishment: establishment),
           ),
         );
+=======
+        showTransparentModalBottomSheet(context, establishment);
+>>>>>>> 77a53486138cd105a6046f3656cd902169323382
       }
     }
 

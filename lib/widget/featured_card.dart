@@ -307,8 +307,12 @@ class FeaturedCardOffer extends StatelessWidget {
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
         DateFormat('dd-MM-yyyy').format(offer.endDate);
 
+<<<<<<< HEAD
     return Expanded(
         child: FutureBuilder<bool>(
+=======
+    return FutureBuilder<bool>(
+>>>>>>> 77a53486138cd105a6046f3656cd902169323382
       future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
