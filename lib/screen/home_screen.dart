@@ -32,6 +32,7 @@ class HomeScreen extends StatelessWidget {
 
     String categorySelected = "";
 
+
     final TextEditingController searchController = TextEditingController();
 
     Widget returnCategories(BuildContext context) {

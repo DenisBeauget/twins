@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:math';
 import 'package:confetti/confetti.dart';
+import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
 import 'utils/util.dart';
@@ -55,7 +54,8 @@ Future<void> main() async {
           create: (context) => CheckboxProvider()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
-      BlocProvider<OfferBloc>(create: (context) => OfferBloc())
+      BlocProvider<OfferBloc>(create: (context) => OfferBloc()),
+      BlocProvider<SubscriptionBloc>(create: (context) => SubscriptionBloc())
     ],
     child: MyApp(),
   ));
@@ -70,7 +70,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getUserInfo(context);
-
 
     TextTheme textTheme = createTextTheme(context, "Chakra Petch", "Tajawal");
 
@@ -112,11 +111,8 @@ class MyApp extends StatelessWidget {
               blastDirectionality: BlastDirectionality.explosive,
               emissionFrequency: 0.1,
               numberOfParticles: 25,
-
               minBlastForce: 10,
               maxBlastForce: 50,
-
-
             ),
           ),
         ],
@@ -150,5 +146,3 @@ Future<void> getUserInfo(BuildContext context) async {
     }
   }
 }
-
-

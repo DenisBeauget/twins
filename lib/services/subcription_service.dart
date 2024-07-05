@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'auth_service.dart';
 
 class SubscriptionService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -9,7 +6,7 @@ class SubscriptionService {
   static Future subscribeUser(String uid, String customerId) async {
     try {
       DocumentReference userReference =
-          FirebaseFirestore.instance.collection('users').doc(uid);
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
       _firestore.collection('subscription').doc().set({
         'user_id': userReference,
@@ -23,24 +20,18 @@ class SubscriptionService {
     }
   }
 
-  static Future<bool> isSubscribed() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    DocumentReference userRef = _firestore.collection('users').doc(auth.currentUser!.uid);
-
-    CollectionReference collectionReference =
-        _firestore.collection('subscription');
+  static Future isSubscribed(String uid) async {
     try {
-
-      QuerySnapshot querySnapshot = await collectionReference
+      DocumentReference userRef =
+      FirebaseFirestore.instance.collection('users').doc(uid);
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('subscription')
           .where('user_id', isEqualTo: userRef)
           .get();
-      if (querySnapshot.docs.isNotEmpty) {
-        return true;
-      } else {
-        return false;
-      }
+
+      return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      return false;
+      rethrow;
     }
   }
 }

@@ -37,7 +37,7 @@ class EstablishmentScreen extends StatelessWidget {
                         Colors.black.withOpacity(0.5), // Fond semi-transparent
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 200,
                   child: Center(
                     child: Padding(
