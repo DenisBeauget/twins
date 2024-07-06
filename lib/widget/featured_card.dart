@@ -1,13 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:twins_front/bloc/subscription_bloc.dart';
+import 'package:twins_front/component/payment_modal.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
 
-import '../component/establishment_details.dart';
+import '../component/establishment_modal.dart';
 import '../services/offers_service.dart';
 
 class FeaturedCard extends StatelessWidget {
@@ -288,6 +291,10 @@ class FeaturedCardOffer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SubscriptionBloc subscriptionBloc =
+        BlocProvider.of<SubscriptionBloc>(context);
+    subscriptionBloc.add(LoadSubscription());
+
     String formattedStartDate = AppLocalizations.of(context)!.start_date +
         DateFormat('dd-MM-yyyy').format(offer.startDate);
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
@@ -297,11 +304,15 @@ class FeaturedCardOffer extends StatelessWidget {
       future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const SizedBox(
+            width: 300,
+            height: 100,
+            child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           bool alreadyUsed = snapshot.data ?? false;
+
           return Container(
             margin: const EdgeInsets.all(16),
             width: 300,
@@ -320,6 +331,15 @@ class FeaturedCardOffer extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Stack(
                 children: [
+                  BlocBuilder<SubscriptionBloc, SubscriptionState>(
+                    builder: (context, state) {
+                      if (state is SubscriptionLoaded) {
+                        return Container();
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -353,8 +373,25 @@ class FeaturedCardOffer extends StatelessWidget {
                           GestureDetector(
                             onTap: alreadyUsed
                                 ? null
-                                : () {
-                                    Popup.showValidateOffer(context, offer);
+                                : () async {
+                                    if (!(subscriptionBloc.state
+                                            as SubscriptionLoaded)
+                                        .isSubscribed) {
+                                      showPaymentModalBottomSheet(
+                                              context, offer)
+                                          .then((value) {
+                                        if (value != null) {
+                                          subscriptionBloc
+                                              .add(LoadSubscription());
+                                          if (value is Offer) {
+                                            Popup.showValidateOffer(
+                                                context, value);
+                                          }
+                                        }
+                                      });
+                                    } else {
+                                      Popup.showValidateOffer(context, offer);
+                                    }
                                   },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -384,7 +421,7 @@ class FeaturedCardOffer extends StatelessWidget {
                         height: 100,
                         width: MediaQuery.of(context).size.width * 0.9,
                         color: Colors.black.withOpacity(0.7),
-                        child:  Center(
+                        child: Center(
                           child: Text(
                             AppLocalizations.of(context)!.offer_already_used,
                             style: const TextStyle(
