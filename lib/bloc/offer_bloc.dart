@@ -15,7 +15,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
     on<OfferALL>((event, emit) async {
       emit(OfferLoading());
       final List<Offer> offers =
-          await OfferService.getOffersByEstablishment(event.establishmentName);
+          await OfferService.getOffersByEstablishmentID(event.establishmentName);
       emit(OfferLoaded(offers));
       currentOffers = offers;
     });
@@ -41,7 +41,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
     });
 
     on<DeleteOffer>((event, emit) async {
-      await OfferService.deleteOfferFromSpecificEstablishment(event.offer.title)
+      await OfferService.deleteOfferByID(event.offer.id!)
           .then((value) {
         if (value) {
           currentOffers.removeWhere((e) => e.title == event.offer.title);

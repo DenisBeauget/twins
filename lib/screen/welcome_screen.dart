@@ -18,6 +18,7 @@ class WelcomeScreen extends StatelessWidget {
 
     DeeplinkService.handleDeepLink(context);
     return Scaffold(
+        backgroundColor: const ColorScheme.light().surface,
         body: CarouselSlider(
             options: CarouselOptions(
               viewportFraction: 1.1,

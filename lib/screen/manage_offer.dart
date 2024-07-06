@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -21,8 +22,13 @@ class ManageOffer extends StatelessWidget {
 
   late EstablishmentBloc establishmentBloc;
   late OfferBloc offerBloc;
-  late Establishment establishmentSelected =
-      Establishment(name: '', description: '', address: '', hightlight: false, imageUrl: '', imageName: '');
+  late Establishment establishmentSelected = Establishment(
+      name: '',
+      description: '',
+      address: '',
+      hightlight: false,
+      imageUrl: '',
+      imageName: '');
 
   String establishmentName = "";
 
@@ -50,18 +56,20 @@ class ManageOffer extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.inversePrimary,
-                      border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 20),
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline, size: 40),
+                      Icon(Icons.info_outline, size: 40, color: Theme.of(context).colorScheme.surface),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                         child: Text(
                             AppLocalizations.of(context)!.admin_offer_title,
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface))
                       )
                     ],
                   ),
@@ -157,8 +165,9 @@ class ManageOffer extends StatelessWidget {
       }
     } else {
       return Center(
-          child: CircularProgressIndicator(
-        color: lightColorScheme.primaryContainer,
+          child: SpinKitThreeInOut(
+        size: 20,
+        color: Theme.of(context).colorScheme.primaryContainer
       ));
     }
   }
@@ -196,8 +205,9 @@ class ManageOffer extends StatelessWidget {
         }
       } else {
         return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
+            child: SpinKitThreeInOut(
+          size: 20,
+          color: Theme.of(context).colorScheme.primaryContainer
         ));
       }
     } else {

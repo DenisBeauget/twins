@@ -11,6 +11,7 @@ import 'package:twins_front/screen/admin_screen.dart';
 import 'package:twins_front/screen/payment_screen.dart';
 import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
+import 'package:twins_front/utils/toaster.dart';
 
 import '../services/auth_service.dart';
 import 'home_screen.dart';
@@ -28,7 +29,6 @@ class AppScreen extends StatelessWidget {
     const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
       HomeScreen(),
-      PaymentScreen(),
       AdminScreen(),
     ];
 
@@ -38,41 +38,43 @@ class AppScreen extends StatelessWidget {
         key: key,
         children: widgetOptions,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: navBarIndex,
-        selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-            ),
-            label: '',
-            activeIcon: Icon(Icons.home),
-            key: Key('home'),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Divider(
+            height: 2,
+            color: Theme.of(context).colorScheme.inversePrimary,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            label: '',
-            activeIcon: Icon(Icons.search),
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: navBarIndex,
+            selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+            items: [
+              BottomNavigationBarItem(
+                icon: buildIcon(const Icon(Icons.home_outlined)),
+                label: '',
+                activeIcon: buildIcon(const Icon(Icons.home)),
+              ),
+              BottomNavigationBarItem(
+                icon: buildIcon(const Icon(Icons.search_outlined)),
+                label: '',
+                activeIcon: buildIcon(const Icon(Icons.search)),
+              ),
+              if (isAdmin)
+                BottomNavigationBarItem(
+                  icon: buildIcon(
+                      const Icon(Icons.admin_panel_settings_outlined)),
+                  label: '',
+                  activeIcon: buildIcon(const Icon(Icons.admin_panel_settings)),
+                ),
+            ],
+            onTap: (index) {
+              navBarIndex = index;
+              screenindexprovider.setIndex(index);
+              Haptics.vibrate(HapticsType.light);
+            },
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.payment_outlined),
-            label: '',
-            activeIcon: Icon(Icons.payment),
-          ),
-          if (isAdmin)
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.admin_panel_settings_outlined),
-              label: '',
-              activeIcon: Icon(Icons.admin_panel_settings),
-            ),
         ],
-        onTap: (index) {
-          navBarIndex = index;
-          screenindexprovider.setIndex(index);
-          Haptics.vibrate(HapticsType.light);
-         },
       ),
     );
   }
@@ -87,4 +89,11 @@ class ScreenIndexProvider extends ChangeNotifier {
     _index = index;
     notifyListeners();
   }
+}
+
+Widget buildIcon(Icon icon) {
+  return Padding(
+    padding: EdgeInsets.only(top: 4.0),
+    child: icon,
+  );
 }
