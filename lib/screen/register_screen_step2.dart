@@ -123,7 +123,7 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
                               onPressed: () {
                                 registration(context);
                               },
-                              style: btnPrimaryStyle(),
+                              style: btnPrimaryStyle(context),
                               child: Text(AppLocalizations.of(context)!
                                   .register_button_finish),
                             ),

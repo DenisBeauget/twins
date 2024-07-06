@@ -4,14 +4,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:twins_front/widget/featured_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class EstablishmentsScreen extends StatelessWidget {
   const EstablishmentsScreen({super.key});
@@ -47,8 +48,9 @@ class EstablishmentsScreen extends StatelessWidget {
         }
       } else {
         return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
+            child: SpinKitThreeInOut(
+          size: 20,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ));
       }
     }
@@ -63,19 +65,18 @@ class EstablishmentsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            establishmentBloc.add(
-                const EstablishmentFilterByKeyword(""));
+            establishmentBloc.add(const EstablishmentFilterByKeyword(""));
             Navigator.of(context).pop();
           },
         ),
         title: Text(
           AppLocalizations.of(context)!.partners,
-          style:
-          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
       body: RefreshIndicator(
@@ -92,33 +93,25 @@ class EstablishmentsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextField(
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface),
                     controller: searchController,
                     decoration: InputDecoration(
                       hintText:
-                          AppLocalizations.of(context)!.search_placeholder,
+                      AppLocalizations.of(context)!.search_placeholder,
                       hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.surface),
+                          color: Theme.of(context).colorScheme.onSurface),
                       prefixIcon: Icon(
-                        Icons.search,
-                        color: Theme.of(context).colorScheme.surface,
+                        IconsaxPlusLinear.search_normal_1,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       filled: true,
-                      fillColor: Theme.of(context).colorScheme.onSurface,
+                      fillColor: Theme.of(context).colorScheme.surface,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface)
                       ),
                       contentPadding: const EdgeInsets.all(16.0),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.arrow_right_alt,
-                            color: Theme.of(context).colorScheme.surface),
-                        onPressed: () {
-                          establishmentBloc.add(EstablishmentFilterByKeyword(
-                              searchController.text));
-                        },
-                      ),
                     ),
                     onChanged: (text) {
                       Future.delayed(const Duration(milliseconds: 300));

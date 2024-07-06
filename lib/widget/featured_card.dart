@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/component/payment_modal.dart';
@@ -153,21 +154,17 @@ class FeaturedCardBig extends StatelessWidget {
                                   children: [
                                     Text(
                                       establishment.name,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                        color: Colors.white,
                                         fontSize: 18,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
                                       establishment.categoryName ?? 'Unknown',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -274,7 +271,7 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
               ),
               Checkbox(
                 activeColor: Colors.white,
-                checkColor: lightColorScheme.surfaceTint,
+                checkColor: Theme.of(context).colorScheme.surfaceTint,
                 value: offer.hightlight,
                 onChanged: null,
               ),
@@ -295,8 +292,6 @@ class FeaturedCardOffer extends StatelessWidget {
         BlocProvider.of<SubscriptionBloc>(context);
     subscriptionBloc.add(LoadSubscription());
 
-    String formattedStartDate = AppLocalizations.of(context)!.start_date +
-        DateFormat('dd-MM-yyyy').format(offer.startDate);
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
         DateFormat('dd-MM-yyyy').format(offer.endDate);
 
@@ -304,10 +299,11 @@ class FeaturedCardOffer extends StatelessWidget {
       future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox(
-            width: 300,
-            height: 100,
-            child: CircularProgressIndicator());
+          return SizedBox(
+              width: 300,
+              height: 100,
+              child: SpinKitThreeInOut(
+                  size: 20, color: Theme.of(context).colorScheme.primaryContainer));
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -331,15 +327,6 @@ class FeaturedCardOffer extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Stack(
                 children: [
-                  BlocBuilder<SubscriptionBloc, SubscriptionState>(
-                    builder: (context, state) {
-                      if (state is SubscriptionLoaded) {
-                        return Container();
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,8 +391,9 @@ class FeaturedCardOffer extends StatelessWidget {
                               ),
                               child: Text(
                                 AppLocalizations.of(context)!.offer_card_bt,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14.0,
+                                  color: Theme.of(context).colorScheme.surface,
                                 ),
                               ),
                             ),

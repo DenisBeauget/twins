@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/services/user_service.dart';
@@ -29,7 +30,7 @@ class ValidateOfferScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>const  AppScreen(),
+                builder: (context) => const AppScreen(),
               ),
             );
           },
@@ -45,7 +46,7 @@ class ValidateOfferScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 return snapshot.data!;
               } else {
-                return const CircularProgressIndicator();
+                return SpinKitThreeInOut(size: 20);
               }
             },
           ),
@@ -86,7 +87,8 @@ Future<Widget> returnContent(
     return SizedBox(
         height: MediaQuery.of(context).size.height * 0.8,
         child: Center(
-          child: Text(AppLocalizations.of(context)!.offer_validation_offer_expired,
+          child: Text(
+              AppLocalizations.of(context)!.offer_validation_offer_expired,
               style: const TextStyle(fontSize: 16)),
         ));
   }
@@ -121,7 +123,7 @@ Future<Widget> returnContent(
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Expanded(
                   child: Text(
-                    AppLocalizations.of(context)!.offer_validation_warning,
+                      AppLocalizations.of(context)!.offer_validation_warning,
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold)),
                 )
@@ -153,7 +155,7 @@ Future<Widget> returnContent(
           const SizedBox(height: 30),
           SizedBox(
             child: ElevatedButton(
-              style: btnPrimaryStyle(),
+              style: btnPrimaryStyle(context),
               onPressed: () async {
                 try {
                   await offersService.validateOffer(offerId);
@@ -163,9 +165,11 @@ Future<Widget> returnContent(
                       builder: (context) => AppScreen(),
                     ),
                   );
-                  Toaster.showSuccessToast(context, AppLocalizations.of(context)!.offer_validation_success);
+                  Toaster.showSuccessToast(context,
+                      AppLocalizations.of(context)!.offer_validation_success);
                 } catch (e) {
-                  Toaster.showFailedToast(context, AppLocalizations.of(context)!.offer_validation_fail);
+                  Toaster.showFailedToast(context,
+                      AppLocalizations.of(context)!.offer_validation_fail);
                 }
               },
               child: Text(
@@ -188,9 +192,14 @@ Widget buildUser(BuildContext context, BasicUser user) {
       Text(AppLocalizations.of(context)!.offer_validation_user_card_title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 10),
-      Text(AppLocalizations.of(context)!.offer_validation_card_name(user.displayName)
-          , style: const TextStyle(fontSize: 16)),
-      Text(AppLocalizations.of(context)!.offer_validation_user_card_email(user.email), style: TextStyle(fontSize: 16)),
+      Text(
+          AppLocalizations.of(context)!
+              .offer_validation_card_name(user.displayName),
+          style: const TextStyle(fontSize: 16)),
+      Text(
+          AppLocalizations.of(context)!
+              .offer_validation_user_card_email(user.email),
+          style: TextStyle(fontSize: 16)),
     ],
   );
 }
@@ -203,8 +212,13 @@ Widget buildOffer(BuildContext context, Offer offer) {
       Text(AppLocalizations.of(context)!.offer_validation_offer_card_title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       const SizedBox(height: 10),
-      Text(AppLocalizations.of(context)!.offer_validation_card_name(offer.title), style: TextStyle(fontSize: 16)),
-      Text(AppLocalizations.of(context)!.offer_validation_offer_card_establishment(offer.establishmentName!),
+      Text(
+          AppLocalizations.of(context)!.offer_validation_card_name(offer.title),
+          style: TextStyle(fontSize: 16)),
+      Text(
+          AppLocalizations.of(context)!
+              .offer_validation_offer_card_establishment(
+                  offer.establishmentName!),
           style: const TextStyle(fontSize: 16)),
     ],
   );

@@ -26,7 +26,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
       for (Establishment establishment in establishments) {
         establishment.offers =
-            await offerService.getOffersByEstablishment(establishment.id!);
+            await offerService.getOffersByEstablishmentID(establishment.id!);
       }
 
       emit(EstablishmentLoaded(establishments));

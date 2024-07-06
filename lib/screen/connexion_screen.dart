@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               _login(context);
                             },
-                            style: btnPrimaryStyle(),
+                            style: btnPrimaryStyle(context),
                             child: Text(
                                 AppLocalizations.of(context)!.sign_in_button),
                           ),
