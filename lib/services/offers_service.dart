@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:confetti/confetti.dart';
-import 'package:twins_front/main.dart';
-import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/utils/toaster.dart';
@@ -25,6 +22,14 @@ class OffersService {
       List<Offer> filteredOffers = offers.where((offer) {
         return offer.establishmentId.id.toString() == establishmentId;
       }).toList();
+
+      filteredOffers.forEach((offer) async {
+        if (offer.endDate.isBefore(DateTime.now())) {
+          filteredOffers.remove(offer);
+          deleteOfferByID(offer.id!);
+        }
+      });
+
       return filteredOffers;
     } catch (e) {
       rethrow;
@@ -105,6 +110,15 @@ class OffersService {
         _firestore.collection('offers').doc(offerId).delete();
         return true;
       }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteOfferByID(String offerID) async {
+    try {
+      _firestore.collection('offers').doc(offerID).delete();
       return false;
     } catch (e) {
       rethrow;
