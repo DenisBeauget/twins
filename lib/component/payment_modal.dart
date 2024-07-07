@@ -48,7 +48,7 @@ Future<Offer?> showPaymentModalBottomSheet(BuildContext context, [Offer? offerCa
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
+                    icon: Icon(Icons.close_rounded, color: Colors.white),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

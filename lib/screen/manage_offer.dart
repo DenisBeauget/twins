@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -63,7 +64,7 @@ class ManageOffer extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, size: 40, color: Theme.of(context).colorScheme.surface),
+                      Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                         child: Text(
@@ -83,7 +84,7 @@ class ManageOffer extends StatelessWidget {
                     hintStyle:
                         TextStyle(color: Theme.of(context).colorScheme.surface),
                     prefixIcon: Icon(
-                      Icons.search,
+                      IconsaxPlusLinear.search_normal_1,
                       color: Theme.of(context).colorScheme.surface,
                     ),
                     filled: true,

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -70,7 +71,7 @@ class ManageEstablishments extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, size: 40, color: Theme.of(context).colorScheme.surface),
+                      Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
                       const Padding(padding: EdgeInsets.only(left: 15)),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
@@ -104,7 +105,7 @@ class ManageEstablishments extends StatelessWidget {
                     hintStyle:
                         TextStyle(color: Theme.of(context).colorScheme.surface),
                     prefixIcon: Icon(
-                      Icons.search,
+                      IconsaxPlusLinear.search_normal_1,
                       color: Theme.of(context).colorScheme.surface,
                     ),
                     filled: true,
@@ -164,7 +165,7 @@ class ManageEstablishments extends StatelessWidget {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.photo_outlined,
+                      icon: Icon(IconsaxPlusLinear.image,
                           color: Theme.of(context).colorScheme.onSurface),
                       onPressed: () {
                         getImageFromGallery();

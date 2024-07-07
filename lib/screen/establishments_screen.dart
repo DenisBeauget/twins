@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
@@ -101,7 +102,7 @@ class EstablishmentsScreen extends StatelessWidget {
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface),
                       prefixIcon: Icon(
-                        Icons.search,
+                        IconsaxPlusLinear.search_normal_1,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       filled: true,

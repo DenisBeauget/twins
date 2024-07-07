@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
 import 'package:twins_front/screen/establishments_screen.dart';
@@ -169,13 +170,15 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.location_on,
+            Icon(IconsaxPlusBold.location,
                 color: Theme.of(context).colorScheme.inversePrimary),
-            const SizedBox(width: 4),
-            const Text(
-              'Lille, France',
-            ),
+            const Padding(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  'Lille, France',
+                )),
           ],
         ),
       ),
@@ -209,15 +212,15 @@ class HomeScreen extends StatelessWidget {
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface),
                       prefixIcon: Icon(
-                        Icons.search,
+                        IconsaxPlusLinear.search_normal_1,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surface,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
-  borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface)
-                      ),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onSurface)),
                       contentPadding: const EdgeInsets.all(16.0),
                     ),
                     onChanged: (text) {

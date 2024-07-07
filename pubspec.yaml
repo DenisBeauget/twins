@@ -37,6 +37,9 @@ dependencies:
   confetti: ^0.7.0
   toastification: ^2.0.0
   flutter_spinkit: ^5.2.1
+  fluentui_system_icons: ^1.1.246
+  iconsax_plus: ^1.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

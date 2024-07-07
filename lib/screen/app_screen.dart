@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/main.dart';
@@ -51,21 +53,23 @@ class AppScreen extends StatelessWidget {
             selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
             items: [
               BottomNavigationBarItem(
-                icon: buildIcon(const Icon(Icons.home_outlined)),
+                icon: buildIcon(const Icon(IconsaxPlusLinear.home_2)),
                 label: '',
-                activeIcon: buildIcon(const Icon(Icons.home)),
+                activeIcon: buildIcon(const Icon(IconsaxPlusBold.home_2)),
               ),
               BottomNavigationBarItem(
-                icon: buildIcon(const Icon(Icons.search_outlined)),
+                icon: buildIcon(const Icon(IconsaxPlusLinear.search_normal_1)),
                 label: '',
-                activeIcon: buildIcon(const Icon(Icons.search)),
+                activeIcon: buildIcon(const Icon(IconsaxPlusBold.search_normal_1)),
+
               ),
               if (isAdmin)
                 BottomNavigationBarItem(
                   icon: buildIcon(
-                      const Icon(Icons.admin_panel_settings_outlined)),
+                      const Icon(IconsaxPlusLinear.edit)),
                   label: '',
-                  activeIcon: buildIcon(const Icon(Icons.admin_panel_settings)),
+                  activeIcon: buildIcon(const Icon(IconsaxPlusBold.edit)),
+
                 ),
             ],
             onTap: (index) {

@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:toastification/toastification.dart';
@@ -19,7 +20,7 @@ class Toaster {
           spreadRadius: 0,
         )
       ],
-      icon: const Icon(Icons.check_circle_outline, size: 35),
+      icon: const Icon(FluentIcons.checkmark_circle_12_regular, size: 35),
       style: ToastificationStyle.flat,
       type: ToastificationType.success,
       autoCloseDuration: const Duration(seconds: 4),
@@ -42,7 +43,7 @@ class Toaster {
           spreadRadius: 0,
         )
       ],
-      icon: const Icon(Icons.error_outline, size: 35),
+      icon: const Icon(FluentIcons.error_circle_12_regular, size: 35),
       style: ToastificationStyle.flat,
       type: ToastificationType.error,
       autoCloseDuration: const Duration(seconds: 4),

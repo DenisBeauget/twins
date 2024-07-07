@@ -347,6 +347,9 @@ class MaterialTheme {
         ),
         scaffoldBackgroundColor: colorScheme.background,
         canvasColor: colorScheme.surface,
+        appBarTheme: AppBarTheme(
+            backgroundColor: colorScheme.surface,
+            surfaceTintColor: Colors.transparent),
       );
 
   List<ExtendedColor> get extendedColors => [];

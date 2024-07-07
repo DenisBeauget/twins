@@ -15,7 +15,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
     on<OfferALL>((event, emit) async {
       emit(OfferLoading());
       final List<Offer> offers =
-          await OfferService.getOffersByEstablishmentID(event.establishmentName);
+          await OfferService.getOffersByEstablishmentID(event.establishmentID);
       emit(OfferLoaded(offers));
       currentOffers = offers;
     });
@@ -73,8 +73,8 @@ class OfferEvent {
 }
 
 class OfferALL extends OfferEvent {
-  final String establishmentName;
-  const OfferALL(this.establishmentName);
+  final String establishmentID;
+  const OfferALL(this.establishmentID);
 }
 
 class OfferFilterByCategory extends OfferEvent {

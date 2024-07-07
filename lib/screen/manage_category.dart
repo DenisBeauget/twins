@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/utils/popup.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/style/style_schema.dart';
@@ -37,7 +38,7 @@ class ManageCategory extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, size: 40, color: Theme.of(context).colorScheme.surface),
+                    Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Text(
