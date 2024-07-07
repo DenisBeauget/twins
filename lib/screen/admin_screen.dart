@@ -16,6 +16,7 @@ class AdminScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(AppLocalizations.of(context)!.admin_hello(name)),
       ),
       body: Center(
@@ -35,7 +36,7 @@ class AdminScreen extends StatelessWidget {
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
-                    style: btnPrimaryStyle(),
+                    style: btnPrimaryStyle(context),
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -59,7 +60,7 @@ class AdminScreen extends StatelessWidget {
             const SizedBox(height: 50),
             SizedBox(
                 child: ElevatedButton(
-                    style: btnPrimaryStyle(),
+                    style: btnPrimaryStyle(context),
                     onPressed: () {
                       Navigator.push(
                           context,

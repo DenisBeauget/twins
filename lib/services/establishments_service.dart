@@ -184,11 +184,11 @@ class EstablishmentService {
 
       if (idToDelete.isNotEmpty) {
         List<Offer> offerToDelete =
-            await OffersService().getOffersByEstablishment(name!);
+            await OffersService().getOffersByEstablishmentID(toDelete.id!);
 
         for (Offer offer in offerToDelete) {
           await OffersService()
-              .deleteOfferFromSpecificEstablishment(offer.title);
+              .deleteOfferByID(offer.id!);
         }
         _firestore.collection('establishments').doc(idToDelete).delete();
         storageService.deleteFile(toDelete.imageName);

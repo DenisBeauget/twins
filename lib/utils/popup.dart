@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,12 +23,12 @@ class Popup {
           content: Text(description),
           actions: [
             ElevatedButton(
-              style: btnDialogStyleCancel(),
+              style: btnDialogStyleCancel(context),
               onPressed: () => Navigator.pop(context, false),
               child: Text(AppLocalizations.of(context)!.popup_cancel_bt),
             ),
             ElevatedButton(
-              style: btnDialogStyle(),
+              style: btnDialogStyle(context),
               onPressed: () => Navigator.pop(context, true),
               child: Text(AppLocalizations.of(context)!.popup_delete_bt),
             ),
@@ -57,38 +55,46 @@ class Popup {
 
     QrImage qrImage = QrImage(qrCode);
 
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.custom,
-      confirmBtnColor: Theme.of(context).colorScheme.inversePrimary,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      widget: Column(
-        children: [
-          Text(AppLocalizations.of(context)!.gr_code_offer_message),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: PrettyQrView(
-              decoration: PrettyQrDecoration(
-                shape: PrettyQrSmoothSymbol(
-                  roundFactor: 1,
-                  color: Theme.of(context).colorScheme.inversePrimary,
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)),
+            title: Center(
+                child: Text(offer.title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20))),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(AppLocalizations.of(context)!.gr_code_offer_message),
+                const SizedBox(height: 20),
+                PrettyQrView(
+                  decoration: PrettyQrDecoration(
+                    shape: PrettyQrSmoothSymbol(
+                      roundFactor: 1,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                    image: PrettyQrDecorationImage(
+                      image: AssetImage(isDarkMode
+                          ? 'assets/img/twins_logo_w.png'
+                          : 'assets/img/twins_logo.png'),
+                    ),
+                  ),
+                  qrImage: qrImage,
                 ),
-                image: PrettyQrDecorationImage(
-                  image: AssetImage(isDarkMode
-                      ? 'assets/img/twins_logo_w.png'
-                      : 'assets/img/twins_logo.png'),
-                ),
-              ),
-              qrImage: qrImage,
+              ],
             ),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-      confirmBtnText: 'Ok',
-      onConfirmBtnTap: () async {
-        Navigator.of(context).pop();
-      },
-    );
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              ElevatedButton(
+                style: btnDialogStyle(context),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Ok'),
+              ),
+            ],
+          );
+        });
   }
 }

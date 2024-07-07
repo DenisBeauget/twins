@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:twins_front/bloc/category_bloc.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -32,7 +33,6 @@ class HomeScreen extends StatelessWidget {
 
     String categorySelected = "";
 
-
     final TextEditingController searchController = TextEditingController();
 
     Widget returnCategories(BuildContext context) {
@@ -58,9 +58,7 @@ class HomeScreen extends StatelessWidget {
                       : Theme.of(context).colorScheme.inversePrimary,
                   foregroundColor: category.name == categorySelected
                       ? Theme.of(context).colorScheme.surface
-                      : Theme.of(context)
-                      .colorScheme
-                      .onPrimary,
+                      : Theme.of(context).colorScheme.onPrimary,
                   onPressed: () {
                     searchController.clear();
                     if (category.name != categorySelected) {
@@ -78,8 +76,9 @@ class HomeScreen extends StatelessWidget {
         }
       } else {
         return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
+            child: SpinKitThreeInOut(
+          size: 20,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ));
       }
     }
@@ -117,8 +116,9 @@ class HomeScreen extends StatelessWidget {
         }
       } else {
         return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
+            child: SpinKitThreeInOut(
+          size: 20,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ));
       }
     }
@@ -147,8 +147,9 @@ class HomeScreen extends StatelessWidget {
         }
       } else {
         return Center(
-            child: CircularProgressIndicator(
-          color: lightColorScheme.primaryContainer,
+            child: SpinKitThreeInOut(
+          size: 20,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ));
       }
     }
@@ -169,12 +170,12 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.location_on, color: Theme.of(context).colorScheme.inversePrimary),
-            SizedBox(width: 4),
-            Text(
+            Icon(Icons.location_on,
+                color: Theme.of(context).colorScheme.inversePrimary),
+            const SizedBox(width: 4),
+            const Text(
               'Lille, France',
             ),
-            Icon(Icons.arrow_drop_down),
           ],
         ),
       ),
@@ -199,33 +200,25 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextField(
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface),
                     controller: searchController,
                     decoration: InputDecoration(
                       hintText:
                           AppLocalizations.of(context)!.search_placeholder,
                       hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.surface),
+                          color: Theme.of(context).colorScheme.onSurface),
                       prefixIcon: Icon(
                         Icons.search,
-                        color: Theme.of(context).colorScheme.surface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       filled: true,
-                      fillColor: Theme.of(context).colorScheme.onSurface,
+                      fillColor: Theme.of(context).colorScheme.surface,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(15.0),
+  borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface)
                       ),
                       contentPadding: const EdgeInsets.all(16.0),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.arrow_right_alt,
-                            color: Theme.of(context).colorScheme.surface),
-                        onPressed: () {
-                          establishmentBloc.add(EstablishmentFilterByKeyword(
-                              searchController.text));
-                        },
-                      ),
                     ),
                     onChanged: (text) {
                       Future.delayed(const Duration(milliseconds: 300));

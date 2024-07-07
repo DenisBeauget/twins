@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:twins_front/bloc/establishment_bloc.dart';
@@ -62,34 +63,31 @@ class ManageEstablishments extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.inversePrimary,
-                      border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 20),
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline, size: 40),
+                      Icon(Icons.info_outline, size: 40, color: Theme.of(context).colorScheme.surface),
                       const Padding(padding: EdgeInsets.only(left: 15)),
                       SizedBox(
-                        height: 150,
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Expanded(
-                              child: Text(
-                                  AppLocalizations.of(context)!
-                                      .admin_establishment_title_update,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            Expanded(
-                              child: Text(
-                                  AppLocalizations.of(context)!
-                                      .admin_establishment_title_delete,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                            )
+                            Text(
+                                AppLocalizations.of(context)!
+                                    .admin_establishment_title_update,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
+                            const SizedBox(height: 15),
+                            Text(
+                                AppLocalizations.of(context)!
+                                    .admin_establishment_title_delete,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
                           ],
                         ),
                       )
@@ -228,6 +226,7 @@ class ManageEstablishments extends StatelessWidget {
                     return returnAddBtn(context);
                   },
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -264,8 +263,8 @@ class ManageEstablishments extends StatelessWidget {
       }
     } else {
       return Center(
-          child: CircularProgressIndicator(
-        color: lightColorScheme.primaryContainer,
+          child: SpinKitThreeInOut(
+        color: Theme.of(context).colorScheme.primaryContainer,
       ));
     }
   }
@@ -281,8 +280,9 @@ class ManageEstablishments extends StatelessWidget {
               addUpdateEstablishment(context);
             },
             child: Center(
-                child: CircularProgressIndicator(
-              color: lightColorScheme.primaryContainer,
+                child: SpinKitThreeInOut(
+              size: 20,
+              color: Theme.of(context).colorScheme.primaryContainer,
             )),
           ));
     }
@@ -346,8 +346,9 @@ class ManageEstablishments extends StatelessWidget {
       }
     } else {
       return Center(
-          child: CircularProgressIndicator(
-        color: lightColorScheme.primaryContainer,
+          child: SpinKitThreeInOut(
+        size: 20,
+        color: Theme.of(context).colorScheme.primaryContainer,
       ));
     }
   }

@@ -9,9 +9,10 @@ class AppExplanation2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const ColorScheme.light().surface,
       body: Container(
         decoration: BoxDecoration(
-            color: darkColorScheme.background,
+            color: const ColorScheme.light().onSurface,
             borderRadius: BorderRadius.circular(25)),
         padding: MediaQuery.of(context).padding,
         child: Column(
@@ -35,7 +36,7 @@ class AppExplanation2 extends StatelessWidget {
                       AppLocalizations.of(context)!.welcome_content_app,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: lightColorScheme.background,
+                        color: const ColorScheme.light().surface,
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
                         height: 1.5,

@@ -18,9 +18,10 @@ class AppExplanation3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const ColorScheme.light().surface,
       body: Container(
         decoration: BoxDecoration(
-            color: darkColorScheme.primary,
+            color: const ColorScheme.light().surface,
             borderRadius: BorderRadius.circular(25)),
         padding: MediaQuery.of(context).padding,
         child: Column(
@@ -42,7 +43,7 @@ class AppExplanation3 extends StatelessWidget {
                             .welcome_content_categories,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: darkColorScheme.surface,
+                          color: const ColorScheme.light().onSurface,
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
                           height: 1.5,
@@ -52,7 +53,7 @@ class AppExplanation3 extends StatelessWidget {
                         onPressed: () {
                           goToHome(context);
                         },
-                        style: btnPrimaryStyle(),
+                        style: btnPrimaryStyle(context),
                         child: Text(
                             AppLocalizations.of(context)!.start_experience)),
                     const SizedBox(height: 50),
