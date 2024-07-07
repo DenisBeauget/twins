@@ -39,6 +39,7 @@ dependencies:
   flutter_spinkit: ^5.2.1
   fluentui_system_icons: ^1.1.246
   iconsax_plus: ^1.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

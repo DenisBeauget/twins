@@ -347,8 +347,8 @@ class MaterialTheme {
         ),
         scaffoldBackgroundColor: colorScheme.background,
         canvasColor: colorScheme.surface,
-        appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
+        appBarTheme: AppBarTheme(
+            backgroundColor: colorScheme.surface,
             surfaceTintColor: Colors.transparent),
       );
 
