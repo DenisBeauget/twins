@@ -6,11 +6,11 @@ import '../services/subscription_service.dart';
 class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   SubscriptionService categoryService = SubscriptionService();
   SubscriptionBloc() : super(SubscriptionInitialState()) {
-
     on<LoadSubscription>((event, emit) async {
       emit(SubscriptionLoading());
-      bool subscriptionStatus =  await SubscriptionService.isSubscribed();
-      emit(SubscriptionLoaded(subscriptionStatus));
+      bool subscriptionStatus = await SubscriptionService.isSubscribed();
+      Subscription? subscription = await SubscriptionService.getSubscription();
+      emit(SubscriptionLoaded(subscriptionStatus, subscription));
     });
   }
 }
@@ -18,14 +18,15 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
 class SubscriptionState {}
 
 class SubscriptionInitialState extends SubscriptionState {}
+
 class SubscriptionLoading extends SubscriptionState {}
 
 class SubscriptionLoaded extends SubscriptionState {
   final bool isSubscribed;
+  final Subscription? subscription;
 
-  SubscriptionLoaded(this.isSubscribed);
+  SubscriptionLoaded(this.isSubscribed, this.subscription);
 }
-
 
 class SubscriptionEvent extends Equatable {
   const SubscriptionEvent();

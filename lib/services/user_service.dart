@@ -54,6 +54,10 @@ class UserService {
           userAttributes['first_name'];
       Provider.of<AuthController>(context, listen: false).lastName =
           userAttributes['last_name'];
+      Provider.of<AuthController>(context, listen: false).birthDate =
+          userAttributes['date_of_birth'];
+      Provider.of<AuthController>(context, listen: false).zipCode =
+          userAttributes['zip_code'];
       return userAttributes.data() as Map<String, dynamic>;
     } catch (e) {
       rethrow;
@@ -74,7 +78,8 @@ class UserService {
 
   static Future<BasicUser?> getUserByUid(String uid) async {
     try {
-      DocumentSnapshot user = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot user =
+          await _firestore.collection('users').doc(uid).get();
       return BasicUser(
         uid: user.id,
         email: user['email'],
@@ -91,5 +96,6 @@ class BasicUser {
   final String email;
   final String displayName;
 
-  BasicUser({required this.uid, required this.email, required this.displayName});
+  BasicUser(
+      {required this.uid, required this.email, required this.displayName});
 }
