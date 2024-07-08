@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/payment_service.dart';
-import 'package:twins_front/services/subscription_service.dart';
+import 'package:twins_front/services/subcription_service.dart';
 import 'package:twins_front/utils/toaster.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,7 +33,7 @@ class PaymentScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'GO !',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -42,7 +42,7 @@ class PaymentScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildCheckItem(
               AppLocalizations.of(context)!.subscription_argument_first,
             ),
@@ -52,9 +52,9 @@ class PaymentScreen extends StatelessWidget {
             _buildCheckItem(
               AppLocalizations.of(context)!.subscription_argument_third,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8.0),
@@ -67,7 +67,7 @@ class PaymentScreen extends StatelessWidget {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.subscription_time,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class PaymentScreen extends StatelessWidget {
                       ),
                       Text(
                         AppLocalizations.of(context)!.subscription_price,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                         ),
@@ -83,7 +83,7 @@ class PaymentScreen extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 8.0,
                       vertical: 4.0,
                     ),
@@ -93,7 +93,7 @@ class PaymentScreen extends StatelessWidget {
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.subscription_argument,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -101,7 +101,7 @@ class PaymentScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 String customerId = await initPaymentSheet(context);
@@ -121,21 +121,21 @@ class PaymentScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               child: Text(
                 AppLocalizations.of(context)!.subscription_button,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               AppLocalizations.of(context)!.subscription_term,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 10,
               ),

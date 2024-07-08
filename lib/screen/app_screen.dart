@@ -11,6 +11,7 @@ import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/main.dart';
 import 'package:twins_front/screen/admin_screen.dart';
 import 'package:twins_front/screen/payment_screen.dart';
+import 'package:twins_front/screen/profil_screen.dart';
 import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 import 'package:twins_front/utils/toaster.dart';
@@ -31,7 +32,8 @@ class AppScreen extends StatelessWidget {
     const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
       HomeScreen(),
-      AdminScreen(),
+      ProfilScreen(),
+      AdminScreen()
     ];
 
     return Scaffold(
@@ -60,16 +62,18 @@ class AppScreen extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: buildIcon(const Icon(IconsaxPlusLinear.search_normal_1)),
                 label: '',
-                activeIcon: buildIcon(const Icon(IconsaxPlusBold.search_normal_1)),
-
+                activeIcon:
+                    buildIcon(const Icon(IconsaxPlusBold.search_normal_1)),
               ),
+              BottomNavigationBarItem(
+                  icon: buildIcon(const Icon(IconsaxPlusBold.profile)),
+                  label: '',
+                  activeIcon: buildIcon(const Icon(IconsaxPlusBold.profile))),
               if (isAdmin)
                 BottomNavigationBarItem(
-                  icon: buildIcon(
-                      const Icon(IconsaxPlusLinear.edit)),
+                  icon: buildIcon(const Icon(IconsaxPlusLinear.edit)),
                   label: '',
                   activeIcon: buildIcon(const Icon(IconsaxPlusBold.edit)),
-
                 ),
             ],
             onTap: (index) {
@@ -97,7 +101,7 @@ class ScreenIndexProvider extends ChangeNotifier {
 
 Widget buildIcon(Icon icon) {
   return Padding(
-    padding: EdgeInsets.only(top: 4.0),
+    padding: const EdgeInsets.only(top: 4.0),
     child: icon,
   );
 }
