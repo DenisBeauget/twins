@@ -1,13 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:twins_front/bloc/subscription_bloc.dart';
+import 'package:twins_front/component/payment_modal.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
 
-import '../component/establishment_details.dart';
+import '../component/establishment_modal.dart';
 import '../services/offers_service.dart';
 
 class FeaturedCard extends StatelessWidget {
@@ -150,21 +154,17 @@ class FeaturedCardBig extends StatelessWidget {
                                   children: [
                                     Text(
                                       establishment.name,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                        color: Colors.white,
                                         fontSize: 18,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
                                       establishment.categoryName ?? 'Unknown',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -271,7 +271,7 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
               ),
               Checkbox(
                 activeColor: Colors.white,
-                checkColor: lightColorScheme.surfaceTint,
+                checkColor: Theme.of(context).colorScheme.surfaceTint,
                 value: offer.hightlight,
                 onChanged: null,
               ),
@@ -288,8 +288,10 @@ class FeaturedCardOffer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedStartDate = AppLocalizations.of(context)!.start_date +
-        DateFormat('dd-MM-yyyy').format(offer.startDate);
+    final SubscriptionBloc subscriptionBloc =
+        BlocProvider.of<SubscriptionBloc>(context);
+    subscriptionBloc.add(LoadSubscription());
+
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
         DateFormat('dd-MM-yyyy').format(offer.endDate);
 
@@ -297,11 +299,16 @@ class FeaturedCardOffer extends StatelessWidget {
       future: checkOfferAlreadyUsed(offer.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return SizedBox(
+              width: 300,
+              height: 100,
+              child: SpinKitThreeInOut(
+                  size: 20, color: Theme.of(context).colorScheme.primaryContainer));
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           bool alreadyUsed = snapshot.data ?? false;
+
           return Container(
             margin: const EdgeInsets.all(16),
             width: 300,
@@ -353,8 +360,25 @@ class FeaturedCardOffer extends StatelessWidget {
                           GestureDetector(
                             onTap: alreadyUsed
                                 ? null
-                                : () {
-                                    Popup.showValidateOffer(context, offer);
+                                : () async {
+                                    if (!(subscriptionBloc.state
+                                            as SubscriptionLoaded)
+                                        .isSubscribed) {
+                                      showPaymentModalBottomSheet(
+                                              context, offer)
+                                          .then((value) {
+                                        if (value != null) {
+                                          subscriptionBloc
+                                              .add(LoadSubscription());
+                                          if (value is Offer) {
+                                            Popup.showValidateOffer(
+                                                context, value);
+                                          }
+                                        }
+                                      });
+                                    } else {
+                                      Popup.showValidateOffer(context, offer);
+                                    }
                                   },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -367,8 +391,9 @@ class FeaturedCardOffer extends StatelessWidget {
                               ),
                               child: Text(
                                 AppLocalizations.of(context)!.offer_card_bt,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14.0,
+                                  color: Theme.of(context).colorScheme.surface,
                                 ),
                               ),
                             ),
@@ -384,7 +409,7 @@ class FeaturedCardOffer extends StatelessWidget {
                         height: 100,
                         width: MediaQuery.of(context).size.width * 0.9,
                         color: Colors.black.withOpacity(0.7),
-                        child:  Center(
+                        child: Center(
                           child: Text(
                             AppLocalizations.of(context)!.offer_already_used,
                             style: const TextStyle(

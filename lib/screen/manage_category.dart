@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/utils/popup.dart';
 import 'package:twins_front/services/category_service.dart';
 import 'package:twins_front/style/style_schema.dart';
@@ -36,13 +38,13 @@ class ManageCategory extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, size: 40),
-                    Padding(padding: EdgeInsets.only(left: 10)),
+                    Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
+                    const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Text(
                           AppLocalizations.of(context)!.admin_category_title,
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
                     )
                   ],
                 ),
@@ -120,7 +122,7 @@ class ManageCategory extends StatelessWidget {
               return CategoryButton(
                 text: category.name,
                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                foregroundColor: Colors.black,
+                foregroundColor: Theme.of(context).colorScheme.surface,
                 onPressed: () {
                   confirmDeleteCategory(category, context);
                 },
@@ -129,8 +131,9 @@ class ManageCategory extends StatelessWidget {
       }
     } else {
       return Center(
-          child: CircularProgressIndicator(
-        color: lightColorScheme.primaryContainer,
+          child: SpinKitThreeInOut(
+            size: 20,
+        color: Theme.of(context).colorScheme.primaryContainer,
       ));
     }
   }

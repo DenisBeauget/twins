@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:confetti/confetti.dart';
-import 'package:twins_front/main.dart';
-import 'package:twins_front/screen/app_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:twins_front/services/establishments_service.dart';
 import 'package:twins_front/utils/toaster.dart';
@@ -15,7 +12,7 @@ import '../utils/confetti_controller.dart';
 class OffersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<Offer>> getOffersByEstablishment(String establishmentId) async {
+  Future<List<Offer>> getOffersByEstablishmentID(String establishmentId) async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('offers').get();
       List<Offer> offers = querySnapshot.docs.map((doc) {
@@ -25,6 +22,18 @@ class OffersService {
       List<Offer> filteredOffers = offers.where((offer) {
         return offer.establishmentId.id.toString() == establishmentId;
       }).toList();
+
+      if (filteredOffers.isEmpty) {
+        return filteredOffers;
+      }
+
+      for(Offer offer in filteredOffers) {
+        if (offer.endDate.isBefore(DateTime.now())) {
+          filteredOffers.remove(offer);
+          deleteOfferByID(offer.id!);
+        }
+      };
+
       return filteredOffers;
     } catch (e) {
       rethrow;
@@ -97,17 +106,13 @@ class OffersService {
     }
   }
 
-  Future<bool> deleteOfferFromSpecificEstablishment(String offerTitle) async {
+  Future<bool> deleteOfferByID(String offerID) async {
     try {
-      String offerId = await getOfferIdByTitle(offerTitle);
-
-      if (offerId.isNotEmpty) {
-        _firestore.collection('offers').doc(offerId).delete();
-        return true;
-      }
-      return false;
+      _firestore.collection('offers').doc(offerID).delete();
+      deleteValidatedOffer(offerID);
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 
@@ -138,6 +143,23 @@ class OffersService {
           .add({"offer_id": offerId, "user_id": AuthService.currentUser!.uid});
 
       return docRef.id;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  Future<void> deleteValidatedOffer(String offerId) async {
+    try {
+      CollectionReference collectionReference = _firestore.collection('used_by');
+      QuerySnapshot querySnapshot = await collectionReference
+          .where('offer_id', isEqualTo: offerId)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          _firestore.collection('used_by').doc(doc.id).delete();
+        }
+      }
     } catch (e) {
       rethrow;
     }

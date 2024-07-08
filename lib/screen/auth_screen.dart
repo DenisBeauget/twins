@@ -42,7 +42,7 @@ class AuthScreen extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
-                        style: btnPrimaryStyle(),
+                        style: btnPrimaryStyle(context),
                         onPressed: () {
                           Navigator.push(
                               context,

@@ -1,32 +1,52 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
-import 'package:motion_toast/motion_toast.dart';
-class Toaster{
+import 'package:toastification/toastification.dart';
+
+class Toaster {
   static void showSuccessToast(BuildContext context, String message) {
     Haptics.vibrate(HapticsType.success);
 
-    MotionToast(
-      width: MediaQuery.of(context).size.width*0.8,
-      height: 60,
-      primaryColor: Theme.of(context).colorScheme.inversePrimary,
-      description: Text(message),
-      icon: Icons.check,
-      animationCurve: Curves.bounceIn,
-    ).show(context);
+    toastification.show(
+      context: context,
+      title: Text(message, style: const TextStyle(fontSize: 16)),
+      alignment: Alignment.topCenter,
+      direction: TextDirection.ltr,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x07000000),
+          blurRadius: 16,
+          offset: Offset(0, 16),
+          spreadRadius: 0,
+        )
+      ],
+      icon: const Icon(FluentIcons.checkmark_circle_12_regular, size: 35),
+      style: ToastificationStyle.flat,
+      type: ToastificationType.success,
+      autoCloseDuration: const Duration(seconds: 4),
+    );
   }
-
 
   static void showFailedToast(BuildContext context, String message) {
     Haptics.vibrate(HapticsType.error);
-    MotionToast(
-      width: MediaQuery.of(context).size.width*0.8,
-      height: message.length > 50 ? message.length.toDouble() : 60,
-      primaryColor: Theme.of(context).colorScheme.error,
-      description: Text(message),
-      icon: Icons.error,
-      animationCurve: Curves.bounceIn,
-    ).show(context);
+
+    toastification.show(
+      context: context,
+      title: Text(message, style: const TextStyle(fontSize: 16)),
+      alignment: Alignment.topCenter,
+      direction: TextDirection.ltr,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x07000000),
+          blurRadius: 16,
+          offset: Offset(0, 16),
+          spreadRadius: 0,
+        )
+      ],
+      icon: const Icon(FluentIcons.error_circle_12_regular, size: 35),
+      style: ToastificationStyle.flat,
+      type: ToastificationType.error,
+      autoCloseDuration: const Duration(seconds: 4),
+    );
   }
 }
