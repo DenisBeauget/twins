@@ -89,6 +89,22 @@ class UserService {
       return null;
     }
   }
+
+  static Future<CompleteUser?> getCompleteUserByUid(String uid) async {
+    try {
+      DocumentSnapshot user =
+          await _firestore.collection('users').doc(uid).get();
+      return CompleteUser(
+          uid: user.id,
+          email: user['email'],
+          firstName: user['first_name'],
+          lastName: user['last_name'],
+          birthDate: user['date_of_birth'],
+          zipCode: user['zip_code']);
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
 class BasicUser {
@@ -98,4 +114,21 @@ class BasicUser {
 
   BasicUser(
       {required this.uid, required this.email, required this.displayName});
+}
+
+class CompleteUser {
+  final String uid;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final Timestamp birthDate;
+  final String zipCode;
+
+  CompleteUser(
+      {required this.uid,
+      required this.email,
+      required this.firstName,
+      required this.lastName,
+      required this.birthDate,
+      required this.zipCode});
 }

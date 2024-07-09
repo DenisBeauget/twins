@@ -183,6 +183,7 @@
       }
     }
   },
-  "gr_code_offer_message": "To benefit from this offer, present this QR code to the establishment"
+  "gr_code_offer_message": "To benefit from this offer, present this QR code to the establishment",
+  "profil_title": "My profil"
 
 }
