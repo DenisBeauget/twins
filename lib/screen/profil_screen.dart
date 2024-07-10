@@ -82,7 +82,7 @@ class ProfilScreen extends StatelessWidget {
                                   BlocProvider.of<SubscriptionBloc>(context)
                                       .add(LoadSubscription());
                                 },
-                                style: btnSecondaryStyle(context),
+                                style: btnPrimaryStyle(context),
                                 child: Text(
                                   "Je m'abonne !",
                                   style: TextStyle(
