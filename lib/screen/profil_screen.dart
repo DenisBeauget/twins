@@ -15,10 +15,15 @@ class ProfilScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(AppLocalizations.of(context)!.profil_title),
-      ),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text(AppLocalizations.of(context)!.profil_title,
+              style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white))),
       body: BlocProvider(
         create: (context) => SubscriptionBloc()..add(LoadSubscription()),
         child: BlocBuilder<SubscriptionBloc, SubscriptionState>(
@@ -77,10 +82,12 @@ class ProfilScreen extends StatelessWidget {
                                   BlocProvider.of<SubscriptionBloc>(context)
                                       .add(LoadSubscription());
                                 },
-                                style: btnPrimaryStyle(context),
+                                style: btnSecondaryStyle(context),
                                 child: const Text(
                                   "Je m'abonne !",
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -103,32 +110,37 @@ class ProfilScreen extends StatelessWidget {
 
   Widget _buildTextItem(BuildContext context, String placeHolder, String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            placeHolder,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              placeHolder,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 5),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Row(
               children: [
-                const Icon(
-                  Icons.output,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 8),
+                const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                    child: Icon(
+                      Icons.mail_lock_outlined,
+                      color: Colors.white,
+                    )),
+                const SizedBox(width: 5),
                 Text(
                   text,
                   style: const TextStyle(
