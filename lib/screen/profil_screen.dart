@@ -20,10 +20,10 @@ class ProfilScreen extends StatelessWidget {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.profil_title,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white))),
+                  color: Theme.of(context).colorScheme.onSurface))),
       body: BlocProvider(
         create: (context) => SubscriptionBloc()..add(LoadSubscription()),
         child: BlocBuilder<SubscriptionBloc, SubscriptionState>(
@@ -83,9 +83,12 @@ class ProfilScreen extends StatelessWidget {
                                       .add(LoadSubscription());
                                 },
                                 style: btnSecondaryStyle(context),
-                                child: const Text(
+                                child: Text(
                                   "Je m'abonne !",
                                   style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -118,10 +121,10 @@ class ProfilScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               placeHolder,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -134,18 +137,18 @@ class ProfilScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                     child: Icon(
                       Icons.mail_lock_outlined,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                     )),
                 const SizedBox(width: 5),
                 Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
