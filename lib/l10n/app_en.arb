@@ -184,6 +184,8 @@
     }
   },
   "gr_code_offer_message": "To benefit from this offer, present this QR code to the establishment",
-  "profil_title": "My profil"
+  "profil_title": "My profil",
+  "profil_subscribe": "Subscribe",
+  "profil_disconnect": "Sign out"
 
 }

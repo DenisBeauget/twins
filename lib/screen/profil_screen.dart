@@ -55,20 +55,19 @@ class ProfilScreen extends StatelessWidget {
                     DateTime birthDateAsDate = data.birthDate.toDate();
                     String formattedBirthDate =
                         DateFormat('dd/MM/yyyy').format(birthDateAsDate);
-                    return ListView(
-                      shrinkWrap: true,
+                    return Column(
                       children: [
                         _buildTextItem(context, "Prénom", data.firstName),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         _buildTextItem(context, "Nom", data.lastName),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         _buildTextItem(context, "Email", data.email),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         _buildTextItem(
                             context, "Date de naissance", formattedBirthDate),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         _buildTextItem(context, "Code postal", data.zipCode),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 5),
                         if (subscriptionEndDate.isNotEmpty)
                           _buildTextItem(
                               context, "Fin d'abonnement", subscriptionEndDate),
@@ -77,7 +76,7 @@ class ProfilScreen extends StatelessWidget {
                           Align(
                             alignment: Alignment.center,
                             child: SizedBox(
-                              width: 325,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   await showPaymentModalBottomSheet(
@@ -86,22 +85,15 @@ class ProfilScreen extends StatelessWidget {
                                       .add(LoadSubscription());
                                 },
                                 style: btnPrimaryStyle(context),
-                                child: Text(
-                                  "Je m'abonne !",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                child: Text(AppLocalizations.of(context)!
+                                    .profil_subscribe),
                               ),
                             ),
                           ),
                         const SizedBox(height: 15),
                         Center(
                           child: SizedBox(
-                              width: 250,
+                              width: MediaQuery.of(context).size.width * 0.9,
                               child: RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
@@ -115,7 +107,8 @@ class ProfilScreen extends StatelessWidget {
                                                   const AuthScreen()),
                                           (Route<dynamic> route) => false);
                                     },
-                                  text: "Se déconnecter",
+                                  text: AppLocalizations.of(context)!
+                                      .profil_disconnect,
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
                                       color: Theme.of(context)
@@ -161,30 +154,14 @@ class ProfilScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                    child: Icon(
-                      Icons.mail_lock_outlined,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    )),
-                const SizedBox(width: 5),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
+          Row(
+            children: [
+              const SizedBox(width: 5),
+              Expanded(
+                child: TextField(
+                    decoration: inputStyle(text, Icons.mail_lock_outlined)),
+              )
+            ],
           ),
         ],
       ),

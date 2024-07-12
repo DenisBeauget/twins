@@ -66,7 +66,7 @@ class AppScreen extends StatelessWidget {
                     buildIcon(const Icon(IconsaxPlusBold.search_normal_1)),
               ),
               BottomNavigationBarItem(
-                  icon: buildIcon(const Icon(IconsaxPlusBold.profile)),
+                  icon: buildIcon(const Icon(IconsaxPlusLinear.profile)),
                   label: '',
                   activeIcon: buildIcon(const Icon(IconsaxPlusBold.profile))),
               if (isAdmin)
