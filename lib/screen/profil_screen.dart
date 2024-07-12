@@ -1,7 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/component/payment_modal.dart';
+import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/services/auth_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,12 +72,12 @@ class ProfilScreen extends StatelessWidget {
                         if (subscriptionEndDate.isNotEmpty)
                           _buildTextItem(
                               context, "Fin d'abonnement", subscriptionEndDate),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         if (subscriptionEndDate.isEmpty)
                           Align(
                             alignment: Alignment.center,
                             child: SizedBox(
-                              width: 250,
+                              width: 325,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   await showPaymentModalBottomSheet(
@@ -95,6 +98,35 @@ class ProfilScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                        const SizedBox(height: 15),
+                        Center(
+                          child: SizedBox(
+                              width: 250,
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      await AuthService.logout();
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AuthScreen()),
+                                          (Route<dynamic> route) => false);
+                                    },
+                                  text: "Se déconnecter",
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )),
+                        ),
+                        const SizedBox(height: 15),
                       ],
                     );
                   } else {
@@ -133,7 +165,7 @@ class ProfilScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               children: [
