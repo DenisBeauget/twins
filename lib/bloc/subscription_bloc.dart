@@ -7,9 +7,11 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   SubscriptionBloc() : super(SubscriptionInitialState()) {
     on<LoadSubscription>((event, emit) async {
       emit(SubscriptionLoading());
-      bool subscriptionStatus = await SubscriptionService.isSubscribed();
-      Subscription? subscription = await SubscriptionService.getSubscription();
-      emit(SubscriptionLoaded(subscriptionStatus, subscription));
+      final (isSubscribed, subscription) =
+          await SubscriptionService.getSubscriptionStatus();
+      emit(SubscriptionLoaded(isSubscribed, subscription));
+
+      emit(SubscriptionLoaded(isSubscribed, subscription));
     });
   }
 }
