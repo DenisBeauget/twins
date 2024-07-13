@@ -23,24 +23,31 @@ class SubscriptionService {
     }
   }
 
-  static Future<bool> isSubscribed() async {
+  static Future<(bool, Subscription?)> getSubscriptionStatus() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    DocumentReference userRef = _firestore.collection('users').doc(auth.currentUser!.uid);
+    DocumentReference userRef =
+        _firestore.collection('users').doc(auth.currentUser!.uid);
 
     CollectionReference collectionReference =
         _firestore.collection('subscription');
     try {
-
-      QuerySnapshot querySnapshot = await collectionReference
-          .where('user_id', isEqualTo: userRef)
-          .get();
+      QuerySnapshot querySnapshot =
+          await collectionReference.where('user_id', isEqualTo: userRef).get();
       if (querySnapshot.docs.isNotEmpty) {
-        return true;
+        var doc = querySnapshot.docs.first;
+        Timestamp endDateTimestamp = doc['end_date'];
+        return (true, Subscription(endDate: endDateTimestamp.toDate()));
       } else {
-        return false;
+        return (false, null);
       }
     } catch (e) {
-      return false;
+      rethrow;
     }
   }
+}
+
+class Subscription {
+  final DateTime endDate;
+
+  Subscription({required this.endDate});
 }

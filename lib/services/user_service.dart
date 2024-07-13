@@ -54,6 +54,10 @@ class UserService {
           userAttributes['first_name'];
       Provider.of<AuthController>(context, listen: false).lastName =
           userAttributes['last_name'];
+      Provider.of<AuthController>(context, listen: false).birthDate =
+          userAttributes['date_of_birth'];
+      Provider.of<AuthController>(context, listen: false).zipCode =
+          userAttributes['zip_code'];
       return userAttributes.data() as Map<String, dynamic>;
     } catch (e) {
       rethrow;
@@ -74,12 +78,29 @@ class UserService {
 
   static Future<BasicUser?> getUserByUid(String uid) async {
     try {
-      DocumentSnapshot user = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot user =
+          await _firestore.collection('users').doc(uid).get();
       return BasicUser(
         uid: user.id,
         email: user['email'],
         displayName: user['first_name'] + ' ' + user['last_name'],
       );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<CompleteUser?> getCompleteUserByUid(String uid) async {
+    try {
+      DocumentSnapshot user =
+          await _firestore.collection('users').doc(uid).get();
+      return CompleteUser(
+          uid: user.id,
+          email: user['email'],
+          firstName: user['first_name'],
+          lastName: user['last_name'],
+          birthDate: user['date_of_birth'],
+          zipCode: user['zip_code']);
     } catch (e) {
       return null;
     }
@@ -91,5 +112,23 @@ class BasicUser {
   final String email;
   final String displayName;
 
-  BasicUser({required this.uid, required this.email, required this.displayName});
+  BasicUser(
+      {required this.uid, required this.email, required this.displayName});
+}
+
+class CompleteUser {
+  final String uid;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final Timestamp birthDate;
+  final String zipCode;
+
+  CompleteUser(
+      {required this.uid,
+      required this.email,
+      required this.firstName,
+      required this.lastName,
+      required this.birthDate,
+      required this.zipCode});
 }
