@@ -31,134 +31,139 @@ class ProfilScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<UserBloc>(
-              create: (context) => UserBloc(UserService())
-                ..add(LoadUser(AuthService.currentUser!.uid)),
-            ),
-            BlocProvider<SubscriptionBloc>(
-              create: (context) => SubscriptionBloc()..add(LoadSubscription()),
-            ),
-          ],
-          child: BlocBuilder<UserBloc, UserState>(
-            builder: (context, userState) {
-              return BlocBuilder<SubscriptionBloc, SubscriptionState>(
-                builder: (context, subscriptionState) {
-                  if (subscriptionState is SubscriptionLoading ||
-                      userState is UserLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+      body: Expanded(
+        child: SingleChildScrollView(
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<UserBloc>(
+                create: (context) => UserBloc(UserService())
+                  ..add(LoadUser(AuthService.currentUser!.uid)),
+              ),
+              BlocProvider<SubscriptionBloc>(
+                create: (context) =>
+                    SubscriptionBloc()..add(LoadSubscription()),
+              ),
+            ],
+            child: BlocBuilder<UserBloc, UserState>(
+              builder: (context, userState) {
+                return BlocBuilder<SubscriptionBloc, SubscriptionState>(
+                  builder: (context, subscriptionState) {
+                    if (subscriptionState is SubscriptionLoading ||
+                        userState is UserLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  if (subscriptionState is SubscriptionLoaded) {
-                    String subscriptionEndDate =
-                        subscriptionState.subscription?.endDate != null
-                            ? DateFormat('dd/MM/yyyy')
-                                .format(subscriptionState.subscription!.endDate)
-                            : "";
+                    if (subscriptionState is SubscriptionLoaded) {
+                      String subscriptionEndDate =
+                          subscriptionState.subscription?.endDate != null
+                              ? DateFormat('dd/MM/yyyy').format(
+                                  subscriptionState.subscription!.endDate)
+                              : "";
 
-                    return BlocBuilder<UserBloc, UserState>(
-                      builder: (context, userState) {
-                        if (userState is UserLoaded) {
-                          final data = userState.user;
-                          DateTime birthDateAsDate = data.birthDate.toDate();
-                          String formattedBirthDate =
-                              DateFormat('dd/MM/yyyy').format(birthDateAsDate);
+                      return BlocBuilder<UserBloc, UserState>(
+                        builder: (context, userState) {
+                          if (userState is UserLoaded) {
+                            final data = userState.user;
+                            DateTime birthDateAsDate = data.birthDate.toDate();
+                            String formattedBirthDate = DateFormat('dd/MM/yyyy')
+                                .format(birthDateAsDate);
 
-                          return Column(
-                            children: [
-                              _buildTextItem(context, "Prénom", data.firstName),
-                              const SizedBox(height: 5),
-                              _buildTextItem(context, "Nom", data.lastName),
-                              const SizedBox(height: 5),
-                              _buildTextItem(context, "Email", data.email),
-                              const SizedBox(height: 5),
-                              _buildTextItem(context, "Date de naissance",
-                                  formattedBirthDate),
-                              const SizedBox(height: 5),
-                              _buildTextItem(
-                                  context, "Code postal", data.zipCode),
-                              const SizedBox(height: 15),
-                              if (subscriptionEndDate.isNotEmpty)
-                                _buildTextItem(context, "Fin d'abonnement",
-                                    subscriptionEndDate),
-                              const SizedBox(height: 15),
-                              if (subscriptionEndDate.isEmpty)
-                                Align(
-                                  alignment: Alignment.center,
+                            return Column(
+                              children: [
+                                _buildTextItem(
+                                    context, "Prénom", data.firstName),
+                                const SizedBox(height: 5),
+                                _buildTextItem(context, "Nom", data.lastName),
+                                const SizedBox(height: 5),
+                                _buildTextItem(context, "Email", data.email),
+                                const SizedBox(height: 5),
+                                _buildTextItem(context, "Date de naissance",
+                                    formattedBirthDate),
+                                const SizedBox(height: 5),
+                                _buildTextItem(
+                                    context, "Code postal", data.zipCode),
+                                const SizedBox(height: 15),
+                                if (subscriptionEndDate.isNotEmpty)
+                                  _buildTextItem(context, "Fin d'abonnement",
+                                      subscriptionEndDate),
+                                const SizedBox(height: 15),
+                                if (subscriptionEndDate.isEmpty)
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          await showPaymentModalBottomSheet(
+                                              context, null);
+                                          BlocProvider.of<SubscriptionBloc>(
+                                                  context)
+                                              .add(LoadSubscription());
+                                        },
+                                        style: btnPrimaryStyle(context),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .profil_subscribe),
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(height: 15),
+                                Center(
                                   child: SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.9,
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        await showPaymentModalBottomSheet(
-                                            context, null);
-                                        BlocProvider.of<SubscriptionBloc>(
-                                                context)
-                                            .add(LoadSubscription());
-                                      },
-                                      style: btnPrimaryStyle(context),
-                                      child: Text(AppLocalizations.of(context)!
-                                          .profil_subscribe),
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.9,
-                                  child: RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () async {
-                                          await AuthService.logout();
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const AuthScreen()),
-                                            (Route<dynamic> route) => false,
-                                          );
-                                        },
-                                      text: AppLocalizations.of(context)!
-                                          .profil_disconnect,
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                    child: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            await AuthService.logout();
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const AuthScreen()),
+                                              (Route<dynamic> route) => false,
+                                            );
+                                          },
+                                        text: AppLocalizations.of(context)!
+                                            .profil_disconnect,
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          );
-                        } else if (userState is UserError) {
-                          return Center(
-                              child: Text(
-                                  'Erreur utilisateur: ${userState.message}'));
-                        } else {
-                          return const Center(
-                              child: Text(
-                                  'Erreur lors du chargement de l\'utilisateur'));
-                        }
-                      },
-                    );
-                  } else {
-                    return const Center(
-                        child: Text(
-                            'Erreur lors de la mise à jour de l\'abonnement'));
-                  }
-                },
-              );
-            },
+                                const SizedBox(height: 15),
+                              ],
+                            );
+                          } else if (userState is UserError) {
+                            return Center(
+                                child: Text(
+                                    'Erreur utilisateur: ${userState.message}'));
+                          } else {
+                            return const Center(
+                                child: Text(
+                                    'Erreur lors du chargement de l\'utilisateur'));
+                          }
+                        },
+                      );
+                    } else {
+                      return const Center(
+                          child: Text(
+                              'Erreur lors de la mise à jour de l\'abonnement'));
+                    }
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
