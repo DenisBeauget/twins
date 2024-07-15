@@ -183,5 +183,8 @@
       }
     }
   },
-  "gr_code_offer_message": "Pour utiliser cette offre, presentez ce QR code au commerçant"
+  "gr_code_offer_message": "Pour utiliser cette offre, presentez ce QR code au commerçant",
+  "profil_title": "Mon profil",
+  "profil_subscribe": "Je m'abonne !",
+  "profil_disconnect": "Se déconnecter"
 }

@@ -66,6 +66,26 @@ inputStyle(String label, IconData icon) {
   );
 }
 
+inputStyleWithoutFocus(String label, IconData icon, BuildContext context) {
+  return InputDecoration(
+    hintText: label,
+    prefixIcon: Icon(icon),
+    border: const OutlineInputBorder(
+      borderSide: BorderSide(width: 4),
+      borderRadius: BorderRadius.all(Radius.circular(22.0)),
+    ),
+    enabledBorder: const OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Colors.grey),
+      borderRadius: BorderRadius.all(Radius.circular(22.0)),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: Colors.grey),
+      borderRadius: BorderRadius.all(Radius.circular(22.0)),
+    ),
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+  );
+}
+
 Image appLogo(double height) {
   var brightness =
       SchedulerBinding.instance.platformDispatcher.platformBrightness;

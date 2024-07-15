@@ -17,7 +17,7 @@ import '../services/offers_service.dart';
 class FeaturedCard extends StatelessWidget {
   final Establishment establishment;
 
-  FeaturedCard({super.key, required this.establishment});
+  const FeaturedCard({super.key, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +303,8 @@ class FeaturedCardOffer extends StatelessWidget {
               width: 300,
               height: 100,
               child: SpinKitThreeInOut(
-                  size: 20, color: Theme.of(context).colorScheme.primaryContainer));
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primaryContainer));
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -370,10 +371,8 @@ class FeaturedCardOffer extends StatelessWidget {
                                         if (value != null) {
                                           subscriptionBloc
                                               .add(LoadSubscription());
-                                          if (value is Offer) {
-                                            Popup.showValidateOffer(
-                                                context, value);
-                                          }
+                                          Popup.showValidateOffer(
+                                              context, value);
                                         }
                                       });
                                     } else {
