@@ -215,7 +215,6 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.only(left: 16),
         width: 300,
-        height: 100,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.0),
@@ -238,6 +237,15 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
                   children: [
                     Text(
                       offer.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      offer.description,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
@@ -342,9 +350,9 @@ class FeaturedCardOffer extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      const Text(
-                        'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
-                        style: TextStyle(
+                      Text(
+                        offer.description,
+                        style: const TextStyle(
                           fontSize: 14.0,
                         ),
                       ),

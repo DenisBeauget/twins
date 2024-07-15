@@ -128,6 +128,7 @@
   "admin_offer_deleted_message": "Offre supprimé",
   "admin_offer_add_title": "Ajoutez une offre",
   "admin_offer_title_input_placeholder": "Titre de l'offre",
+  "admin_offer_description_input_placeholder": "Description",
   "admin_offer_start_date_input_placeholder": "Date de début",
   "admin_offer_end_date_input_placeholder": "Date de fin",
   "admin_offer_title": "Pour supprimer une offre, appuyez dessus",

@@ -128,6 +128,7 @@
   "admin_offer_deleted_message": "Offer deleted",
   "admin_offer_add_title": "Add offer",
   "admin_offer_title_input_placeholder": "Offer title",
+  "admin_offer_description_input_placeholder": "Description",
   "admin_offer_start_date_input_placeholder": "Start date",
   "admin_offer_end_date_input_placeholder": "End date",
   "admin_offer_title": "To delete an offer, tap on it",
