@@ -147,7 +147,7 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
         _surnameController.text == "" ||
         _birthDateController.text == "" ||
         _zipCodeController.text == "") {
-      Toaster.showFailedToast(context, "One or many fields are empty");
+      Toaster.showFailedToast("One or many fields are empty");
     } else {
       _registrationController.authenticateWithEmailAndPassword(
           context: context);

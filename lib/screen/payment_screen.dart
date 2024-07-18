@@ -110,12 +110,10 @@ class PaymentScreen extends StatelessWidget {
                   await SubscriptionService.subscribeUser(
                       AuthService.currentUser!.uid, customerId);
                   subscriptionBloc.add(LoadSubscription());
-                  Toaster.showSuccessToast(context,
-                      AppLocalizations.of(context)!.subscription_success);
+                  Toaster.showSuccessToast(AppLocalizations.of(context)!.subscription_success);
                   Navigator.of(context).pop(offerEntry);
                 } catch (e) {
-                  Toaster.showFailedToast(
-                      context, AppLocalizations.of(context)!.subscription_fail);
+                  Toaster.showFailedToast(AppLocalizations.of(context)!.subscription_fail);
                 }
               },
               style: ElevatedButton.styleFrom(

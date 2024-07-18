@@ -142,7 +142,7 @@ class ManageCategory extends StatelessWidget {
     if (categoryName.isNotEmpty) {
       categoryBloc.add(AddCategory(new Category(name: categoryName), context));
     } else {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_category_empty_input);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.admin_category_empty_input);
     }
   }
 }

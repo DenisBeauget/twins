@@ -119,8 +119,7 @@ class AuthController extends ChangeNotifier {
           zipCode: zipCode,
           isAdmin: false,
         );
-        Toaster.showSuccessToast(
-            context, AppLocalizations.of(context)!.registration_message);
+        Toaster.showSuccessToast(AppLocalizations.of(context)!.registration_message);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else {
@@ -135,15 +134,13 @@ class AuthController extends ChangeNotifier {
         }
 
         if (!context.mounted) return;
-        Toaster.showSuccessToast(
-            context, AppLocalizations.of(context)!.sign_in_success);
+        Toaster.showSuccessToast(AppLocalizations.of(context)!.sign_in_success);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const AppScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
       Toaster.showFailedToast(
-          context,
           e.message!.contains("credential is malformed")
               ? AppLocalizations.of(context)!.sign_in_bad_credentials
               : e.message!);

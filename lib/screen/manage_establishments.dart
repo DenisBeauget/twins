@@ -366,23 +366,18 @@ class ManageEstablishments extends StatelessWidget {
 
   void addUpdateEstablishment(BuildContext context) {
     if (categorySelected == null) {
-      Toaster.showFailedToast(
-          context,
-          AppLocalizations.of(context)!
+      Toaster.showFailedToast(AppLocalizations.of(context)!
               .admin_establishment_select_category_message);
       return;
     }
     if (establishmentName.text.isEmpty ||
         establishmentDescription.text.isEmpty) {
-      Toaster.showFailedToast(context,
-          AppLocalizations.of(context)!.admin_establishment_enter_name_message);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.admin_establishment_enter_name_message);
       return;
     }
 
     if (_image.path.isEmpty || _image.path == null) {
-      Toaster.showFailedToast(
-          context,
-          AppLocalizations.of(context)!
+      Toaster.showFailedToast(AppLocalizations.of(context)!
               .admin_establishment_select_image_message);
       return;
     }

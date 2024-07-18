@@ -148,18 +148,17 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
         Validator.passwordValidator(_passwordController.text);
 
     if (checkedEmail != null) {
-      Toaster.showFailedToast(context, checkedEmail);
+      Toaster.showFailedToast(checkedEmail);
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      Toaster.showFailedToast(
-          context, AppLocalizations.of(context)!.password_not_match);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.password_not_match);
       return;
     }
 
     if (checkedPassword != null) {
-      Toaster.showFailedToast(context, checkedPassword);
+      Toaster.showFailedToast(checkedPassword);
       return;
     }
 
@@ -173,8 +172,7 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
         ),
       );
     } else {
-      Toaster.showFailedToast(
-          context, AppLocalizations.of(context)!.check_register_conditions);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.check_register_conditions);
     }
   }
 }

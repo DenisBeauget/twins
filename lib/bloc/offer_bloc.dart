@@ -22,19 +22,16 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
 
     on<AddOffer>((event, emit) async {
       if (event.offer.startDate.isAfter(event.offer.endDate)) {
-        Toaster.showFailedToast(event.context,
-            AppLocalizations.of(event.context)!.admin_offer_bad_date);
+        Toaster.showFailedToast(AppLocalizations.of(event.context)!.admin_offer_bad_date);
       } else {
         await OfferService.addOfferToSpecificEstablishment(event.offer)
             .then((value) {
           if (value.isNotEmpty) {
             event.offer.id = value;
             currentOffers.add(event.offer);
-            Toaster.showSuccessToast(event.context,
-                AppLocalizations.of(event.context)!.admin_offer_added);
+            Toaster.showSuccessToast(AppLocalizations.of(event.context)!.admin_offer_added);
           } else {
-            Toaster.showFailedToast(event.context,
-                AppLocalizations.of(event.context)!.admin_offer_cant_add);
+            Toaster.showFailedToast(AppLocalizations.of(event.context)!.admin_offer_cant_add);
           }
         }).whenComplete(() => emit(OfferLoaded(currentOffers)));
       }
@@ -45,11 +42,9 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           .then((value) {
         if (value) {
           currentOffers.removeWhere((e) => e.title == event.offer.title);
-          Toaster.showSuccessToast(event.context,
-              AppLocalizations.of(event.context)!.admin_offer_deleted_message);
+          Toaster.showSuccessToast(AppLocalizations.of(event.context)!.admin_offer_deleted_message);
         } else {
-          Toaster.showFailedToast(
-              event.context, AppLocalizations.of(event.context)!.delete_error);
+          Toaster.showFailedToast(AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(OfferLoaded(currentOffers)));
     });

@@ -165,11 +165,9 @@ Future<Widget> returnContent(
                       builder: (context) => AppScreen(),
                     ),
                   );
-                  Toaster.showSuccessToast(context,
-                      AppLocalizations.of(context)!.offer_validation_success);
+                  Toaster.showSuccessToast(AppLocalizations.of(context)!.offer_validation_success);
                 } catch (e) {
-                  Toaster.showFailedToast(context,
-                      AppLocalizations.of(context)!.offer_validation_fail);
+                  Toaster.showFailedToast(AppLocalizations.of(context)!.offer_validation_fail);
                 }
               },
               child: Text(

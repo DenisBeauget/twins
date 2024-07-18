@@ -12,6 +12,9 @@ import '../utils/confetti_controller.dart';
 class OffersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  StreamSubscription<QuerySnapshot>? _subscription;
+  Timer? _cancelTimer;
+
   Future<List<Offer>> getOffersByEstablishmentID(String establishmentId) async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('offers').get();
@@ -165,10 +168,11 @@ class OffersService {
     }
   }
 
-  StreamSubscription<QuerySnapshot>? _subscription;
-  Timer? _cancelTimer;
+  Future<bool> startListeningForUsedBy(BuildContext context, Offer offer) async {
+    bool isUsed = false;
 
-  void startListeningForUsedBy(BuildContext context, Offer offer) {
+    final completer = Completer<bool>();
+
     _subscription = FirebaseFirestore.instance
         .collection('used_by')
         .snapshots()
@@ -177,16 +181,27 @@ class OffersService {
         OfferUsedBy offerUsedBy = OfferUsedBy.fromDocument(doc);
         if (offerUsedBy.userId == AuthService.currentUser!.uid &&
             offerUsedBy.offerId == offer.id) {
-          Toaster.showSuccessToast(context,
-              'Félicitations, vous venez d\'utiliser l\'offre: ${offer.title} !');
+          Toaster.showSuccessToast('Félicitations, vous venez d\'utiliser l\'offre: ${offer.title} !');
           confettiController.play();
+
+          stopListeningForUsedBy();
+
+          isUsed = true;
+          completer.complete(isUsed);
+          break;
         }
       }
     });
 
-    _cancelTimer = Timer(const Duration(minutes: 10), () {
+    _cancelTimer = Timer(const Duration(minutes: 1), () {
       stopListeningForUsedBy();
+      isUsed = false;
+      if (!completer.isCompleted) {
+        completer.complete(isUsed);
+      }
     });
+
+    return completer.future;
   }
 
   void stopListeningForUsedBy() {

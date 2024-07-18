@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
+import 'package:toastification/toastification.dart';
 import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
@@ -75,47 +76,34 @@ class MyApp extends StatelessWidget {
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return MaterialApp(
-      title: 'Twins App',
-      theme: theme.light(),
-      darkTheme: theme.dark(),
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('fr'),
-      ],
-      localeListResolutionCallback: (locales, supportedLocales) {
-        if (locales != null && locales.isNotEmpty) {
-          if (locales.first.languageCode == 'fr') {
-            return const Locale('fr', '');
-          } else {
-            return const Locale('en', '');
-          }
-        }
-        return null;
-      },
-      home: Stack(
-        children: [
-          redirectUser(),
-          Align(
-            alignment: Alignment.center,
-            child: ConfettiWidget(
-              confettiController: confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              emissionFrequency: 0.1,
-              numberOfParticles: 25,
-              minBlastForce: 10,
-              maxBlastForce: 50,
-            ),
-          ),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'Twins App',
+        theme: theme.light(),
+        darkTheme: theme.dark(),
+        themeMode: ThemeMode.system,
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('fr'),
+        ],
+        localeListResolutionCallback: (locales, supportedLocales) {
+          if (locales != null && locales.isNotEmpty) {
+            if (locales.first.languageCode == 'fr') {
+              return const Locale('fr', '');
+            } else {
+              return const Locale('en', '');
+            }
+          }
+          return null;
+        },
+        home: integrateConfetti(redirectUser())
       ),
     );
   }

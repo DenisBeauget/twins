@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       _authController.authenticateWithEmailAndPassword(context: context);
     } catch (e) {
-      Toaster.showFailedToast(context, e.toString());
+      Toaster.showFailedToast(e.toString());
     }
   }
 }

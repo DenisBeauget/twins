@@ -26,8 +26,8 @@ btnTextPrimaryStyle() {
 
 btnDialogStyle(BuildContext context) {
   return ElevatedButton.styleFrom(
-    backgroundColor: Theme.of(context).colorScheme.primary,
-    foregroundColor: Colors.black,
+    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+    foregroundColor: Theme.of(context).colorScheme.surface,
     textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11.0)),
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),

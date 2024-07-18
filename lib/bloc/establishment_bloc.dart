@@ -80,13 +80,11 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           emit(EstablishmentLoading());
           event.establishment.id = value;
           currentEstablishments.add(event.establishment);
-          Toaster.showSuccessToast(event.context,
-              AppLocalizations.of(event.context)!.establishment_added);
+          Toaster.showSuccessToast(AppLocalizations.of(event.context)!.establishment_added);
         } else {
           storageService
               .deleteFile('establishments/${event.establishment.name}-$id');
-          Toaster.showFailedToast(event.context,
-              AppLocalizations.of(event.context)!.establishment_already_exist);
+          Toaster.showFailedToast(AppLocalizations.of(event.context)!.establishment_already_exist);
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
@@ -120,10 +118,9 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           currentEstablishments
               .removeWhere((e) => e.id == event.establishment.id);
           currentEstablishments.add(event.establishment);
-          Toaster.showSuccessToast(event.context, 'mis à jour avec succès');
+          Toaster.showSuccessToast('mis à jour avec succès');
         } else {
-          Toaster.showFailedToast(
-              event.context, 'Erreur lors de la mise à jour');
+          Toaster.showFailedToast('Erreur lors de la mise à jour');
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
@@ -137,13 +134,10 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
           currentEstablishments
               .removeWhere((e) => e.name == event.establishment.name);
-          Toaster.showSuccessToast(
-              event.context,
-              AppLocalizations.of(event.context)!
+          Toaster.showSuccessToast(AppLocalizations.of(event.context)!
                   .admin_establishment_delete_success);
         } else {
-          Toaster.showFailedToast(
-              event.context, AppLocalizations.of(event.context)!.delete_error);
+          Toaster.showFailedToast(AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
