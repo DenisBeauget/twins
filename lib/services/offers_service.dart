@@ -27,12 +27,12 @@ class OffersService {
         return filteredOffers;
       }
 
-      for(Offer offer in filteredOffers) {
+      for (Offer offer in filteredOffers) {
         if (offer.endDate.isBefore(DateTime.now())) {
           filteredOffers.remove(offer);
           deleteOfferByID(offer.id!);
         }
-      };
+      }
 
       return filteredOffers;
     } catch (e) {
@@ -97,6 +97,7 @@ class OffersService {
         "start_date": offer.startDate,
         "end_date": offer.endDate,
         "hightlight": offer.hightlight,
+        "description": offer.description,
         "establishment_id": offer.establishmentId
       });
 
@@ -148,13 +149,12 @@ class OffersService {
     }
   }
 
-
   Future<void> deleteValidatedOffer(String offerId) async {
     try {
-      CollectionReference collectionReference = _firestore.collection('used_by');
-      QuerySnapshot querySnapshot = await collectionReference
-          .where('offer_id', isEqualTo: offerId)
-          .get();
+      CollectionReference collectionReference =
+          _firestore.collection('used_by');
+      QuerySnapshot querySnapshot =
+          await collectionReference.where('offer_id', isEqualTo: offerId).get();
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
           _firestore.collection('used_by').doc(doc.id).delete();
@@ -178,7 +178,7 @@ class OffersService {
         if (offerUsedBy.userId == AuthService.currentUser!.uid &&
             offerUsedBy.offerId == offer.id) {
           Toaster.showSuccessToast(context,
-              'Félicitations, vous venez d\'utiliser l\offre: ${offer.title} !');
+              'Félicitations, vous venez d\'utiliser l\'offre: ${offer.title} !');
           confettiController.play();
         }
       }
@@ -200,6 +200,7 @@ class Offer {
   final DateTime startDate;
   final DateTime endDate;
   final bool hightlight;
+  final String description;
   final DocumentReference establishmentId;
   String? establishmentName;
   String? id;
@@ -210,6 +211,7 @@ class Offer {
       required this.establishmentId,
       required this.startDate,
       required this.endDate,
+      required this.description,
       this.establishmentName,
       this.id});
 
@@ -219,6 +221,7 @@ class Offer {
       hightlight: doc['hightlight'],
       startDate: (doc['start_date'] as Timestamp).toDate(),
       endDate: (doc['end_date'] as Timestamp).toDate(),
+      description: (doc['description']),
       establishmentId: doc['establishment_id'],
       id: doc.id,
     );

@@ -38,6 +38,7 @@ class ManageOffer extends StatelessWidget {
   DateTime? startDate;
   DateTime? endDate;
   String offerTitle = "";
+  String offerDescription = "";
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +65,18 @@ class ManageOffer extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
+                      Icon(IconsaxPlusLinear.info_circle,
+                          size: 40,
+                          color: Theme.of(context).colorScheme.surface),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
-                        child: Text(
-                            AppLocalizations.of(context)!.admin_offer_title,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface))
-                      )
+                          child: Text(
+                              AppLocalizations.of(context)!.admin_offer_title,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.surface)))
                     ],
                   ),
                 ),
@@ -167,9 +172,7 @@ class ManageOffer extends StatelessWidget {
     } else {
       return Center(
           child: SpinKitThreeInOut(
-        size: 20,
-        color: Theme.of(context).colorScheme.primaryContainer
-      ));
+              size: 20, color: Theme.of(context).colorScheme.primaryContainer));
     }
   }
 
@@ -207,9 +210,8 @@ class ManageOffer extends StatelessWidget {
       } else {
         return Center(
             child: SpinKitThreeInOut(
-          size: 20,
-          color: Theme.of(context).colorScheme.primaryContainer
-        ));
+                size: 20,
+                color: Theme.of(context).colorScheme.primaryContainer));
       }
     } else {
       return Center(
@@ -254,6 +256,21 @@ class ManageOffer extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     offerTitle = value;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  autocorrect: true,
+                  cursorColor: Colors.green,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!
+                        .admin_offer_description_input_placeholder,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    offerDescription = value;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -375,6 +392,7 @@ class ManageOffer extends StatelessWidget {
             title: offerTitle,
             hightlight: isChecked,
             establishmentId: reference,
+            description: offerDescription,
             startDate: startDate!,
             endDate: endDate!),
         context));

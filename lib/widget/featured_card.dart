@@ -213,71 +213,80 @@ class FeaturedCardOfferAdmin extends StatelessWidget {
     String formattedEndDate = AppLocalizations.of(context)!.end_date +
         DateFormat('dd-MM-yyyy').format(offer.endDate);
     return Container(
-        margin: const EdgeInsets.only(left: 16),
-        width: 300,
-        height: 100,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.0),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5, top: 5),
-          child: Row(
+      margin: const EdgeInsets.only(left: 16),
+      width: 300,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 5, top: 5),
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      offer.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      formattedStartDate,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    Text(
-                      formattedEndDate,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
+              Text(
+                offer.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 8.0),
               Text(
-                AppLocalizations.of(context)!.offer_card_hightlight,
+                offer.description,
                 style: const TextStyle(
-                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                formattedStartDate,
+                style: const TextStyle(
+                  color: Colors.black,
                   fontSize: 14.0,
                 ),
               ),
-              Checkbox(
-                activeColor: Colors.white,
-                checkColor: Theme.of(context).colorScheme.surfaceTint,
-                value: offer.hightlight,
-                onChanged: null,
+              Text(
+                formattedEndDate,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14.0,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.offer_card_hightlight,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  Checkbox(
+                    activeColor: Colors.white,
+                    checkColor: Theme.of(context).colorScheme.surfaceTint,
+                    value: offer.hightlight,
+                    onChanged: null,
+                  ),
+                ],
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -342,9 +351,9 @@ class FeaturedCardOffer extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      const Text(
-                        'Profite d’une bière offerte chez lfrefrefreferferferforkrfkrekorekoorfeofrealalala',
-                        style: TextStyle(
+                      Text(
+                        offer.description,
+                        style: const TextStyle(
                           fontSize: 14.0,
                         ),
                       ),
