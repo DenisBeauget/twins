@@ -63,15 +63,15 @@ class ManageEstablishments extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.inversePrimary,
+                      color: Theme.of(context).colorScheme.primary,
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                          color: Theme.of(context).colorScheme.primary,
                           width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
-                      Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
+                      Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.onPrimary),
                       const Padding(padding: EdgeInsets.only(left: 15)),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
@@ -82,13 +82,13 @@ class ManageEstablishments extends StatelessWidget {
                                 AppLocalizations.of(context)!
                                     .admin_establishment_title_update,
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
+                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary)),
                             const SizedBox(height: 15),
                             Text(
                                 AppLocalizations.of(context)!
                                     .admin_establishment_title_delete,
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
+                                    fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary)),
                           ],
                         ),
                       )
@@ -99,7 +99,7 @@ class ManageEstablishments extends StatelessWidget {
                 TextField(
                   style:
                       TextStyle(color: Theme.of(context).colorScheme.surface),
-                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.search_placeholder,
                     hintStyle:
@@ -157,7 +157,7 @@ class ManageEstablishments extends StatelessWidget {
                 const SizedBox(height: 10),
                 TextField(
                   autocorrect: true,
-                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   controller: establishmentName,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!
@@ -176,7 +176,7 @@ class ManageEstablishments extends StatelessWidget {
                 const SizedBox(height: 10),
                 TextField(
                   autocorrect: true,
-                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   controller: establishmentDescription,
                   keyboardType: TextInputType.multiline,
                   minLines: 2,
@@ -191,7 +191,7 @@ class ManageEstablishments extends StatelessWidget {
                 const SizedBox(height: 10),
                 TextField(
                   autocorrect: true,
-                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   controller: establishmentAddress,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!
@@ -253,7 +253,7 @@ class ManageEstablishments extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 onPressed: () {
                   categorySelected = category;
@@ -366,23 +366,18 @@ class ManageEstablishments extends StatelessWidget {
 
   void addUpdateEstablishment(BuildContext context) {
     if (categorySelected == null) {
-      Toaster.showFailedToast(
-          context,
-          AppLocalizations.of(context)!
+      Toaster.showFailedToast(AppLocalizations.of(context)!
               .admin_establishment_select_category_message);
       return;
     }
     if (establishmentName.text.isEmpty ||
         establishmentDescription.text.isEmpty) {
-      Toaster.showFailedToast(context,
-          AppLocalizations.of(context)!.admin_establishment_enter_name_message);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.admin_establishment_enter_name_message);
       return;
     }
 
     if (_image.path.isEmpty || _image.path == null) {
-      Toaster.showFailedToast(
-          context,
-          AppLocalizations.of(context)!
+      Toaster.showFailedToast(AppLocalizations.of(context)!
               .admin_establishment_select_image_message);
       return;
     }

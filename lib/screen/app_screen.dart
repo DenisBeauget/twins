@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/main.dart';
 import 'package:twins_front/screen/admin_screen.dart';
+import 'package:twins_front/screen/establishments_screen.dart';
 import 'package:twins_front/screen/payment_screen.dart';
 import 'package:twins_front/screen/profil_screen.dart';
 import 'package:twins_front/services/deeplink_service.dart';
@@ -31,7 +32,7 @@ class AppScreen extends StatelessWidget {
     int navBarIndex = screenindexprovider._index;
     const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
-      HomeScreen(),
+      EstablishmentsScreen(enableGoBack: false),
       ProfilScreen(),
       AdminScreen()
     ];
@@ -52,10 +53,10 @@ class AppScreen extends StatelessWidget {
           BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: navBarIndex,
-            selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
+            selectedItemColor: Theme.of(context).colorScheme.primary,
             items: [
               BottomNavigationBarItem(
-                icon: buildIcon(const Icon(IconsaxPlusLinear.home_2)),
+                icon: buildIcon(const Icon(IconsaxPlusLinear.home_2,)),
                 label: '',
                 activeIcon: buildIcon(const Icon(IconsaxPlusBold.home_2)),
               ),

@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/popup.dart';
 
 import '../component/establishment_modal.dart';
+import '../services/auth_service.dart';
 import '../services/offers_service.dart';
 
 class FeaturedCard extends StatelessWidget {
@@ -323,13 +324,13 @@ class FeaturedCardOffer extends StatelessWidget {
             margin: const EdgeInsets.all(16),
             width: 300,
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.black26,
+                  color: Theme.of(context).colorScheme.shadow,
                   blurRadius: 10,
-                  offset: Offset(0, 5),
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
@@ -394,14 +395,14 @@ class FeaturedCardOffer extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .inversePrimary,
+                                    .secondaryContainer,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: Text(
                                 AppLocalizations.of(context)!.offer_card_bt,
                                 style: TextStyle(
                                   fontSize: 14.0,
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color: Theme.of(context).colorScheme.onSecondary,
                                 ),
                               ),
                             ),
@@ -439,6 +440,6 @@ class FeaturedCardOffer extends StatelessWidget {
   }
 
   Future<bool> checkOfferAlreadyUsed(String offerId) async {
-    return await OffersService().checkOfferAlreadyUsed(offerId);
+    return await OffersService().checkOfferAlreadyUsed(offerId, AuthService.currentUser!.uid);
   }
 }

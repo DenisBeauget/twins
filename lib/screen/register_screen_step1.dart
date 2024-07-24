@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/register_screen_step2.dart';
 import 'package:twins_front/services/user_service.dart';
@@ -45,7 +46,7 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
                 Expanded(
                     flex: 3,
                     child: Center(
-                      child: appLogo(200),
+                      child: appLogoGreen(200),
                     )),
                 Expanded(
                   flex: 7,
@@ -66,9 +67,10 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
                           const SizedBox(height: 20),
                           TextFormField(
                             controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: inputStyle(
                                 AppLocalizations.of(context)!.email_placeholder,
-                                Icons.email_outlined),
+                                IconsaxPlusLinear.sms),
                             validator: Validator.emailValidator,
                           ),
                           const SizedBox(height: 50),
@@ -78,7 +80,7 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
                             decoration: inputStyle(
                                 AppLocalizations.of(context)!
                                     .password_placeholder,
-                                Icons.lock_outline),
+                                IconsaxPlusLinear.password_check),
                             validator: Validator.passwordValidator,
                           ),
                           const SizedBox(height: 16),
@@ -88,7 +90,7 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
                             decoration: inputStyle(
                                 AppLocalizations.of(context)!
                                     .confirm_password_placeholder,
-                                Icons.lock_outline),
+                                IconsaxPlusLinear.password_check),
                             validator: Validator.passwordValidator,
                           ),
                           const SizedBox(height: 16),
@@ -105,11 +107,18 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
                                 },
                               ),
                               Expanded(
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .register_conditions,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
+                                child: GestureDetector(
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .register_conditions,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                    onTap: () {
+                                      setState(() {
+                                        _termsAccepted = !_termsAccepted;
+                                      });
+                                    },
+                                )
                               ),
                             ],
                           ),
@@ -148,18 +157,17 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
         Validator.passwordValidator(_passwordController.text);
 
     if (checkedEmail != null) {
-      Toaster.showFailedToast(context, checkedEmail);
+      Toaster.showFailedToast(checkedEmail);
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      Toaster.showFailedToast(
-          context, AppLocalizations.of(context)!.password_not_match);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.password_not_match);
       return;
     }
 
     if (checkedPassword != null) {
-      Toaster.showFailedToast(context, checkedPassword);
+      Toaster.showFailedToast(checkedPassword);
       return;
     }
 
@@ -173,8 +181,7 @@ class _SignUpScreenStep1State extends State<SignUpScreenStep1> {
         ),
       );
     } else {
-      Toaster.showFailedToast(
-          context, AppLocalizations.of(context)!.check_register_conditions);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.check_register_conditions);
     }
   }
 }

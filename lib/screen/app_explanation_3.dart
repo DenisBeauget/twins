@@ -21,15 +21,18 @@ class AppExplanation3 extends StatelessWidget {
       backgroundColor: const ColorScheme.light().surface,
       body: Container(
         decoration: BoxDecoration(
-            color: const ColorScheme.light().surface,
+            color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(25)),
         padding: MediaQuery.of(context).padding,
         child: Column(
           children: <Widget>[
             const Expanded(
               flex: 5,
-              child: Image(
-                  image: AssetImage('assets/img/twins_logo.png'), height: 180),
+              child: Center(
+                child: Image(
+                    image: AssetImage('assets/img/twins_logo_green_full.png'),
+                    height: 180),
+              ),
             ),
             Expanded(
               flex: 5,
@@ -56,7 +59,7 @@ class AppExplanation3 extends StatelessWidget {
                         style: btnPrimaryStyle(context),
                         child: Text(
                             AppLocalizations.of(context)!.start_experience)),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
@@ -76,15 +79,21 @@ Future<void> goToHome(BuildContext context) async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     try {
       if (await userConnected(context)) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const AuthScreen()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const AppScreen()),
+            (route) => false);
       } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const AuthScreen()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const AuthScreen()),
+            (route) => false);
       }
     } catch (e) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const AuthScreen()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+          (route) => false);
     }
   });
 }

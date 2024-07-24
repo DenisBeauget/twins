@@ -55,10 +55,10 @@ class HomeScreen extends StatelessWidget {
                 return CategoryButton(
                   text: category.name,
                   backgroundColor: category.name == categorySelected
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.inversePrimary,
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.primary,
                   foregroundColor: category.name == categorySelected
-                      ? Theme.of(context).colorScheme.surface
+                      ? Theme.of(context).colorScheme.onSecondary
                       : Theme.of(context).colorScheme.onPrimary,
                   onPressed: () {
                     searchController.clear();
@@ -173,7 +173,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(IconsaxPlusBold.location,
-                color: Theme.of(context).colorScheme.inversePrimary),
+                color: Theme.of(context).colorScheme.primary),
             const Padding(
                 padding: EdgeInsets.all(5),
                 child: Text(

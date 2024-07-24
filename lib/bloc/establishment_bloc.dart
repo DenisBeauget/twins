@@ -49,8 +49,11 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
       List<Establishment> filteredEstablishments =
           currentEstablishments.where((establishment) {
         return establishment.name
-            .toLowerCase()
-            .contains(event.keyword.toLowerCase());
+                .toLowerCase()
+                .contains(event.keyword.toLowerCase()) ||
+            establishment.categoryName!
+                .toLowerCase()
+                .contains(event.keyword.toLowerCase());
       }).toList();
       emit(EstablishmentLoaded(filteredEstablishments));
     });
@@ -80,12 +83,12 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           emit(EstablishmentLoading());
           event.establishment.id = value;
           currentEstablishments.add(event.establishment);
-          Toaster.showSuccessToast(event.context,
+          Toaster.showSuccessToast(
               AppLocalizations.of(event.context)!.establishment_added);
         } else {
           storageService
               .deleteFile('establishments/${event.establishment.name}-$id');
-          Toaster.showFailedToast(event.context,
+          Toaster.showFailedToast(
               AppLocalizations.of(event.context)!.establishment_already_exist);
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
@@ -94,7 +97,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
     on<UpdateEstablishment>((event, emit) async {
       (state is EstablishmentLoaded)
           ? emit(EstablishmentCreating(
-          (state as EstablishmentLoaded).establishmentList))
+              (state as EstablishmentLoaded).establishmentList))
           : emit(EstablishmentUpdating(List.empty()));
       if (event.image.path != 'not_changed') {
         String oldImagePath = event.establishment.imageName;
@@ -120,10 +123,9 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           currentEstablishments
               .removeWhere((e) => e.id == event.establishment.id);
           currentEstablishments.add(event.establishment);
-          Toaster.showSuccessToast(event.context, 'mis à jour avec succès');
+          Toaster.showSuccessToast('mis à jour avec succès');
         } else {
-          Toaster.showFailedToast(
-              event.context, 'Erreur lors de la mise à jour');
+          Toaster.showFailedToast('Erreur lors de la mise à jour');
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });
@@ -137,13 +139,11 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
           currentEstablishments
               .removeWhere((e) => e.name == event.establishment.name);
-          Toaster.showSuccessToast(
-              event.context,
-              AppLocalizations.of(event.context)!
-                  .admin_establishment_delete_success);
+          Toaster.showSuccessToast(AppLocalizations.of(event.context)!
+              .admin_establishment_delete_success);
         } else {
           Toaster.showFailedToast(
-              event.context, AppLocalizations.of(event.context)!.delete_error);
+              AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
     });

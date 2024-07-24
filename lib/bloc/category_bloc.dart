@@ -26,14 +26,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
                     {
                       emit(CategoryLoading()),
                       categories.add(event.category),
-                      Toaster.showSuccessToast(event.context,
-                          AppLocalizations.of(event.context)!.category_added),
+                      Toaster.showSuccessToast(AppLocalizations.of(event.context)!.category_added),
                     }
                   else
                     {
-                      Toaster.showFailedToast(
-                          event.context,
-                          AppLocalizations.of(event.context)!
+                      Toaster.showFailedToast(AppLocalizations.of(event.context)!
                               .category_already_exist)
                     },
                 })
@@ -48,17 +45,13 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
           if (categories.map((e) => e.name == event.category.name) != null) {
             emit(CategoryLoading());
             categories.removeWhere((e) => e.name == event.category.name);
-            Toaster.showSuccessToast(
-                event.context,
-                AppLocalizations.of(event.context)!
+            Toaster.showSuccessToast(AppLocalizations.of(event.context)!
                     .admin_category_deleted_message);
           } else {
-            Toaster.showFailedToast(event.context,
-                AppLocalizations.of(event.context)!.category_not_found);
+            Toaster.showFailedToast(AppLocalizations.of(event.context)!.category_not_found);
           }
         } else {
-          Toaster.showFailedToast(
-              event.context, AppLocalizations.of(event.context)!.delete_error);
+          Toaster.showFailedToast(AppLocalizations.of(event.context)!.delete_error);
         }
       }).whenComplete(() => emit(CategoryLoaded(categories)));
     });

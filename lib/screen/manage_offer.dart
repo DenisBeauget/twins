@@ -57,9 +57,9 @@ class ManageOffer extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.inversePrimary,
+                      color: Theme.of(context).colorScheme.primary,
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                          color: Theme.of(context).colorScheme.primary,
                           width: 20),
                       borderRadius: BorderRadius.circular(10)),
                   width: MediaQuery.of(context).size.width,
@@ -67,7 +67,7 @@ class ManageOffer extends StatelessWidget {
                     children: [
                       Icon(IconsaxPlusLinear.info_circle,
                           size: 40,
-                          color: Theme.of(context).colorScheme.surface),
+                          color: Theme.of(context).colorScheme.onPrimary),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                           child: Text(
@@ -76,7 +76,7 @@ class ManageOffer extends StatelessWidget {
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color:
-                                      Theme.of(context).colorScheme.surface)))
+                                      Theme.of(context).colorScheme.onPrimary)))
                     ],
                   ),
                 ),

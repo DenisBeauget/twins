@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/change/auth_controller.dart';
+import 'package:twins_front/screen/auth_screen.dart';
 import 'package:twins_front/screen/home_screen.dart';
 import 'package:twins_front/style/style_schema.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/utils/toaster.dart';
+
+import 'app_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,6 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {Navigator.pushAndRemoveUntil(
+            context,
+            _createRoute(const AuthScreen()),
+                (route) => false,
+          );
+          },
+        ),
       ),
       body: CustomScrollView(
         slivers: [
@@ -36,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     flex: 3,
                     child: Align(
                       alignment: Alignment.center,
-                      child: appLogo(200),
+                      child: appLogoGreen(200),
                     )),
                 Expanded(
                   flex: 7,
@@ -57,9 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 20),
                         TextField(
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: inputStyle(
                               AppLocalizations.of(context)!.email_placeholder,
-                              Icons.email_outlined),
+                              IconsaxPlusLinear.sms),
                           onChanged: (newValue) {
                             _authController.email = newValue;
                           },
@@ -71,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: inputStyle(
                               AppLocalizations.of(context)!
                                   .sign_in_password_placeholder,
-                              Icons.lock_outline),
+                              IconsaxPlusLinear.password_check),
                           onChanged: (newValue) {
                             _authController.password = newValue;
                           },
@@ -104,9 +118,45 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login(BuildContext context) async {
     _authController.registerMode = false;
     try {
-      _authController.authenticateWithEmailAndPassword(context: context);
+      _authController
+          .authenticateWithEmailAndPassword(context: context)
+          .then((value) {
+        if (value == "success") {
+          Toaster.showSuccessToast(
+              AppLocalizations.of(context)!.sign_in_success);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const AppScreen()),
+              (route) => false);
+        } else {
+          Toaster.showFailedToast(
+              value.contains("credential is malformed")
+                  ? AppLocalizations.of(context)!.sign_in_bad_credentials
+                  : value);
+        }
+      });
     } catch (e) {
-      Toaster.showFailedToast(context, e.toString());
+      Toaster.showFailedToast(e.toString());
     }
   }
+
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(-1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeOut;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+
 }

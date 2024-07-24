@@ -63,7 +63,7 @@ class EstablishmentScreen extends StatelessWidget {
               establishment.name,
               style: const TextStyle(
                 fontSize: 22,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),
@@ -72,7 +72,7 @@ class EstablishmentScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.location_on,
-                  color: Theme.of(context).colorScheme.inversePrimary),
+                  color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 5),
               Text(
                 establishment.address,
@@ -87,7 +87,7 @@ class EstablishmentScreen extends StatelessWidget {
           Center(
             child: Text(
               AppLocalizations.of(context)!.offer_card_title,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
             ),
           ),
           const SizedBox(height: 20),
@@ -115,4 +115,11 @@ class EstablishmentScreen extends StatelessWidget {
       },
     );
   }
+}
+
+class EstablishmentScreenArguments {
+  final Establishment establishment;
+  final List<Offer> offers;
+
+  EstablishmentScreenArguments(this.establishment, this.offers);
 }

@@ -29,7 +29,7 @@ class AuthScreen extends StatelessWidget {
           Expanded(
             flex: 7,
             child: Center(
-              child: appLogo(180),
+              child: appLogoPurple(180),
             ),
           ),
           Expanded(

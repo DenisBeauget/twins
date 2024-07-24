@@ -104,7 +104,7 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> authenticateWithEmailAndPassword(
+  Future<String> authenticateWithEmailAndPassword(
       {required BuildContext context}) async {
     // ignore: prefer_interpolation_to_compose_strings
     isLoading = true;
@@ -119,10 +119,7 @@ class AuthController extends ChangeNotifier {
           zipCode: zipCode,
           isAdmin: false,
         );
-        Toaster.showSuccessToast(
-            context, AppLocalizations.of(context)!.registration_message);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        return "success";
       } else {
         await AuthService.login(
           email: email,
@@ -134,19 +131,11 @@ class AuthController extends ChangeNotifier {
           await UserService.initializetUserAttributes(uid, context);
         }
 
-        if (!context.mounted) return;
-        Toaster.showSuccessToast(
-            context, AppLocalizations.of(context)!.sign_in_success);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const AppScreen()));
+        return "success";
+
       }
     } on FirebaseAuthException catch (e) {
-      if (!context.mounted) return;
-      Toaster.showFailedToast(
-          context,
-          e.message!.contains("credential is malformed")
-              ? AppLocalizations.of(context)!.sign_in_bad_credentials
-              : e.message!);
+      return e.message!;
     } finally {
       isLoading = false;
     }

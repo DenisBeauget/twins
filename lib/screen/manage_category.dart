@@ -32,19 +32,19 @@ class ManageCategory extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    border: Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 20),
+                    color: Theme.of(context).colorScheme.primary,
+                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 20),
                     borderRadius: BorderRadius.circular(10)),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   children: [
-                    Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.surface),
+                    Icon(IconsaxPlusLinear.info_circle, size: 40, color: Theme.of(context).colorScheme.onPrimary),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Text(
                           AppLocalizations.of(context)!.admin_category_title,
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.surface)),
+                              fontSize: 15, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary)),
                     )
                   ],
                 ),
@@ -67,7 +67,7 @@ class ManageCategory extends StatelessWidget {
               const SizedBox(height: 10),
               TextField(
                   autocorrect: true,
-                  cursorColor: Theme.of(context).colorScheme.inversePrimary,
+                  cursorColor: Theme.of(context).colorScheme.primary,
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)!
                           .admin_category_input_placeholder,
@@ -121,7 +121,7 @@ class ManageCategory extends StatelessWidget {
               final category = categoryList[index];
               return CategoryButton(
                 text: category.name,
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).colorScheme.surface,
                 onPressed: () {
                   confirmDeleteCategory(category, context);
@@ -142,7 +142,7 @@ class ManageCategory extends StatelessWidget {
     if (categoryName.isNotEmpty) {
       categoryBloc.add(AddCategory(new Category(name: categoryName), context));
     } else {
-      Toaster.showFailedToast(context, AppLocalizations.of(context)!.admin_category_empty_input);
+      Toaster.showFailedToast(AppLocalizations.of(context)!.admin_category_empty_input);
     }
   }
 }

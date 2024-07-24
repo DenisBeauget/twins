@@ -93,7 +93,7 @@ Future<Widget> returnContent(
         ));
   }
 
-  bool alreadyUse = await offersService.checkOfferAlreadyUsed(offerId);
+  bool alreadyUse = await offersService.checkOfferAlreadyUsed(offerId,userId);
 
   if (alreadyUse) {
     return SizedBox(
@@ -111,9 +111,9 @@ Future<Widget> returnContent(
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: Theme.of(context).colorScheme.primary,
                 border: Border.all(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    color: Theme.of(context).colorScheme.primary,
                     width: 20),
                 borderRadius: BorderRadius.circular(10)),
             width: MediaQuery.of(context).size.width,
@@ -158,18 +158,16 @@ Future<Widget> returnContent(
               style: btnPrimaryStyle(context),
               onPressed: () async {
                 try {
-                  await offersService.validateOffer(offerId);
+                  await offersService.validateOffer(offerId, userId);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => AppScreen(),
                     ),
                   );
-                  Toaster.showSuccessToast(context,
-                      AppLocalizations.of(context)!.offer_validation_success);
+                  Toaster.showSuccessToast(AppLocalizations.of(context)!.offer_validation_success);
                 } catch (e) {
-                  Toaster.showFailedToast(context,
-                      AppLocalizations.of(context)!.offer_validation_fail);
+                  Toaster.showFailedToast(AppLocalizations.of(context)!.offer_validation_fail);
                 }
               },
               child: Text(

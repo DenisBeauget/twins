@@ -15,7 +15,8 @@ import 'package:twins_front/widget/featured_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EstablishmentsScreen extends StatelessWidget {
-  const EstablishmentsScreen({super.key});
+  final bool enableGoBack;
+  const EstablishmentsScreen({super.key, this.enableGoBack = true});
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +68,13 @@ class EstablishmentsScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        leading: IconButton(
+        leading: enableGoBack ? IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             establishmentBloc.add(const EstablishmentFilterByKeyword(""));
             Navigator.of(context).pop();
           },
-        ),
+        ): null,
         title: Text(
           AppLocalizations.of(context)!.partners,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
