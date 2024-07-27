@@ -4,6 +4,7 @@ import 'package:toastification/toastification.dart';
 import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
+import 'bloc/establishment_search_bloc.dart';
 import 'utils/util.dart';
 
 import 'theme.dart';
@@ -55,6 +56,7 @@ Future<void> main() async {
           create: (context) => CheckboxProvider()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
+      BlocProvider<EstablishmentSearchBloc>(create: (context) => EstablishmentSearchBloc()),
       BlocProvider<OfferBloc>(create: (context) => OfferBloc()),
       BlocProvider<SubscriptionBloc>(create: (context) => SubscriptionBloc())
     ],

@@ -4,6 +4,7 @@ import 'package:confetti/confetti.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,8 @@ import 'package:twins_front/services/deeplink_service.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 import 'package:twins_front/utils/toaster.dart';
 
+import '../bloc/establishment_bloc.dart';
+import '../bloc/establishment_search_bloc.dart';
 import '../services/auth_service.dart';
 import 'home_screen.dart';
 
@@ -30,6 +33,10 @@ class AppScreen extends StatelessWidget {
     final isAdmin = Provider.of<AuthController>(context).isAdmin;
     final screenindexprovider = Provider.of<ScreenIndexProvider>(context);
     int navBarIndex = screenindexprovider._index;
+
+    final EstablishmentSearchBloc establishmentBloc =
+    BlocProvider.of<EstablishmentSearchBloc>(context);
+
     const List<Widget> widgetOptions = <Widget>[
       HomeScreen(),
       EstablishmentsScreen(enableGoBack: false),
@@ -81,6 +88,10 @@ class AppScreen extends StatelessWidget {
               navBarIndex = index;
               screenindexprovider.setIndex(index);
               Haptics.vibrate(HapticsType.light);
+
+              if(index== 1){
+                establishmentBloc.add(LoadEstablishments());
+              }
             },
           ),
         ],

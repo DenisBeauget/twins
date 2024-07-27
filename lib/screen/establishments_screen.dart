@@ -14,23 +14,25 @@ import 'package:twins_front/widget/featured_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../bloc/establishment_search_bloc.dart';
+
 class EstablishmentsScreen extends StatelessWidget {
   final bool enableGoBack;
   const EstablishmentsScreen({super.key, this.enableGoBack = true});
 
   @override
   Widget build(BuildContext context) {
-    final EstablishmentBloc establishmentBloc =
-        BlocProvider.of<EstablishmentBloc>(context);
+    final EstablishmentSearchBloc establishmentBloc =
+        BlocProvider.of<EstablishmentSearchBloc>(context);
 
-    establishmentBloc.add(EstablishmentALL(false));
+    establishmentBloc.add(LoadEstablishments());
 
     final TextEditingController searchController = TextEditingController();
 
     Widget returnEstablishments(BuildContext context) {
-      if (establishmentBloc.state is EstablishmentLoaded) {
+      if (establishmentBloc.state is EstablishmentSearchLoaded) {
         List<Establishment> establishmentList =
-            (establishmentBloc.state as EstablishmentLoaded).establishmentList;
+            (establishmentBloc.state as EstablishmentSearchLoaded).establishmentList;
         if (establishmentList.isEmpty) {
           return Center(
               child: Text(AppLocalizations.of(context)!.no_establishment_found,
@@ -58,7 +60,7 @@ class EstablishmentsScreen extends StatelessWidget {
 
     Future<void> reloadEstablishments() async {
       Haptics.vibrate(HapticsType.medium);
-      establishmentBloc.add(EstablishmentALL(true));
+      establishmentBloc.add(LoadEstablishments());
       searchController.clear();
     }
 
@@ -71,7 +73,7 @@ class EstablishmentsScreen extends StatelessWidget {
         leading: enableGoBack ? IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            establishmentBloc.add(const EstablishmentFilterByKeyword(""));
+            establishmentBloc.add(const EstablishmentSearchFilterByKeyword(""));
             Navigator.of(context).pop();
           },
         ): null,
@@ -117,7 +119,7 @@ class EstablishmentsScreen extends StatelessWidget {
                     onChanged: (text) {
                       Future.delayed(const Duration(milliseconds: 300));
                       establishmentBloc.add(
-                          EstablishmentFilterByKeyword(searchController.text));
+                          EstablishmentSearchFilterByKeyword(searchController.text));
                     },
                   ),
                 ),
@@ -125,7 +127,7 @@ class EstablishmentsScreen extends StatelessWidget {
               const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: BlocBuilder<EstablishmentBloc, EstablishmentState>(
+                child: BlocBuilder<EstablishmentSearchBloc, EstablishmentSearchState>(
                   builder: (context, state) {
                     return returnEstablishments(context);
                   },

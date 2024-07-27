@@ -7,6 +7,7 @@ import 'package:twins_front/services/establishments_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:twins_front/services/offers_service.dart';
 import 'package:twins_front/services/storage_service.dart';
+import 'package:twins_front/utils/shared_data.dart';
 
 import '../utils/toaster.dart';
 
@@ -14,7 +15,6 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
   EstablishmentService establishmentService = EstablishmentService();
   StorageService storageService = StorageService();
   OffersService offerService = OffersService();
-  List<Establishment> currentEstablishments = List.empty();
 
   EstablishmentBloc() : super(EstablishmentInitialState()) {
     on<EstablishmentALL>((event, emit) async {
@@ -22,7 +22,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
 
       final List<Establishment> establishments = event.fromDB
           ? await establishmentService.getEstablishments()
-          : currentEstablishments;
+          : SharedData.allEstablishments;
 
       for (Establishment establishment in establishments) {
         establishment.offers =
@@ -30,14 +30,23 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
       }
 
       emit(EstablishmentLoaded(establishments));
-      currentEstablishments = establishments;
+
+
+      SharedData.allEstablishments = establishments;
+      try {
+        SharedData.allEstablishmentsCompleter.complete();
+      }
+      catch(e){
+        print("already completed");
+      }
+
     });
 
     on<EstablishmentFilterByCategory>((event, emit) async {
       emit(EstablishmentLoading());
 
       final List<Establishment> establishments =
-          currentEstablishments.where((establishment) {
+      SharedData.allEstablishments.where((establishment) {
         return establishment.categoryName == event.categoryName;
       }).toList();
       emit(EstablishmentLoaded(establishments));
@@ -47,7 +56,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
       emit(EstablishmentLoading());
 
       List<Establishment> filteredEstablishments =
-          currentEstablishments.where((establishment) {
+      SharedData.allEstablishments.where((establishment) {
         return establishment.name
                 .toLowerCase()
                 .contains(event.keyword.toLowerCase()) ||
@@ -82,7 +91,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
         if (value != null) {
           emit(EstablishmentLoading());
           event.establishment.id = value;
-          currentEstablishments.add(event.establishment);
+          SharedData.allEstablishments.add(event.establishment);
           Toaster.showSuccessToast(
               AppLocalizations.of(event.context)!.establishment_added);
         } else {
@@ -91,7 +100,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           Toaster.showFailedToast(
               AppLocalizations.of(event.context)!.establishment_already_exist);
         }
-      }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
+      }).whenComplete(() => emit(EstablishmentLoaded(SharedData.allEstablishments)));
     });
 
     on<UpdateEstablishment>((event, emit) async {
@@ -120,14 +129,14 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           .updateEstablishment(event.establishment)
           .then((value) {
         if (value) {
-          currentEstablishments
+          SharedData.allEstablishments
               .removeWhere((e) => e.id == event.establishment.id);
-          currentEstablishments.add(event.establishment);
+          SharedData.allEstablishments.add(event.establishment);
           Toaster.showSuccessToast('mis à jour avec succès');
         } else {
           Toaster.showFailedToast('Erreur lors de la mise à jour');
         }
-      }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
+      }).whenComplete(() => emit(EstablishmentLoaded(SharedData.allEstablishments)));
     });
 
     on<DeleteEstablishment>((event, emit) async {
@@ -137,7 +146,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
         if (value) {
           emit(EstablishmentLoading());
 
-          currentEstablishments
+          SharedData.allEstablishments
               .removeWhere((e) => e.name == event.establishment.name);
           Toaster.showSuccessToast(AppLocalizations.of(event.context)!
               .admin_establishment_delete_success);
@@ -145,7 +154,7 @@ class EstablishmentBloc extends Bloc<EstablishmentEvent, EstablishmentState> {
           Toaster.showFailedToast(
               AppLocalizations.of(event.context)!.delete_error);
         }
-      }).whenComplete(() => emit(EstablishmentLoaded(currentEstablishments)));
+      }).whenComplete(() => emit(EstablishmentLoaded(SharedData.allEstablishments)));
     });
   }
 }
