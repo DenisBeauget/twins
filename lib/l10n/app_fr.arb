@@ -37,14 +37,14 @@
   "category_name": "Nom de la catégorie",
   "category_not_found": "Aucune catégorie trouvée",
   "add_category": "Ajoutez catégorie",
-  "category_added": "Catégorie ajouté",
+  "category_added": "Catégorie ajoutée",
   "category_already_exist": "La catégorie existe déjà",
   "manage_establishment": "Gestion des établissements",
   "establishment_name": "Nom de l'établissement",
   "highlighted": "Nos coups de ❤️",
   "partners": "Nos partenaires",
   "see_all": "Voir tout",
-  "add_establishment": "Ajoutez établissement",
+  "add_establishment": "Ajoutez l'établissement",
   "establishment_added": "Establishment ajouté",
   "establishment_already_exist": "L'établissement existe déjà",
   "popup_delete_bt": "Supprimer",
@@ -67,14 +67,14 @@
     }
   },
   "admin_update": "Mettre à jour",
-  "admin_presentation": "A partir de cette zone tu pourras ajouter, supprimer ou consulter différents éléments directement dans l'application",
+  "admin_presentation": "A partir de cette zone, tu pourras ajouter, supprimer ou consulter différents éléments directement dans l'application",
   "admin_category": "Gérer les catégories",
   "admin_category_title": "Pour supprimer une catégorie, appuyez dessus.",
   "admin_category_add_title": "Ajouter une catégorie",
   "admin_category_add": "Ajouter",
   "admin_category_empty_input": "Veuillez entrer un nom de catégorie",
   "admin_category_popup_delete_title": "Supprimer la categorie",
-  "admin_category_deleted_message": "Categorie supprimé",
+  "admin_category_deleted_message": "Categorie supprimée",
   "admin_category_popup_delete_message": "Êtes-vous sûr de vouloir supprimer la catégorie {category_name} ?",
   "@admin_category_popup_delete_message": {
     "placeholders": {
@@ -93,7 +93,7 @@
   "admin_establishment_address_input_placeholder": "Adresse",
   "admin_establishment_highlight": "Mettre en avant",
   "admin_establishment_add": "Ajouter",
-  "admin_establishment_category_selected": "catégories sélectionné : {category_name}",
+  "admin_establishment_category_selected": "catégorie sélectionnée : {category_name}",
   "@admin_establishment_category_selected": {
     "placeholders": {
       "category_name": {
@@ -184,7 +184,7 @@
       }
     }
   },
-  "gr_code_offer_message": "Pour utiliser cette offre, presentez ce QR code au commerçant",
+  "gr_code_offer_message": "Pour utiliser cette offre, présentez ce QR code au commerçant",
   "profil_title": "Mon profil",
   "profil_subscribe": "Je m'abonne !",
   "profil_disconnect": "Se déconnecter"
