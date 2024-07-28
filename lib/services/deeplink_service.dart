@@ -31,12 +31,13 @@ class DeeplinkService {
       final String? offerId = uri.queryParameters['offerId'];
       final String? userId = uri.queryParameters['userId'];
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ValidateOfferScreen(offerId: offerId!, userId: userId!),
-        ),
-      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ValidateOfferScreen(offerId: offerId!, userId: userId!),
+          ),
+          (route) => false);
     }
   }
 }

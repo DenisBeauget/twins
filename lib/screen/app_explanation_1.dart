@@ -21,7 +21,7 @@ class AppExplanation1 extends StatelessWidget {
               flex: 5,
               child: Center(
                   child: Image(
-                      image: AssetImage('assets/img/twins_logo.png'),
+                      image: AssetImage('assets/img/twins_logo_purple_full.png'),
                       height: 180)),
             ),
             Expanded(

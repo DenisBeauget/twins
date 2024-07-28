@@ -12,18 +12,15 @@ class AppExplanation2 extends StatelessWidget {
       backgroundColor: const ColorScheme.light().surface,
       body: Container(
         decoration: BoxDecoration(
-            color: const ColorScheme.light().onSurface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(25)),
         padding: MediaQuery.of(context).padding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            const Expanded(
+            Expanded(
               flex: 5,
-              child: Center(
-                  child: Image(
-                      image: AssetImage('assets/img/twins_logo_w.png'),
-                      height: 180)),
+              child: Center(child: appLogoGreen(180)),
             ),
             Expanded(
               flex: 5,
@@ -36,7 +33,7 @@ class AppExplanation2 extends StatelessWidget {
                       AppLocalizations.of(context)!.welcome_content_app,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: const ColorScheme.light().surface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
                         height: 1.5,

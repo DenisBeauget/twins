@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
+import 'package:toastification/toastification.dart';
 import 'package:twins_front/bloc/subscription_bloc.dart';
 import 'package:twins_front/utils/confetti_controller.dart';
 
+import 'bloc/establishment_search_bloc.dart';
 import 'utils/util.dart';
 
 import 'theme.dart';
@@ -54,6 +56,7 @@ Future<void> main() async {
           create: (context) => CheckboxProvider()),
       BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
       BlocProvider<EstablishmentBloc>(create: (context) => EstablishmentBloc()),
+      BlocProvider<EstablishmentSearchBloc>(create: (context) => EstablishmentSearchBloc()),
       BlocProvider<OfferBloc>(create: (context) => OfferBloc()),
       BlocProvider<SubscriptionBloc>(create: (context) => SubscriptionBloc())
     ],
@@ -71,51 +74,37 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     getUserInfo(context);
 
-    TextTheme textTheme = createTextTheme(context, "Chakra Petch", "Tajawal");
+    TextTheme textTheme = createTextTheme(context, "Urbanist", "Tajawal");
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return MaterialApp(
-      title: 'Twins App',
-      theme: theme.light(),
-      darkTheme: theme.dark(),
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('fr'),
-      ],
-      localeListResolutionCallback: (locales, supportedLocales) {
-        if (locales != null && locales.isNotEmpty) {
-          if (locales.first.languageCode == 'fr') {
-            return const Locale('fr', '');
-          } else {
-            return const Locale('en', '');
-          }
-        }
-        return null;
-      },
-      home: Stack(
-        children: [
-          redirectUser(),
-          Align(
-            alignment: Alignment.center,
-            child: ConfettiWidget(
-              confettiController: confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              emissionFrequency: 0.1,
-              numberOfParticles: 25,
-              minBlastForce: 10,
-              maxBlastForce: 50,
-            ),
-          ),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'Twins App',
+        theme: theme.dark(),
+        themeMode: ThemeMode.system,
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('fr'),
+        ],
+        localeListResolutionCallback: (locales, supportedLocales) {
+          if (locales != null && locales.isNotEmpty) {
+            if (locales.first.languageCode == 'fr') {
+              return const Locale('fr', '');
+            } else {
+              return const Locale('en', '');
+            }
+          }
+          return null;
+        },
+        home: integrateConfetti(redirectUser())
       ),
     );
   }
@@ -123,7 +112,7 @@ class MyApp extends StatelessWidget {
 
 Widget redirectUser() {
   if (FirebaseAuth.instance.currentUser != null) {
-    return AppScreen();
+    return const AppScreen();
   } else {
     return const WelcomeScreen();
   }

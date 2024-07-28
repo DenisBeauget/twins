@@ -6,6 +6,7 @@ import 'package:twins_front/style/style_schema.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../services/auth_service.dart';
+import 'confetti_controller.dart';
 
 class Popup {
   static Future<bool> showPopupForDelete(
@@ -13,26 +14,28 @@ class Popup {
     final bool? result = await showDialog<bool>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          title: Center(
-              child: Text(title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20))),
-          content: Text(description),
-          actions: [
-            ElevatedButton(
-              style: btnDialogStyleCancel(context),
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(AppLocalizations.of(context)!.popup_cancel_bt),
-            ),
-            ElevatedButton(
-              style: btnDialogStyle(context),
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(AppLocalizations.of(context)!.popup_delete_bt),
-            ),
-          ],
+        return integrateConfetti(
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)),
+            title: Center(
+                child: Text(title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20))),
+            content: Text(description),
+            actions: [
+              ElevatedButton(
+                style: btnDialogStyleCancel(context),
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(AppLocalizations.of(context)!.popup_cancel_bt),
+              ),
+              ElevatedButton(
+                style: btnDialogStyle(context),
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(AppLocalizations.of(context)!.popup_delete_bt),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -41,11 +44,12 @@ class Popup {
   }
 
   static showValidateOffer(BuildContext context, Offer offer) {
-    OffersService().startListeningForUsedBy(context, offer);
-
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+    OffersService().startListeningForUsedBy(context, offer).then((value) {
+      print(value);
+      if (value) {
+        Navigator.pop(context,offer);
+      }
+    });
 
     QrCode qrCode = QrCode.fromData(
       data:
@@ -58,42 +62,42 @@ class Popup {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)),
-            title: Center(
-                child: Text(offer.title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20))),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(AppLocalizations.of(context)!.gr_code_offer_message),
-                const SizedBox(height: 20),
-                PrettyQrView(
-                  decoration: PrettyQrDecoration(
-                    shape: PrettyQrSmoothSymbol(
-                      roundFactor: 1,
-                      color: Theme.of(context).colorScheme.inversePrimary,
+          return integrateConfetti(
+            AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Center(
+                  child: Text(offer.title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20))),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(AppLocalizations.of(context)!.gr_code_offer_message),
+                  const SizedBox(height: 20),
+                  PrettyQrView(
+                    decoration: PrettyQrDecoration(
+                      shape: PrettyQrSmoothSymbol(
+                        roundFactor: 1,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      image: const PrettyQrDecorationImage(
+                        image: AssetImage('assets/img/twins_logo_green.png'),
+                      ),
                     ),
-                    image: PrettyQrDecorationImage(
-                      image: AssetImage(isDarkMode
-                          ? 'assets/img/twins_logo_w.png'
-                          : 'assets/img/twins_logo.png'),
-                    ),
+                    qrImage: qrImage,
                   ),
-                  qrImage: qrImage,
+                ],
+              ),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                ElevatedButton(
+                  style: btnDialogStyle(context),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Ok'),
                 ),
               ],
             ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              ElevatedButton(
-                style: btnDialogStyle(context),
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
-              ),
-            ],
           );
         });
   }

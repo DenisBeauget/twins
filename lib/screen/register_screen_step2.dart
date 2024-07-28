@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:twins_front/change/auth_controller.dart';
 import 'package:twins_front/screen/connexion_screen.dart';
 import 'package:twins_front/utils/toaster.dart';
@@ -7,6 +8,7 @@ import 'package:twins_front/utils/validador.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../services/auth_service.dart';
 import '../style/style_schema.dart';
 
 class SignUpScreenStep2 extends StatefulWidget {
@@ -55,7 +57,7 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
                 Expanded(
                     flex: 3,
                     child: Center(
-                      child: appLogo(200),
+                      child: appLogoGreen(200),
                     )),
                 Expanded(
                   flex: 7,
@@ -80,7 +82,7 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
                               decoration: inputStyle(
                                   AppLocalizations.of(context)!
                                       .first_name_placeholder,
-                                  Icons.person_outlined),
+                                  IconsaxPlusLinear.user),
                               onChanged: (value) {
                                 _registrationController.firstName = value;
                               }),
@@ -90,29 +92,43 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
                             decoration: inputStyle(
                                 AppLocalizations.of(context)!
                                     .last_name_placeholder,
-                                Icons.person_outlined),
+                                IconsaxPlusLinear.user),
                             onChanged: (value) {
                               _registrationController.lastName = value;
                             },
                           ),
                           const SizedBox(height: 20),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Entre ta date de naissance",
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
                           CalendarDatePicker(
                               initialDate: selectedDate,
                               firstDate: firstDate,
                               lastDate: lastDate,
+                              initialCalendarMode: DatePickerMode.year,
                               onDateChanged: (DateTime date) {
                                 Timestamp.fromDate(date);
                                 _registrationController.birthDate =
                                     Timestamp.fromDate(date);
-                                _birthDateController.text = _registrationController.birthDate.toString();
+                                _birthDateController.text =
+                                    _registrationController.birthDate
+                                        .toString();
                               }),
                           const SizedBox(height: 20),
                           TextFormField(
                               controller: _zipCodeController,
+                              keyboardType: TextInputType.number,
                               decoration: inputStyle(
                                   AppLocalizations.of(context)!
                                       .zipcode_placeholder,
-                                  Icons.home_outlined),
+                                  IconsaxPlusLinear.house),
                               onChanged: (value) {
                                 _registrationController.zipCode = value;
                               }),
@@ -147,10 +163,21 @@ class _SignUpScreenStep2State extends State<SignUpScreenStep2> {
         _surnameController.text == "" ||
         _birthDateController.text == "" ||
         _zipCodeController.text == "") {
-      Toaster.showFailedToast(context, "One or many fields are empty");
+      Toaster.showFailedToast("One or many fields are empty");
     } else {
-      _registrationController.authenticateWithEmailAndPassword(
-          context: context);
+      _registrationController
+          .authenticateWithEmailAndPassword(context: context)
+          .then((value) async {
+        if (value == "success") {
+          Toaster.showSuccessToast(
+              AppLocalizations.of(context)!.registration_message);
+          await AuthService.logout();
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
+        } else {
+          Toaster.showFailedToast(value);
+        }
+      });
     }
   }
 }

@@ -29,7 +29,7 @@ class AdminScreen extends StatelessWidget {
               text: TextSpan(
                   style: TextStyle(
                       fontSize: 18.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w300,
                       color: Theme.of(context).colorScheme.onSurface),
                   text: AppLocalizations.of(context)!.admin_presentation),
             ),
